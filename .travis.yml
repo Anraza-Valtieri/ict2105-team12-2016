@@ -1,7 +1,7 @@
 language: android
 
-#before_install:
-    #- chmod +x gradlew
+before_install:
+    - chmod +x gradlew
 
 android:
   components:
