@@ -2,12 +2,18 @@ package com.example.anton.test_application.Business;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.anton.test_application.R;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.List;
 
@@ -16,6 +22,7 @@ import java.util.List;
  */
 public class QueueInfoAdapter extends RecyclerView.Adapter<QueueInfoAdapter.ViewHolder> {
     private List<QueueInfo> qInfo;
+    private RecyclerView mRecyclerView;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -31,13 +38,14 @@ public class QueueInfoAdapter extends RecyclerView.Adapter<QueueInfoAdapter.View
             cv = (CardView)itemView.findViewById(R.id.card_view);
             title = (TextView)itemView.findViewById(R.id.txtTitle);
             number = (TextView)itemView.findViewById(R.id.txtNoOfCustomers);
-
+            //number.setOnClickListener();
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public QueueInfoAdapter(List<QueueInfo> queue) {
+    public QueueInfoAdapter(List<QueueInfo> queue, RecyclerView mRecyclerView) {
         this.qInfo = queue;
+        this.mRecyclerView = mRecyclerView;
     }
 
     // Create new views (invoked by the layout manager)
@@ -54,12 +62,25 @@ public class QueueInfoAdapter extends RecyclerView.Adapter<QueueInfoAdapter.View
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        Firebase myFirebaseRef;
+        myFirebaseRef = new Firebase("https://qremind1.firebaseio.com/AppUserAccount");
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.title.setText(qInfo.get(position).title);
-        holder.number.setText(qInfo.get(position).noOfCustomers+"");
+        holder.number.setText(qInfo.get(position).noOfCustomers + "");
+        myFirebaseRef.child("Customer").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                qInfo.get(position).noOfCustomers = (int) dataSnapshot.getChildrenCount();
+                mRecyclerView.setAdapter(QueueInfoAdapter.this);
+            }
 
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
 
     }
 
