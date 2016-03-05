@@ -11,7 +11,7 @@ import android.widget.Button;
 public class GetQueueNumberActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_GetQueueNumberActivity);
+        setContentView(R.layout.activity_getqueuenumber);
 
         Button NoOfPax = (Button) findViewById(R.id.bGetQNo);
 
