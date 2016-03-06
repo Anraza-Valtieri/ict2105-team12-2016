@@ -1,8 +1,11 @@
 package com.example.chowdi.qremind.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by L on 3/5/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Customer {
 
     private String email;
