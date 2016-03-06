@@ -297,14 +297,10 @@ public class LoginActivity extends AppCompatActivity {
      * @param value email string
      * @return true for valid, false for invalid
      */
-    private Boolean isEmailString(String value)
-    {
-        if(value.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"))
-        {
-            return true;
-        }
-        return false;
+    private Boolean isEmailString(String value) {
+        String email_reg_exp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        return value.matches(email_reg_exp);
     }
 
     /**
@@ -312,23 +308,17 @@ public class LoginActivity extends AppCompatActivity {
      * @param value number string
      * @return true for valid, false for invalid
      */
-    private Boolean isNumberString(String value)
-    {
-        if(value.matches("^[0-9]*$"))
-            return true;
-        return false;
+    private Boolean isNumberString(String value) {
+        String number_reg_exp = "^[0-9]*$";
+        return value.matches(number_reg_exp);
     }
 
     /**
      * Check if str is empty
      * @return true if empty, else false for non-empty
      */
-    private Boolean isEmptyString(String value)
-    {
-        if(TextUtils.isEmpty(value)) {
-            return true;
-        }
-        return false;
+    private Boolean isEmptyString(String value) {
+        return TextUtils.isEmpty(value);
     }
 
     /**
