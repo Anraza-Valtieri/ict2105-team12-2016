@@ -45,7 +45,13 @@
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
+            android:name=".ChooseTaskActivity"
+            android:label="@string/choosetask_activity"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity
             android:name=".BusinessProfileActivity"
+            android:parentActivityName=".ChooseTaskActivity"
             android:label="@string/buss_prof_activity"
             android:windowSoftInputMode="stateHidden">
         </activity>
