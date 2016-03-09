@@ -29,24 +29,24 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/text_login"
+            android:label="@string/login_activity"
             android:parentActivityName=".Login_RegisterActivity"
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".Register_Activity"
-            android:label="@string/text_create_account"
+            android:label="@string/register_activity"
             android:parentActivityName=".Login_RegisterActivity"
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".CustomerProfilePageActivity"
-            android:label="Profile"
+            android:label="@string/cust_prof_activity"
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".BusinessProfileActivity"
-            android:label="Shop rofile"
+            android:label="@string/buss_prof_activity"
             android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
