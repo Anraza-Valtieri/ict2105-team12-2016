@@ -47,9 +47,6 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
-        // Check if there is an authorisation for firebase which the user application have logged in previously
-        fbRef = new Firebase(Constants.FIREBASE_MAIN);
-
         // Initialise all UI elements first
         initialiseUIElements();
 
@@ -83,7 +80,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
                 // If session expired, close current activity and go to login activity
                 if(fbRef.getAuth() == null)
                 {
-                    logout();
+                    Commons.logout(fbRef, CustomerProfilePageActivity.this);
                     Commons.showToastMessage("Your session expired!", getApplicationContext());
                     return;
                 }
@@ -99,7 +96,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout();
+                Commons.logout(fbRef, CustomerProfilePageActivity.this);
             }
         });
     }
@@ -129,15 +126,6 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         phoneNo_ET.setEnabled(value);
         updateBtn.setEnabled(value);
         logoutBtn.setEnabled(value);
-    }
-
-    /**
-     * To logout to maint activity (Login_RegisterActivity)
-     */
-    private void logout()
-    {
-        fbRef.unauth();
-        CustomerProfilePageActivity.this.finish();
     }
 
     /**
