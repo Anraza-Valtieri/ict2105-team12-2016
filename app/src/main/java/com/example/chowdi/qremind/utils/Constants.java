@@ -11,9 +11,11 @@ public final class Constants {
     }
 
     // For Firebase
-    public static final String  FIREBASE_MAIN = "https://qremind1.firebaseio.com";
-    public static final String  FIREBASE_CUSTOMER = "https://qremind1.firebaseio.com/AppUserAccount/Customer";
-    public static final String  FIREBASE_VENDOR = "https://qremind1.firebaseio.com/AppUserAccount/Vendor";
+    public static final String FIREBASE_MAIN = "https://qremind1.firebaseio.com";
+    public static final String FIREBASE_CUSTOMER = "https://qremind1.firebaseio.com/AppUserAccount/Customer";
+    public static final String FIREBASE_VENDOR = "https://qremind1.firebaseio.com/AppUserAccount/Vendor";
+    public static final String FIREBASE_CATEGORY = "https://qremind1.firebaseio.com/category";
+    public static final String FIREBASE_SHOPS = "https://qremind1.firebaseio.com/shops";
 
     // For shared preferences
     public static final String SHARE_PREF_LINK = "QREMIND_SP";
