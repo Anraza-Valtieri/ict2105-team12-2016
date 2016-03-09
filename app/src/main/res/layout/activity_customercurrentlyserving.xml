@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:weightSum="1"
+              android:background="#efefef">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/text_currently_serving"
+        android:id="@+id/currentserving_textView"
+        android:layout_gravity="center_horizontal"
+        android:layout_above="@+id/currentlyserving_editText"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/text_your_queue_no"
+        android:id="@+id/queuenumber_textView"
+        android:layout_gravity="center_horizontal"
+        android:layout_above="@+id/queuenumber_editText"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/text_estimated_waiting_time"
+        android:id="@+id/waitingtime_textView"
+        android:layout_gravity="center_horizontal"
+        android:layout_above="@+id/waitingtime_editText"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_refresh"
+        android:id="@+id/refreshbtn"
+        android:layout_gravity="center_horizontal"
+        android:background="#02bbd2"
+        android:layout_above="@+id/timeextensionbtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="23dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_10_mins_time_extension"
+        android:id="@+id/timeextensionbtn"
+        android:layout_gravity="center_horizontal"
+        android:background="#02bbd2"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="57dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:id="@+id/waitingtime_editText"
+        android:layout_above="@+id/refreshbtn"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/queuenumber_editText"
+        android:inputType="number"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currentlyserving_editText"
+        android:inputType="number"
+        android:layout_above="@+id/queuenumber_textView"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/vendorname_textView"
+        android:layout_above="@+id/currentserving_textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp"
+        android:text="Vendor Name(to be changed)"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_claim"
+        android:id="@+id/currentserving_claimbtn"
+        android:layout_alignTop="@+id/queuenumber_textView"
+        android:layout_toRightOf="@+id/currentserving_textView"
+        android:layout_toEndOf="@+id/currentserving_textView"
+        android:background="#02bbd2"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_logout"
+        android:id="@+id/currentserving_logoutbtn"
+        android:background="#FF3232"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+</RelativeLayout>
