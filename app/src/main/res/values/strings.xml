@@ -61,12 +61,4 @@
     <string name="text_manage_queue">Manage Queue</string>
     <string name="text_settings">Settings</string>
 
-    <!-- Firebase URL Links -->
-    <string name="fb_main_link">https://qremind1.firebaseio.com</string>
-    <string name="fb_appuseracc_cust">https://qremind1.firebaseio.com/AppUserAccount/Customer</string>
-    <string name="fb_appuseracc_vendor">https://qremind1.firebaseio.com/AppUserAccount/Vendor</string>
-
-    <!-- SharedPrefences strings -->
-    <string name="shared_pref_main">qremind_app</string>
-
 </resources>
