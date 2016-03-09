@@ -48,13 +48,17 @@ public class LoginActivity extends AppCompatActivity {
         Firebase.setAndroidContext(getApplicationContext());
 
         // Check if there is already an authorisation for firebase which the user application have logged in previously
-        fbRef = new Firebase(getString(R.string.fb_main_link));
+        fbRef = new Firebase(Constants.FIREBASE_MAIN);
         // if there is valid authorisation, redirect to next activity
         if(fbRef.getAuth() != null)
         {
-            Intent intent = new Intent(LoginActivity.this, CustomerProfilePageActivity.class);
-            startActivity(intent);
-            LoginActivity.this.finish();
+            prefs = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE);
+            String role = prefs.getString(Constants.SHAREPREF_ROLE, null);
+            if(role.equals(Constants.ROLE_CUSTOMER))
+                nextActivityAfterLogin(CustomerProfilePageActivity.class);
+            else if(role.equals(Constants.ROLE_VENDOR))
+
+                nextActivityAfterLogin(BusinessProfileActivity.class);
         }
 
         // Initialise all UI elements first
@@ -181,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
                         fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
                             @Override
                             public void onAuthenticated(AuthData authData) {
-                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID);
+                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR);
                                 nextActivityAfterLogin(BusinessProfileActivity.class);
                             }
 
@@ -211,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
                             {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
-                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString());
+                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR);
                                     nextActivityAfterLogin(BusinessProfileActivity.class);
                                     return;
                                 }
@@ -257,7 +261,7 @@ public class LoginActivity extends AppCompatActivity {
                         fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
                             @Override
                             public void onAuthenticated(AuthData authData) {
-                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID);
+                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_CUSTOMER);
                                 nextActivityAfterLogin(CustomerProfilePageActivity.class);
                             }
 
@@ -286,7 +290,7 @@ public class LoginActivity extends AppCompatActivity {
                             {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
-                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString());
+                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_CUSTOMER);
                                     nextActivityAfterLogin(CustomerProfilePageActivity.class);
                                     return;
                                 }
@@ -352,12 +356,13 @@ public class LoginActivity extends AppCompatActivity {
      * @param email email address
      * @param phoneNo phone number
      */
-    private void saveAuthenticatedUserInfo(String email, String phoneNo)
+    private void saveAuthenticatedUserInfo(String email, String phoneNo, String role)
     {
-        prefs = getSharedPreferences(getString(R.string.shared_pref_main),MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("email", email);
-        editor.putString("phoneNo", phoneNo);
+        editor.putString(Constants.SHAREPREF_EMAIL, email);
+        editor.putString(Constants.SHAREPREF_PHONE_NO, phoneNo);
+        editor.putString(Constants.SHAREPREF_ROLE, role);
         editor.commit();
     }
 
