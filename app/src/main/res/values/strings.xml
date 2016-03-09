@@ -61,4 +61,7 @@
     <string name="text_manage_queue">Manage Queue</string>
     <string name="text_settings">Settings</string>
 
+    <string-array name="category_array">
+
+    </string-array>
 </resources>
