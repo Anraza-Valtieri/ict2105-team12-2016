@@ -57,8 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             if(role.equals(Constants.ROLE_CUSTOMER))
                 nextActivityAfterLogin(CustomerProfilePageActivity.class);
             else if(role.equals(Constants.ROLE_VENDOR))
-
-                nextActivityAfterLogin(BusinessProfileActivity.class);
+                nextActivityAfterLogin(ChooseTaskActivity.class);
         }
 
         // Initialise all UI elements first and progress dialog
@@ -189,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                             public void onAuthenticated(AuthData authData) {
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR);
                                 pd.dismiss();
-                                nextActivityAfterLogin(BusinessProfileActivity.class);
+                                nextActivityAfterLogin(ChooseTaskActivity.class);
                             }
 
                             @Override
@@ -220,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
                                 {
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR);
                                     pd.dismiss();
-                                    nextActivityAfterLogin(BusinessProfileActivity.class);
+                                    nextActivityAfterLogin(ChooseTaskActivity.class);
                                     return;
                                 }
                             }
