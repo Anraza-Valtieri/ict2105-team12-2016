@@ -41,7 +41,9 @@
                 android:layout_below="@+id/custProfile_fName_TV"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:editable="true" />
+                android:editable="true"
+                android:maxLines="1"
+                android:singleLine="true" />
 
             <TextView android:id="@+id/custProfile_lName_TV"
                 android:layout_width="wrap_content"
@@ -61,7 +63,9 @@
                 android:layout_below="@+id/custProfile_lName_TV"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:editable="true" />
+                android:editable="true"
+                android:maxLines="1"
+                android:singleLine="true" />
 
             <TextView android:id="@+id/custProfile_phone_no_TV"
                 android:layout_width="wrap_content"
@@ -82,7 +86,9 @@
                 android:layout_below="@+id/custProfile_phone_no_TV"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:editable="false" />
+                android:editable="false"
+                android:maxLines="1"
+                android:singleLine="true" />
 
             <TextView android:id="@+id/custProfile_email_TV"
                 android:layout_width="wrap_content"
@@ -103,7 +109,9 @@
                 android:layout_below="@+id/custProfile_email_TV"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:editable="false" />
+                android:editable="false"
+                android:maxLines="1"
+                android:singleLine="true" />
 
             <Button android:id="@+id/custProfile_udpatebtn"
                 android:layout_width="match_parent"
