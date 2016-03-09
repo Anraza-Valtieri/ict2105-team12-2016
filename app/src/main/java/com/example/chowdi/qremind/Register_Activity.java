@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -185,9 +186,9 @@ public class Register_Activity extends AppCompatActivity{
         switch (roleRG.getCheckedRadioButtonId())
         {
             case R.id.customer_radiobtn:
-                return getString(R.string.fb_appuseracc_cust);
+                return Constants.FIREBASE_CUSTOMER;
             case R.id.vendor_radiobtn:
-                return getString(R.string.fb_appuseracc_vendor);
+                return Constants.FIREBASE_VENDOR;
             default:
                 return "";
         }
