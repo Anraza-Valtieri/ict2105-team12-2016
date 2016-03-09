@@ -1,8 +1,11 @@
 package com.example.chowdi.qremind.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.firebase.client.Firebase;
 
 /**
  * Created by anton on 9/3/2016.
@@ -49,4 +52,15 @@ public class Commons {
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
+
+
+    /**
+     * To logout to main activity (Login_RegisterActivity)
+     */
+    public static void logout(Firebase fbRef, Activity currActivity)
+    {
+        fbRef.unauth();
+        currActivity.finish();
+    }
+
 }
