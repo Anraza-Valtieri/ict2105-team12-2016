@@ -39,7 +39,8 @@
                 android:layout_below="@+id/businessProf_shopName_TV"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:editable="false" />
 
             <TextView android:id="@+id/businessProf_category_TV"
                 android:layout_width="wrap_content"
