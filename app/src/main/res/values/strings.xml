@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Qremind</string>
+    <string name="login_activity">Login</string>
+    <string name="cust_prof_activity">Profile</string>
+    <string name="buss_prof_activity">Shop Profile</string>
+    <string name="register_activity">Create account</string>
 
     <!-- Strings -->
     <string name="permission_rationale">"Contacts permissions are needed for providing email
