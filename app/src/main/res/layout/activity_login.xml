@@ -28,7 +28,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="40dp"/>
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/email_login_ET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
