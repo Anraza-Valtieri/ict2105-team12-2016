@@ -1,6 +1,7 @@
 package com.example.chowdi.qremind.utils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -53,6 +54,27 @@ public class Commons {
         toast.show();
     }
 
+    /**
+     * Change the first letter of a string to uppercase
+     * @param str
+     */
+    public static String firstLetterToUpper(String str)
+    {
+        if(str.length() <= 0 || str == null) return str;
+        return str.substring(0,1).toUpperCase() + str.substring(1, str.length());
+    }
+
+    /**
+     * To show progress dialog
+     * @param title title string
+     * @param message message string
+     */
+    public static void showProgressDialog(ProgressDialog pd, String title, String message)
+    {
+        pd.setTitle(title);
+        pd.setMessage(message);
+        pd.show();
+    }
 
     /**
      * To logout to main activity (Login_RegisterActivity)
