@@ -67,23 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 String loginID = emailPhoneNoET.getText().toString();
                 String password = passwordET.getText().toString();
 
-                if (Commons.isEmptyString(loginID)) {
-                    emailPhoneNoET.setError("LoginID cannot be empty!");
-                    return;
-                }
-                if (Commons.isEmptyString(password)) {
-                    passwordET.setError("Password cannot be empty!");
-                    return;
-                }
-                if (!validateLoginID(loginID)) {
-                    emailPhoneNoET.setError("Please provide valid email or phone no!");
-                    Commons.showToastMessage("Please provide valid email or phone no!", getApplicationContext());
-                    return;
-                }
-                emailPhoneNoET.setError(null);
-                passwordET.setError(null);
-
-                setEnableAllElements(false);
+                if(!checkMandatoryFields(loginID, password)) return;
                 customerLogin(loginID, password);
             }
         });
@@ -93,23 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                 String loginID = emailPhoneNoET.getText().toString();
                 String password = passwordET.getText().toString();
 
-                if (Commons.isEmptyString(loginID)) {
-                    emailPhoneNoET.setError("LoginID cannot be empty!");
-                    return;
-                }
-                if (Commons.isEmptyString(password)) {
-                    passwordET.setError("Password cannot be empty!");
-                    return;
-                }
-                if (!validateLoginID(loginID)) {
-                    emailPhoneNoET.setError("Please provide valid email or phone no!");
-                    Commons.showToastMessage("Please provide valid email or phone no!", getApplicationContext());
-                    return;
-                }
-                emailPhoneNoET.setError(null);
-                passwordET.setError(null);
-
-                setEnableAllElements(false);
+                if(!checkMandatoryFields(loginID, password)) return;
                 vendorLogin(loginID, password);
             }
         });
@@ -161,6 +129,35 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * To check whether there are any errors on the mandatory fields
+     * @param loginID login id
+     * @param password password
+     * @return true is passed | false is error.
+     */
+    private boolean checkMandatoryFields(String loginID, String password)
+    {
+        if (Commons.isEmptyString(loginID)) {
+            emailPhoneNoET.setError("LoginID cannot be empty!");
+            return false;
+        }
+        if (Commons.isEmptyString(password)) {
+            passwordET.setError("Password cannot be empty!");
+            return false;
+        }
+        if (!validateLoginID(loginID)) {
+            emailPhoneNoET.setError("Please provide valid email or phone no!");
+            Commons.showToastMessage("Please provide valid email or phone no!", getApplicationContext());
+            return false;
+        }
+
+        // if no errors
+        emailPhoneNoET.setError(null);
+        passwordET.setError(null);
+        setEnableAllElements(false);
+        return true;
+    }
+
+    /**
      * To login as customer
      * @param loginID login id
      * @param password password
@@ -190,13 +187,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             @Override
                             public void onAuthenticationError(FirebaseError firebaseError) {
-                                switch (firebaseError.getCode())
-                                {
-                                    case FirebaseError.INVALID_PASSWORD:
-                                        passwordET.setError("Password is invalid!");
-                                        Commons.showToastMessage("Password is invalid!", getApplicationContext());
-                                        break;
-                                }
+                                handleFirebaseError(firebaseError);
                             }
                         });
                     }
@@ -204,6 +195,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
+                    handleFirebaseError(firebaseError);
                 }
             });
         }
@@ -228,25 +220,14 @@ public class LoginActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(FirebaseError firebaseError) {
-
+                            handleFirebaseError(firebaseError);
                         }
                     });
                 }
 
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
-                    switch (firebaseError.getCode())
-                    {
-                        case FirebaseError.INVALID_PASSWORD:
-                            passwordET.setError("Password is invalid!");
-                            Commons.showToastMessage("Password is invalid!", getApplicationContext());
-                            break;
-                        case FirebaseError.USER_DOES_NOT_EXIST:
-                            emailPhoneNoET.setError("Email does not exist!");
-                            Commons.showToastMessage("Email does not exist!", getApplicationContext());
-                            break;
-                    }
-                    setEnableAllElements(true);
+                    handleFirebaseError(firebaseError);
                 }
             });
         }
@@ -282,13 +263,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             @Override
                             public void onAuthenticationError(FirebaseError firebaseError) {
-                                switch (firebaseError.getCode())
-                                {
-                                    case FirebaseError.INVALID_PASSWORD:
-                                        passwordET.setError("Password is invalid!");
-                                        Commons.showToastMessage("Password is invalid!", getApplicationContext());
-                                        break;
-                                }
+                                handleFirebaseError(firebaseError);
                             }
                         });
                     }
@@ -296,10 +271,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
+                    handleFirebaseError(firebaseError);
                 }
             });
-        }
-        else if(Commons.isEmailString(loginID))
+        } else if (Commons.isEmailString(loginID))
         {
             fbRef.authWithPassword(loginID, password, new Firebase.AuthResultHandler() {
                 @Override
@@ -320,28 +295,41 @@ public class LoginActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(FirebaseError firebaseError) {
-
+                            handleFirebaseError(firebaseError);
                         }
                     });
                 }
 
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
-                    switch (firebaseError.getCode())
-                    {
-                        case FirebaseError.INVALID_PASSWORD:
-                            passwordET.setError("Password is invalid!");
-                            Commons.showToastMessage("Password is invalid!", getApplicationContext());
-                            break;
-                        case FirebaseError.USER_DOES_NOT_EXIST:
-                            emailPhoneNoET.setError("Email does not exist!");
-                            Commons.showToastMessage("Email does not exist!", getApplicationContext());
-                            break;
-                    }
-                    setEnableAllElements(true);
+                    handleFirebaseError(firebaseError);
                 }
             });
         }
+    }
+
+    /**
+     * To handle all kind of firebase errors where to show the appropriate
+     * and correct error messages on each errors
+     * @param firebaseError FirebaseError
+     */
+    private void handleFirebaseError(FirebaseError firebaseError)
+    {
+        switch (firebaseError.getCode())
+        {
+            case FirebaseError.INVALID_PASSWORD:
+                passwordET.setError("Password is invalid!");
+                Commons.showToastMessage("Password is invalid!", getApplicationContext());
+                break;
+            case FirebaseError.USER_DOES_NOT_EXIST:
+                emailPhoneNoET.setError("Email does not exist!");
+                Commons.showToastMessage("Email does not exist!", getApplicationContext());
+                break;
+            case FirebaseError.INVALID_TOKEN:
+                Commons.showToastMessage("Your session is expired", getApplicationContext());
+                break;
+        }
+        setEnableAllElements(true);
     }
 
     /**
