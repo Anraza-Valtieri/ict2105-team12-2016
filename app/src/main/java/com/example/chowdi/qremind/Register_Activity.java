@@ -190,7 +190,7 @@ public class Register_Activity extends AppCompatActivity{
             case R.id.vendor_radiobtn:
                 return Constants.FIREBASE_VENDOR;
             default:
-                return "";
+                return null;
         }
     }
 
