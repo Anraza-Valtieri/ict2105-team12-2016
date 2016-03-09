@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -237,7 +238,7 @@ public class Register_Activity extends AppCompatActivity{
                             map.put("uid", result.get("uid").toString());
 
                             fbRef.child(phoneNoET.getText().toString()).setValue(map);
-                            showToastMessage("Registration Successful");
+                            Commons.showToastMessage("Registration Successful", getApplicationContext());
                             Register_Activity.this.finish();
                             //System.out.println("Successfully created user account with uid: " + result.get("uid"));
                         }
@@ -247,7 +248,7 @@ public class Register_Activity extends AppCompatActivity{
                             // there was an error
                             switch (firebaseError.getCode()) {
                                 case FirebaseError.EMAIL_TAKEN: {
-                                    showToastMessage("Email is already taken");
+                                    Commons.showToastMessage("Email is already taken", getApplicationContext());
                                     emailET.setError("Email is already taken.");
                                     break;
                                 }
@@ -257,7 +258,7 @@ public class Register_Activity extends AppCompatActivity{
                 }
                 else
                 {
-                    showToastMessage("Phone already exists");
+                    Commons.showToastMessage("Phone already exists", getApplicationContext());
                     phoneNoET.setError("Phone already exists");
                 }
                 // Enable all the UI elements after this process done
@@ -269,19 +270,5 @@ public class Register_Activity extends AppCompatActivity{
 
             }
         });
-    }
-
-    /**
-     * Show any messages on Toast
-     * @param message - message string
-     */
-    private void showToastMessage(String message)
-    {
-        Context context = getApplicationContext();
-        CharSequence text = message;
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
     }
 }
