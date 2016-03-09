@@ -44,6 +44,11 @@
             android:label="Profile"
             android:windowSoftInputMode="stateHidden">
         </activity>
+        <activity
+            android:name=".BusinessProfileActivity"
+            android:label="Shop Profile"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
     </application>
 
 </manifest>
