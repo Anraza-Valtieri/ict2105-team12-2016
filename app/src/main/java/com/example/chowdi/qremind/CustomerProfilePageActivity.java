@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.chowdi.qremind.utils.Commons;
+import com.example.chowdi.qremind.utils.Constants;
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -44,23 +48,24 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         Firebase.setAndroidContext(getApplicationContext());
 
         // Check if there is an authorisation for firebase which the user application have logged in previously
-        fbRef = new Firebase(getString(R.string.fb_main_link));
-        // if there is no valid authorisation, redirect to main activity
-        if(fbRef.getAuth() == null)
-        {
-            Intent intent = new Intent(this, Login_RegisterActivity.class);
-            startActivity(intent);
-            this.finish();
-        }
+        fbRef = new Firebase(Constants.FIREBASE_MAIN);
+
+//        // if there is no valid authorisation, redirect to main activity
+//        if(fbRef.getAuth() == null)
+//        {
+//            Intent intent = new Intent(this, Login_RegisterActivity.class);
+//            startActivity(intent);
+//            this.finish();
+//        }
 
         // Initialise all UI elements first
         initialiseUIElements();
 
-        prefs = getSharedPreferences(getString(R.string.shared_pref_main),MODE_PRIVATE);
-        fbRef = new Firebase(getString(R.string.fb_appuseracc_cust));
+        prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
+        fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
 
         // Retrieve phone no from share preference to retrieve user information and display on the view
-        phoneNo = prefs.getString("phoneNo", null);
+        phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
         fbRef.child(phoneNo).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -81,6 +86,15 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 setEnableAllElements(false);
+
+                // If session expired, close current activity and go to login activity
+                if(fbRef.getAuth() == null)
+                {
+                    logout();
+                    Commons.showToastMessage("Your session expired!", getApplicationContext());
+                    return;
+                }
+
                 fbRef.child(phoneNo).child("firstname").setValue(fName_ET.getText().toString());
                 fbRef.child(phoneNo).child("lastname").setValue(lName_ET.getText().toString());
                 showToastMessage("Profile updated!");
@@ -92,10 +106,18 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fbRef.unauth();
-                CustomerProfilePageActivity.this.finish();
+                logout();
             }
         });
+    }
+
+    /**
+     * To logout to maint activity (Login_RegisterActivity)
+     */
+    private void logout()
+    {
+        fbRef.unauth();
+        CustomerProfilePageActivity.this.finish();
     }
 
     /**
