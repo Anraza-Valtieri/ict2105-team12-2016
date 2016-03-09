@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -35,9 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button vendorLoginBtn;
 
     // Others variables
-    private Boolean dataRetrieved = false;
-    private Boolean phoneNoExist = false;
     private SharedPreferences prefs;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +61,9 @@ public class LoginActivity extends AppCompatActivity {
                 nextActivityAfterLogin(BusinessProfileActivity.class);
         }
 
-        // Initialise all UI elements first
+        // Initialise all UI elements first and progress dialog
         initialiseUIElements();
+        pd = new ProgressDialog(this);
 
         // Set listener to customer login button
         custLoginBtn.setOnClickListener(new OnClickListener() {
@@ -168,6 +169,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void vendorLogin(final String loginID, final String password)
     {
+        Commons.showProgressDialog(pd, "Vendor login", "Logging in");
         fbRef = new Firebase(Constants.FIREBASE_VENDOR);
         final String email = loginID;
         if(Commons.isNumberString(loginID))
@@ -186,6 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onAuthenticated(AuthData authData) {
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR);
+                                pd.dismiss();
                                 nextActivityAfterLogin(BusinessProfileActivity.class);
                             }
 
@@ -216,6 +219,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR);
+                                    pd.dismiss();
                                     nextActivityAfterLogin(BusinessProfileActivity.class);
                                     return;
                                 }
@@ -244,6 +248,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void customerLogin(final String loginID, final String password)
     {
+        Commons.showProgressDialog(pd, "Customer login", "Logging in");
         fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
         final String email = loginID;
         if(Commons.isNumberString(loginID))
@@ -262,6 +267,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onAuthenticated(AuthData authData) {
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_CUSTOMER);
+                                pd.dismiss();
                                 nextActivityAfterLogin(CustomerProfilePageActivity.class);
                             }
 
@@ -291,6 +297,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_CUSTOMER);
+                                    pd.dismiss();
                                     nextActivityAfterLogin(CustomerProfilePageActivity.class);
                                     return;
                                 }
@@ -334,6 +341,7 @@ public class LoginActivity extends AppCompatActivity {
                 break;
         }
         setEnableAllElements(true);
+        pd.dismiss();
     }
 
     /**
