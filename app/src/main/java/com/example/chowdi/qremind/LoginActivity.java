@@ -1,52 +1,24 @@
 package com.example.chowdi.qremind;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.chowdi.qremind.utils.Commons;
+import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -95,17 +67,17 @@ public class LoginActivity extends AppCompatActivity {
                 String loginID = emailPhoneNoET.getText().toString();
                 String password = passwordET.getText().toString();
 
-                if (isEmptyString(loginID)) {
+                if (Commons.isEmptyString(loginID)) {
                     emailPhoneNoET.setError("LoginID cannot be empty!");
                     return;
                 }
-                if (isEmptyString(password)) {
+                if (Commons.isEmptyString(password)) {
                     passwordET.setError("Password cannot be empty!");
                     return;
                 }
                 if (!validateLoginID(loginID)) {
                     emailPhoneNoET.setError("Please provide valid email or phone no!");
-                    showToastMessage("Please provide valid email or phone no!");
+                    Commons.showToastMessage("Please provide valid email or phone no!", getApplicationContext());
                     return;
                 }
                 emailPhoneNoET.setError(null);
@@ -113,6 +85,32 @@ public class LoginActivity extends AppCompatActivity {
 
                 setEnableAllElements(false);
                 customerLogin(loginID, password);
+            }
+        });
+        vendorLoginBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String loginID = emailPhoneNoET.getText().toString();
+                String password = passwordET.getText().toString();
+
+                if (Commons.isEmptyString(loginID)) {
+                    emailPhoneNoET.setError("LoginID cannot be empty!");
+                    return;
+                }
+                if (Commons.isEmptyString(password)) {
+                    passwordET.setError("Password cannot be empty!");
+                    return;
+                }
+                if (!validateLoginID(loginID)) {
+                    emailPhoneNoET.setError("Please provide valid email or phone no!");
+                    Commons.showToastMessage("Please provide valid email or phone no!", getApplicationContext());
+                    return;
+                }
+                emailPhoneNoET.setError(null);
+                passwordET.setError(null);
+
+                setEnableAllElements(false);
+                vendorLogin(loginID, password);
             }
         });
         // add and implement text changed listener to email edit text
@@ -167,18 +165,139 @@ public class LoginActivity extends AppCompatActivity {
      * @param loginID login id
      * @param password password
      */
-    private void customerLogin(final String loginID, final String password)
+    private void vendorLogin(final String loginID, final String password)
     {
-        fbRef = new Firebase(getString(R.string.fb_appuseracc_cust));
+        fbRef = new Firebase(Constants.FIREBASE_VENDOR);
         final String email = loginID;
-        if(isNumberString(loginID))
+        if(Commons.isNumberString(loginID))
         {
             fbRef.child(loginID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(final DataSnapshot dataSnapshot) {
                     if(dataSnapshot.getValue() == null) {
                         emailPhoneNoET.setError("Phone No does not exists");
-                        showToastMessage("Phone No does not exists");
+                        Commons.showToastMessage("Phone No does not exists", getApplicationContext());
+                        setEnableAllElements(true);
+                    }
+                    else
+                    {
+                        fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
+                            @Override
+                            public void onAuthenticated(AuthData authData) {
+                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID);
+                                nextActivityAfterLogin(BusinessProfileActivity.class);
+                            }
+
+                            @Override
+                            public void onAuthenticationError(FirebaseError firebaseError) {
+                                switch (firebaseError.getCode())
+                                {
+                                    case FirebaseError.INVALID_PASSWORD:
+                                        passwordET.setError("Password is invalid!");
+                                        Commons.showToastMessage("Password is invalid!", getApplicationContext());
+                                        break;
+                                }
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                }
+            });
+        }
+        else if(Commons.isEmailString(loginID))
+        {
+            fbRef.authWithPassword(loginID, password, new Firebase.AuthResultHandler() {
+                @Override
+                public void onAuthenticated(AuthData authData) {
+                    fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot ds : dataSnapshot.getChildren())
+                            {
+                                if(ds.child("email").getValue().toString().equals(loginID))
+                                {
+                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString());
+                                    nextActivityAfterLogin(BusinessProfileActivity.class);
+                                    return;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onAuthenticationError(FirebaseError firebaseError) {
+                    switch (firebaseError.getCode())
+                    {
+                        case FirebaseError.INVALID_PASSWORD:
+                            passwordET.setError("Password is invalid!");
+                            Commons.showToastMessage("Password is invalid!", getApplicationContext());
+                            break;
+                        case FirebaseError.USER_DOES_NOT_EXIST:
+                            emailPhoneNoET.setError("Email does not exist!");
+                            Commons.showToastMessage("Email does not exist!", getApplicationContext());
+                            break;
+                    }
+                    setEnableAllElements(true);
+                }
+            });
+        }
+    }
+
+    /**
+     * Move to next activity after login
+     * @param activityClass (some_activity).class
+     */
+    private void nextActivityAfterLogin(Class activityClass)
+    {
+        // if no valid authentication
+        if(fbRef.getAuth() == null) return;
+
+        Intent intent = new Intent(LoginActivity.this, activityClass);
+        startActivity(intent);
+        LoginActivity.this.finish();
+    }
+
+    /**
+     * This method will save the authenticated user's email and phoneNo to sharedpreferences
+     * which will be used in other activity to retrieve information from Firebase.
+     * @param email email address
+     * @param phoneNo phone number
+     */
+    private void saveAuthenticatedUserInfo(String email, String phoneNo)
+    {
+        prefs = getSharedPreferences(getString(R.string.shared_pref_main),MODE_PRIVATE);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("email", email);
+        editor.putString("phoneNo", phoneNo);
+        editor.commit();
+    }
+
+    /**
+     * To login as customer
+     * @param loginID login id
+     * @param password password
+     */
+    private void customerLogin(final String loginID, final String password)
+    {
+        fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
+        final String email = loginID;
+        if(Commons.isNumberString(loginID))
+        {
+            fbRef.child(loginID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(final DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue() == null) {
+                        emailPhoneNoET.setError("Phone No does not exists");
+                        Commons.showToastMessage("Phone No does not exists", getApplicationContext());
                         setEnableAllElements(true);
                     }
                     else
@@ -202,7 +321,7 @@ public class LoginActivity extends AppCompatActivity {
                                 {
                                     case FirebaseError.INVALID_PASSWORD:
                                         passwordET.setError("Password is invalid!");
-                                        showToastMessage("Password is invalid!");
+                                        Commons.showToastMessage("Password is invalid!", getApplicationContext());
                                         break;
                                 }
                             }
@@ -215,7 +334,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
-        else if(isEmailString(loginID))
+        else if(Commons.isEmailString(loginID))
         {
             fbRef.authWithPassword(loginID, password, new Firebase.AuthResultHandler() {
                 @Override
@@ -253,11 +372,11 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         case FirebaseError.INVALID_PASSWORD:
                             passwordET.setError("Password is invalid!");
-                            showToastMessage("Password is invalid!");
+                            Commons.showToastMessage("Password is invalid!", getApplicationContext());
                             break;
                         case FirebaseError.USER_DOES_NOT_EXIST:
                             emailPhoneNoET.setError("Email does not exist!");
-                            showToastMessage("Email does not exist!");
+                            Commons.showToastMessage("Email does not exist!", getApplicationContext());
                             break;
                     }
                     setEnableAllElements(true);
@@ -278,61 +397,17 @@ public class LoginActivity extends AppCompatActivity {
         vendorLoginBtn.setEnabled(value);
     }
 
-
     /**
      * Validate the login ID whether it is an valid email or phone number
      * @return true if valid else false for invalid
      */
     private Boolean validateLoginID(String loginID)
     {
-        if(isEmailString(loginID))
+        if(Commons.isEmailString(loginID))
             return true;
-        else if(isNumberString(loginID))
+        else if(Commons.isNumberString(loginID))
             return true;
         return false;
-    }
-
-    /**
-     * Check if the value is an valid email
-     * @param value email string
-     * @return true for valid, false for invalid
-     */
-    private Boolean isEmailString(String value) {
-        String email_reg_exp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        return value.matches(email_reg_exp);
-    }
-
-    /**
-     * Check if the value is a number
-     * @param value number string
-     * @return true for valid, false for invalid
-     */
-    private Boolean isNumberString(String value) {
-        String number_reg_exp = "^[0-9]*$";
-        return value.matches(number_reg_exp);
-    }
-
-    /**
-     * Check if str is empty
-     * @return true if empty, else false for non-empty
-     */
-    private Boolean isEmptyString(String value) {
-        return TextUtils.isEmpty(value);
-    }
-
-    /**
-     * Show any messages on Toast
-     * @param message - message string
-     */
-    private void showToastMessage(String message)
-    {
-        Context context = getApplicationContext();
-        CharSequence text = message;
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
     }
 }
 
