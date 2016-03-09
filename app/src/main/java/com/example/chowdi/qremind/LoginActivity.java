@@ -253,35 +253,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Move to next activity after login
-     * @param activityClass (some_activity).class
-     */
-    private void nextActivityAfterLogin(Class activityClass)
-    {
-        // if no valid authentication
-        if(fbRef.getAuth() == null) return;
-
-        Intent intent = new Intent(LoginActivity.this, activityClass);
-        startActivity(intent);
-        LoginActivity.this.finish();
-    }
-
-    /**
-     * This method will save the authenticated user's email and phoneNo to sharedpreferences
-     * which will be used in other activity to retrieve information from Firebase.
-     * @param email email address
-     * @param phoneNo phone number
-     */
-    private void saveAuthenticatedUserInfo(String email, String phoneNo)
-    {
-        prefs = getSharedPreferences(getString(R.string.shared_pref_main),MODE_PRIVATE);
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("email", email);
-        editor.putString("phoneNo", phoneNo);
-        editor.commit();
-    }
-
-    /**
      * To login as customer
      * @param loginID login id
      * @param password password
@@ -305,14 +276,8 @@ public class LoginActivity extends AppCompatActivity {
                         fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
                             @Override
                             public void onAuthenticated(AuthData authData) {
-                                prefs = getSharedPreferences(getString(R.string.shared_pref_main),MODE_PRIVATE);
-                                final SharedPreferences.Editor editor = prefs.edit();
-                                editor.putString("email", dataSnapshot.child("email").getValue().toString());
-                                editor.putString("phoneNo", loginID);
-                                editor.commit();
-                                Intent intent = new Intent(LoginActivity.this, CustomerProfilePageActivity.class);
-                                startActivity(intent);
-                                LoginActivity.this.finish();
+                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID);
+                                nextActivityAfterLogin(CustomerProfilePageActivity.class);
                             }
 
                             @Override
@@ -346,14 +311,8 @@ public class LoginActivity extends AppCompatActivity {
                             {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
-                                    prefs = getSharedPreferences(getString(R.string.shared_pref_main),MODE_PRIVATE);
-                                    final SharedPreferences.Editor editor = prefs.edit();
-                                    editor.putString("email", loginID);
-                                    editor.putString("phoneNo", ds.child("phoneno").getValue().toString());
-                                    editor.commit();
-                                    Intent intent = new Intent(LoginActivity.this, CustomerProfilePageActivity.class);
-                                    startActivity(intent);
-                                    LoginActivity.this.finish();
+                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString());
+                                    nextActivityAfterLogin(CustomerProfilePageActivity.class);
                                     return;
                                 }
                             }
@@ -383,6 +342,35 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    /**
+     * Move to next activity after login
+     * @param activityClass (some_activity).class
+     */
+    private void nextActivityAfterLogin(Class activityClass)
+    {
+        // if no valid authentication
+        if(fbRef.getAuth() == null) return;
+
+        Intent intent = new Intent(LoginActivity.this, activityClass);
+        startActivity(intent);
+        LoginActivity.this.finish();
+    }
+
+    /**
+     * This method will save the authenticated user's email and phoneNo to sharedpreferences
+     * which will be used in other activity to retrieve information from Firebase.
+     * @param email email address
+     * @param phoneNo phone number
+     */
+    private void saveAuthenticatedUserInfo(String email, String phoneNo)
+    {
+        prefs = getSharedPreferences(getString(R.string.shared_pref_main),MODE_PRIVATE);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("email", email);
+        editor.putString("phoneNo", phoneNo);
+        editor.commit();
     }
 
     /**
