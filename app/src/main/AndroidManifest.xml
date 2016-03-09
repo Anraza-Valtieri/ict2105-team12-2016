@@ -46,7 +46,7 @@
         </activity>
         <activity
             android:name=".BusinessProfileActivity"
-            android:label="Shop Profile"
+            android:label="Shop rofile"
             android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
