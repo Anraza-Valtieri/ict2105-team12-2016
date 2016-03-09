@@ -50,17 +50,10 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         // Check if there is an authorisation for firebase which the user application have logged in previously
         fbRef = new Firebase(Constants.FIREBASE_MAIN);
 
-//        // if there is no valid authorisation, redirect to main activity
-//        if(fbRef.getAuth() == null)
-//        {
-//            Intent intent = new Intent(this, Login_RegisterActivity.class);
-//            startActivity(intent);
-//            this.finish();
-//        }
-
         // Initialise all UI elements first
         initialiseUIElements();
 
+        // Initialise getSharedPreferences for this app and Firebase setup
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
         fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
 
@@ -77,7 +70,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                handleFirebaseError(firebaseError);
             }
         });
 
@@ -97,7 +90,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
 
                 fbRef.child(phoneNo).child("firstname").setValue(fName_ET.getText().toString());
                 fbRef.child(phoneNo).child("lastname").setValue(lName_ET.getText().toString());
-                showToastMessage("Profile updated!");
+                Commons.showToastMessage("Profile updated!", getApplicationContext());
                 setEnableAllElements(true);
             }
         });
@@ -109,15 +102,6 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
                 logout();
             }
         });
-    }
-
-    /**
-     * To logout to maint activity (Login_RegisterActivity)
-     */
-    private void logout()
-    {
-        fbRef.unauth();
-        CustomerProfilePageActivity.this.finish();
     }
 
     /**
@@ -148,28 +132,33 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
     }
 
     /**
-     * Check if str is empty
-     * @return true if empty, else false for non-empty
+     * To logout to maint activity (Login_RegisterActivity)
      */
-    private Boolean isEmptyField(String value)
+    private void logout()
     {
-        if(TextUtils.isEmpty(value)) {
-            return true;
-        }
-        return false;
+        fbRef.unauth();
+        CustomerProfilePageActivity.this.finish();
     }
 
     /**
-     * Show any messages on Toast
-     * @param message - message string
+     * To handle all kind of firebase errors where to show the appropriate
+     * and correct error messages on each errors
+     * @param firebaseError FirebaseError
      */
-    private void showToastMessage(String message)
+    private void handleFirebaseError(FirebaseError firebaseError)
     {
-        Context context = getApplicationContext();
-        CharSequence text = message;
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+        switch (firebaseError.getCode())
+        {
+            case FirebaseError.NETWORK_ERROR:
+                Commons.showToastMessage("Network error!", getApplicationContext());
+                break;
+            case FirebaseError.DISCONNECTED:
+                Commons.showToastMessage("Network disconnected!", getApplicationContext());
+                break;
+            case FirebaseError.INVALID_TOKEN:
+                Commons.showToastMessage("Your session is expired", getApplicationContext());
+                break;
+        }
+        setEnableAllElements(true);
     }
 }
