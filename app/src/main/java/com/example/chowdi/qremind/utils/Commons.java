@@ -3,6 +3,8 @@ package com.example.chowdi.qremind.utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -121,5 +123,17 @@ public class Commons {
                 Commons.showToastMessage("Other errors", context);
                 break;
         }
+    }
+
+    /**
+     * To check if there is internet connections
+     * @param context
+     * @return true - internet connection available | false - no internet connection
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
