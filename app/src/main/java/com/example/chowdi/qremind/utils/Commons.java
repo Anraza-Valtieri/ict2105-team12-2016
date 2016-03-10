@@ -6,10 +6,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+
+import java.io.IOError;
 
 /**
  * Created by anton on 9/3/2016.
@@ -91,6 +94,19 @@ public class Commons {
         pd.setMessage(message);
         pd.setCancelable(false);
         pd.show();
+    }
+
+    /**
+     * To dismiss progress dialog
+     */
+    public static void dismissProgressDialog(ProgressDialog pd)
+    {
+        try{
+            pd.dismiss();
+        }catch (Exception ex)
+        {
+            Log.d("Exception Msg", ex.getMessage());
+        }
     }
 
     /**
