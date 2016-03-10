@@ -335,8 +335,8 @@ public class LoginActivity extends AppCompatActivity {
                 emailPhoneNoET.setError("Email does not exist!");
                 Commons.showToastMessage("Email does not exist!", getApplicationContext());
                 break;
-            case FirebaseError.INVALID_TOKEN:
-                Commons.showToastMessage("Your session is expired", getApplicationContext());
+            default:
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
                 break;
         }
         setEnableAllElements(true);

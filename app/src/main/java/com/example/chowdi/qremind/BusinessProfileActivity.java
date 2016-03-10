@@ -302,29 +302,8 @@ public class BusinessProfileActivity extends AppCompatActivity{
     {
         switch (firebaseError.getCode())
         {
-            case FirebaseError.NETWORK_ERROR:
-                Commons.showToastMessage("Network error!", getApplicationContext());
-                break;
-            case FirebaseError.DISCONNECTED:
-                Commons.showToastMessage("Network disconnected!", getApplicationContext());
-                break;
-            case FirebaseError.INVALID_TOKEN:
-                Commons.showToastMessage("Your session is expired", getApplicationContext());
-                break;
-            case FirebaseError.PERMISSION_DENIED:
-                Commons.showToastMessage("permission denied", getApplicationContext());
-                break;
-            case FirebaseError.PROVIDER_ERROR:
-                Commons.showToastMessage("provide error", getApplicationContext());
-                break;
-            case FirebaseError.LIMITS_EXCEEDED:
-                Commons.showToastMessage("limits exceeded", getApplicationContext());
-                break;
-            case FirebaseError.OPERATION_FAILED:
-                Commons.showToastMessage("operation failed", getApplicationContext());
-                break;
             default:
-                Commons.showToastMessage("Other errors", getApplicationContext());
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
                 break;
         }
         setEnableAllElements(true);

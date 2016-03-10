@@ -137,14 +137,8 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
     {
         switch (firebaseError.getCode())
         {
-            case FirebaseError.NETWORK_ERROR:
-                Commons.showToastMessage("Network error!", getApplicationContext());
-                break;
-            case FirebaseError.DISCONNECTED:
-                Commons.showToastMessage("Network disconnected!", getApplicationContext());
-                break;
-            case FirebaseError.INVALID_TOKEN:
-                Commons.showToastMessage("Your session is expired", getApplicationContext());
+            default:
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
                 break;
         }
         setEnableAllElements(true);
