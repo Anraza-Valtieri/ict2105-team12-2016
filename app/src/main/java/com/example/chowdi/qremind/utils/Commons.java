@@ -15,6 +15,8 @@ import com.firebase.client.FirebaseError;
  * Created by anton on 9/3/2016.
  */
 public class Commons {
+    private static Toast toast = null;
+
     /**
      * Check if the value is an valid email
      * @param value email string
@@ -53,8 +55,17 @@ public class Commons {
         CharSequence text = message;
         int duration = Toast.LENGTH_SHORT;
 
-        Toast toast = Toast.makeText(context, text, duration);
+        toast = Toast.makeText(context, text, duration);
         toast.show();
+    }
+
+    /**
+     * To cancel and dismiss the current toast displayed
+     */
+    public static void cancelToastMessage()
+    {
+        if(toast != null)
+            toast.cancel();
     }
 
     /**
