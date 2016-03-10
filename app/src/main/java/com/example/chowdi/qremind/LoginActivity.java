@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 String loginID = emailPhoneNoET.getText().toString();
                 String password = passwordET.getText().toString();
 
-                //if(!checkMandatoryFields(loginID, password)) return;
+                if(!checkMandatoryFields(loginID, password)) return;
 
                 // Check network connection
                 if(!Commons.isNetworkAvailable(getApplicationContext()))
@@ -196,7 +196,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(dataSnapshot.getValue() == null) {
                         emailPhoneNoET.setError("Phone No does not exists");
                         Commons.showToastMessage("Phone No does not exists", getApplicationContext());
-                        pd.dismiss();
+                        Commons.dismissProgressDialog(pd);
                         setEnableAllElements(true);
                     }
                     else
@@ -205,7 +205,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onAuthenticated(AuthData authData) {
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR);
-                                pd.dismiss();
+                                Commons.dismissProgressDialog(pd);
                                 nextActivityAfterLogin(ChooseTaskActivity.class);
                             }
 
@@ -236,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR);
-                                    pd.dismiss();
+                                    Commons.dismissProgressDialog(pd);
                                     nextActivityAfterLogin(ChooseTaskActivity.class);
                                     return;
                                 }
@@ -276,7 +276,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(dataSnapshot.getValue() == null) {
                         emailPhoneNoET.setError("Phone No does not exists");
                         Commons.showToastMessage("Phone No does not exists", getApplicationContext());
-                        pd.dismiss();
+                        Commons.dismissProgressDialog(pd);
                         setEnableAllElements(true);
                     }
                     else
@@ -285,7 +285,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onAuthenticated(AuthData authData) {
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_CUSTOMER);
-                                pd.dismiss();
+                                Commons.dismissProgressDialog(pd);
                                 nextActivityAfterLogin(CustomerProfilePageActivity.class);
                             }
 
@@ -315,7 +315,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_CUSTOMER);
-                                    pd.dismiss();
+                                    Commons.dismissProgressDialog(pd);
                                     nextActivityAfterLogin(CustomerProfilePageActivity.class);
                                     return;
                                 }
@@ -359,7 +359,7 @@ public class LoginActivity extends AppCompatActivity {
                 break;
         }
         setEnableAllElements(true);
-        pd.dismiss();
+        Commons.dismissProgressDialog(pd);
     }
 
     /**

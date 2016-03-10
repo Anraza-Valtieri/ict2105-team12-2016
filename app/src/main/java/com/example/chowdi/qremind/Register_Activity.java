@@ -266,7 +266,7 @@ public class Register_Activity extends AppCompatActivity{
                     phoneNoET.setError("Phone already exists");
                     // Enable all the UI elements after this process done and dismiss the progress dialog
                     setEnableAllElements(true);
-                    pd.dismiss();
+                    Commons.dismissProgressDialog(pd);
                 }
             }
 
@@ -295,7 +295,7 @@ public class Register_Activity extends AppCompatActivity{
                 break;
         }
         setEnableAllElements(true);
-        pd.dismiss();
+        Commons.dismissProgressDialog(pd);
     }
 
     @Override

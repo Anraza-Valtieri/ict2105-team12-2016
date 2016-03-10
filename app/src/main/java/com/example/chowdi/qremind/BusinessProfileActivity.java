@@ -197,7 +197,7 @@ public class BusinessProfileActivity extends AppCompatActivity{
         fbRef.child(shopname).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                pd.dismiss();
+                Commons.dismissProgressDialog(pd);
                 if(dataSnapshot.getValue() != null)
                 {
                     Commons.showToastMessage("Shop name is already taken!", getApplicationContext());
@@ -286,7 +286,7 @@ public class BusinessProfileActivity extends AppCompatActivity{
                 // Apply the adapter to the spinner
                 category_Spinner.setAdapter(adapter);
                 setEnableAllElements(true);
-                pd.dismiss();
+                Commons.dismissProgressDialog(pd);
             }
 
             @Override
@@ -314,7 +314,7 @@ public class BusinessProfileActivity extends AppCompatActivity{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // if no shop is created
                 if (dataSnapshot.getValue() == null) {
-                    pd.dismiss();
+                    Commons.dismissProgressDialog(pd);
                     final AlertDialog alertDialog = new AlertDialog.Builder(BusinessProfileActivity.this).create();
                     alertDialog.setTitle("No shop");
                     alertDialog.setMessage("You have not created a shop.");
@@ -362,7 +362,7 @@ public class BusinessProfileActivity extends AppCompatActivity{
                 telephone_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
                 String cat = dataSnapshot.child("category").getValue().toString();
                 category_Spinner.setSelection(adapter.getPosition(Commons.firstLetterToUpper(cat)));
-                pd.dismiss();
+                Commons.dismissProgressDialog(pd);
             }
 
             @Override
@@ -386,7 +386,7 @@ public class BusinessProfileActivity extends AppCompatActivity{
                 break;
         }
         setEnableAllElements(true);
-        pd.dismiss();
+        Commons.dismissProgressDialog(pd);
     }
 
     @Override
