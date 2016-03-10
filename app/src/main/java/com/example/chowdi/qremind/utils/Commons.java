@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 /**
  * Created by anton on 9/3/2016.
@@ -73,6 +74,7 @@ public class Commons {
     {
         pd.setTitle(title);
         pd.setMessage(message);
+        pd.setCancelable(false);
         pd.show();
     }
 
@@ -85,4 +87,39 @@ public class Commons {
         currActivity.finish();
     }
 
+    /**
+     * To handle all kind of firebase errors where to show the appropriate
+     * and correct error messages on each errors
+     * @param firebaseError FirebaseError
+     */
+    public static void handleCommonFirebaseError(FirebaseError firebaseError, Context context)
+    {
+        switch (firebaseError.getCode())
+        {
+            case FirebaseError.NETWORK_ERROR:
+                Commons.showToastMessage("Network error!", context);
+                break;
+            case FirebaseError.DISCONNECTED:
+                Commons.showToastMessage("Network disconnected!", context);
+                break;
+            case FirebaseError.INVALID_TOKEN:
+                Commons.showToastMessage("Your session is expired", context);
+                break;
+            case FirebaseError.PERMISSION_DENIED:
+                Commons.showToastMessage("permission denied", context);
+                break;
+            case FirebaseError.PROVIDER_ERROR:
+                Commons.showToastMessage("provide error", context);
+                break;
+            case FirebaseError.LIMITS_EXCEEDED:
+                Commons.showToastMessage("limits exceeded", context);
+                break;
+            case FirebaseError.OPERATION_FAILED:
+                Commons.showToastMessage("operation failed", context);
+                break;
+            default:
+                Commons.showToastMessage("Other errors", context);
+                break;
+        }
+    }
 }
