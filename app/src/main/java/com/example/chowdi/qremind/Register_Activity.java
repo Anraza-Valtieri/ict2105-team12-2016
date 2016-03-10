@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,7 @@ public class Register_Activity extends AppCompatActivity{
 
     // Others variables
     private boolean anyETErrors = false;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,9 @@ public class Register_Activity extends AppCompatActivity{
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
-        // Initialise all UI elements first
+        // Initialise all UI elements first and progress dialog
         initialiseUIElements();
+        pd = new ProgressDialog(this);
 
         // Set listener to register button
         registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +72,6 @@ public class Register_Activity extends AppCompatActivity{
                 if(anyETErrors) return;
 
                 setEnableAllElements(false);
-                fbRef = new Firebase(getFBLinkForSelectedRole());
                 registerUser();
             }
         });
@@ -216,11 +218,15 @@ public class Register_Activity extends AppCompatActivity{
      */
     private void registerUser()
     {
+        Commons.showProgressDialog(pd, "Registration", "Creating account");
+
         final String fname = fNameET.getText().toString();
         final String lname = lNameET.getText().toString();
         final String email = emailET.getText().toString();
         final String phoneNo = phoneNoET.getText().toString();
         final String pwd = pwdET.getText().toString();
+
+        fbRef = new Firebase(getFBLinkForSelectedRole());
 
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -240,35 +246,47 @@ public class Register_Activity extends AppCompatActivity{
                             fbRef.child(phoneNoET.getText().toString()).setValue(map);
                             Commons.showToastMessage("Registration Successful", getApplicationContext());
                             Register_Activity.this.finish();
-                            //System.out.println("Successfully created user account with uid: " + result.get("uid"));
                         }
 
                         @Override
                         public void onError(FirebaseError firebaseError) {
-                            // there was an error
-                            switch (firebaseError.getCode()) {
-                                case FirebaseError.EMAIL_TAKEN: {
-                                    Commons.showToastMessage("Email is already taken", getApplicationContext());
-                                    emailET.setError("Email is already taken.");
-                                    break;
-                                }
-                            }
+                            handleFirebaseError(firebaseError);
                         }
                     });
-                }
-                else
-                {
+                } else {
                     Commons.showToastMessage("Phone already exists", getApplicationContext());
                     phoneNoET.setError("Phone already exists");
+                    // Enable all the UI elements after this process done and dismiss the progress dialog
+                    setEnableAllElements(true);
+                    pd.dismiss();
                 }
-                // Enable all the UI elements after this process done
-                setEnableAllElements(true);
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                handleFirebaseError(firebaseError);
             }
         });
+    }
+
+    /**
+     * To handle all kind of firebase errors where to show the appropriate
+     * and correct error messages on each errors
+     * @param firebaseError FirebaseError
+     */
+    private void handleFirebaseError(FirebaseError firebaseError)
+    {
+        switch (firebaseError.getCode())
+        {
+            case FirebaseError.EMAIL_TAKEN:
+                Commons.showToastMessage("Email is already taken", getApplicationContext());
+                emailET.setError("Email is already taken.");
+                break;
+            default:
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
+                break;
+        }
+        setEnableAllElements(true);
+        pd.dismiss();
     }
 }
