@@ -297,4 +297,12 @@ public class Register_Activity extends AppCompatActivity{
         setEnableAllElements(true);
         pd.dismiss();
     }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        // To cancel and dismiss all current toast
+        Commons.cancelToastMessage();
+    }
 }

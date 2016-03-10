@@ -156,4 +156,12 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         }
         setEnableAllElements(true);
     }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        // To cancel and dismiss all current toast
+        Commons.cancelToastMessage();
+    }
 }

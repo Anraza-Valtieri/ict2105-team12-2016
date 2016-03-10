@@ -79,6 +79,8 @@ public class LoginActivity extends AppCompatActivity {
                     Commons.showToastMessage("No internet connection", getApplicationContext());
                     return;
                 }
+
+                setEnableAllElements(false);
                 customerLogin(loginID, password);
             }
         });
@@ -96,6 +98,8 @@ public class LoginActivity extends AppCompatActivity {
                     Commons.showToastMessage("No internet connection", getApplicationContext());
                     return;
                 }
+
+                setEnableAllElements(false);
                 vendorLogin(loginID, password);
             }
         });
@@ -171,7 +175,6 @@ public class LoginActivity extends AppCompatActivity {
         // if no errors
         emailPhoneNoET.setError(null);
         passwordET.setError(null);
-        setEnableAllElements(false);
         return true;
     }
 
@@ -193,6 +196,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(dataSnapshot.getValue() == null) {
                         emailPhoneNoET.setError("Phone No does not exists");
                         Commons.showToastMessage("Phone No does not exists", getApplicationContext());
+                        pd.dismiss();
                         setEnableAllElements(true);
                     }
                     else
@@ -272,6 +276,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(dataSnapshot.getValue() == null) {
                         emailPhoneNoET.setError("Phone No does not exists");
                         Commons.showToastMessage("Phone No does not exists", getApplicationContext());
+                        pd.dismiss();
                         setEnableAllElements(true);
                     }
                     else
@@ -410,6 +415,14 @@ public class LoginActivity extends AppCompatActivity {
         else if(Commons.isNumberString(loginID))
             return true;
         return false;
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        // To cancel and dismiss all current toast
+        Commons.cancelToastMessage();
     }
 }
 
