@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 String loginID = emailPhoneNoET.getText().toString();
                 String password = passwordET.getText().toString();
 
-                if(!checkMandatoryFields(loginID, password)) return;
+                //if(!checkMandatoryFields(loginID, password)) return;
 
                 // Check network connection
                 if(!Commons.isNetworkAvailable(getApplicationContext()))
@@ -418,9 +418,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy()
+    protected void onStop()
     {
-        super.onDestroy();
+        super.onStop();
         // To cancel and dismiss all current toast
         Commons.cancelToastMessage();
     }

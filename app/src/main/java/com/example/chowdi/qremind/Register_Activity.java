@@ -299,9 +299,9 @@ public class Register_Activity extends AppCompatActivity{
     }
 
     @Override
-    protected void onDestroy()
+    protected void onStop()
     {
-        super.onDestroy();
+        super.onStop();
         // To cancel and dismiss all current toast
         Commons.cancelToastMessage();
     }
