@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -63,6 +65,38 @@ public class BusinessProfileActivity extends AppCompatActivity{
         pd = new ProgressDialog(this);
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
         fbRef = new Firebase(Constants.FIREBASE_MAIN);
+
+        // add and implement text changed listener to email edit text
+        email_ET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                email_ET.setError(null);
+            }
+        });
+
+        // add and implement text changed listener to email edit text
+        shopName_ET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                shopName_ET.setError(null);
+            }
+        });
 
         // set click listener to udpate and create button
         createBtn.setOnClickListener(new View.OnClickListener() {
@@ -151,28 +185,50 @@ public class BusinessProfileActivity extends AppCompatActivity{
      */
     private void createShop()
     {
-        String shopname = shopName_ET.getText().toString();
-        String location = location_ET.getText().toString();
-        String email = email_ET.getText().toString();
-        String phoneno = telephone_ET.getText().toString();
-        String category = category_Spinner.getSelectedItem().toString().toLowerCase();
+        Commons.showProgressDialog(pd, "Shop info", "Creating shop");
+        final String shopname = shopName_ET.getText().toString();
+        final String location = location_ET.getText().toString();
+        final String email = email_ET.getText().toString();
+        final String phoneno = telephone_ET.getText().toString();
+        final String category = category_Spinner.getSelectedItem().toString().toLowerCase();
         phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, "");
 
-        fbRef = new Firebase(Constants.FIREBASE_VENDOR);
-        fbRef.child(phoneNo).child("shops").child(shopname).setValue(shopname);
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("address", location);
-        map.put("category", category);
-        map.put("shop_name", shopname);
-        map.put("phoneno", phoneno);
-        map.put("email", email);
-        map.put("vendorid", phoneNo);
-
         fbRef = new Firebase(Constants.FIREBASE_SHOPS);
-        fbRef.child(shopname).setValue(map);
-        getShopInfo();
-        Commons.showToastMessage("Shops created", getApplicationContext());
+        fbRef.child(shopname).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                pd.dismiss();
+                if(dataSnapshot.getValue() != null)
+                {
+                    Commons.showToastMessage("Shop name is already taken!", getApplicationContext());
+                    shopName_ET.setError("Shop name is already taken!");
+                    setEnableAllElements(true);
+                }
+                else
+                {
+                    fbRef = new Firebase(Constants.FIREBASE_VENDOR);
+                    fbRef.child(phoneNo).child("shops").child(shopname).setValue(shopname);
+
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("address", location);
+                    map.put("category", category);
+                    map.put("shop_name", shopname);
+                    map.put("phoneno", phoneno);
+                    map.put("email", email);
+                    map.put("vendorid", phoneNo);
+
+                    fbRef = new Firebase(Constants.FIREBASE_SHOPS);
+                    fbRef.child(shopname).setValue(map);
+                    getShopInfo();
+                    Commons.showToastMessage("Shops created", getApplicationContext());
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                handleFirebaseError(firebaseError);
+            }
+        });
     }
 
     private void updateShopInfo()
@@ -236,7 +292,6 @@ public class BusinessProfileActivity extends AppCompatActivity{
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 handleFirebaseError(firebaseError);
-                pd.dismiss();
             }
         });
     }
@@ -272,10 +327,12 @@ public class BusinessProfileActivity extends AppCompatActivity{
                     alertDialog.show();
                     createBtn.setVisibility(View.VISIBLE);
                     updateBtn.setVisibility(View.INVISIBLE);
+                    email_ET.setText(prefs.getString(Constants.SHAREPREF_EMAIL, ""));
+                    telephone_ET.setText(prefs.getString(Constants.SHAREPREF_PHONE_NO, ""));
                 } else {
                     createBtn.setVisibility(View.INVISIBLE);
                     updateBtn.setVisibility(View.VISIBLE);
-                    shopName_ET.setKeyListener(null);
+                    shopName_ET.setKeyListener(null); // set shopname_ET uneditable
                     String s = dataSnapshot.getKey();
                     loadShopInfo(dataSnapshot.getChildren().iterator().next().getValue().toString());
                 }
@@ -284,7 +341,6 @@ public class BusinessProfileActivity extends AppCompatActivity{
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 handleFirebaseError(firebaseError);
-                pd.dismiss();
             }
         });
     }
@@ -312,7 +368,6 @@ public class BusinessProfileActivity extends AppCompatActivity{
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 handleFirebaseError(firebaseError);
-                pd.dismiss();
             }
         });
     }
@@ -331,6 +386,7 @@ public class BusinessProfileActivity extends AppCompatActivity{
                 break;
         }
         setEnableAllElements(true);
+        pd.dismiss();
     }
 
     @Override
