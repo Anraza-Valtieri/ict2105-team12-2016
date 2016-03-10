@@ -53,7 +53,9 @@ public class Commons {
     public static void showToastMessage(String message, Context context)
     {
         CharSequence text = message;
-        int duration = Toast.LENGTH_SHORT;
+        int duration = Toast.LENGTH_LONG;
+
+        cancelToastMessage(); // Cancel any current toast is being displayed
 
         toast = Toast.makeText(context, text, duration);
         toast.show();
