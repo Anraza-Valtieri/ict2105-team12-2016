@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
     // Other variables
     private SharedPreferences prefs;
     private String phoneNo;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +49,9 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
-        // Initialise all UI elements first
+        // Initialise all UI elements first and progress dialog
         initialiseUIElements();
+        pd = new ProgressDialog(this);
 
         // Initialise getSharedPreferences for this app and Firebase setup
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
@@ -61,7 +64,10 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         {
             Commons.showToastMessage("No internet connection", getApplicationContext());
             setEnableAllElements(false);
-        }else {
+        }
+        else
+        {
+            Commons.showProgressDialog(pd, "Profile info", "Loading profile information");
             fbRef.child(phoneNo).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -69,6 +75,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
                     lName_ET.setText(dataSnapshot.child("lastname").getValue().toString());
                     email_ET.setText(dataSnapshot.child("email").getValue().toString());
                     phoneNo_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
+                    Commons.dismissProgressDialog(pd);
                 }
 
                 @Override
@@ -98,10 +105,12 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
                     return;
                 }
 
+                Commons.showProgressDialog(pd, "Profile info", "Loading profile information");
                 fbRef.child(phoneNo).child("firstname").setValue(fName_ET.getText().toString());
                 fbRef.child(phoneNo).child("lastname").setValue(lName_ET.getText().toString());
                 Commons.showToastMessage("Profile updated!", getApplicationContext());
                 setEnableAllElements(true);
+                Commons.dismissProgressDialog(pd);
             }
         });
 
@@ -155,6 +164,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
                 break;
         }
         setEnableAllElements(true);
+        Commons.dismissProgressDialog(pd);
     }
 
     @Override
