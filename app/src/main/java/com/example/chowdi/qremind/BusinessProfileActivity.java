@@ -68,6 +68,12 @@ public class BusinessProfileActivity extends AppCompatActivity{
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
                 if(!Commons.isEmailString(email_ET.getText().toString()))
                 {
                     Commons.showToastMessage("Please provide valid email!", getApplicationContext());
@@ -81,6 +87,12 @@ public class BusinessProfileActivity extends AppCompatActivity{
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
                 if(!Commons.isEmailString(email_ET.getText().toString()))
                 {
                     Commons.showToastMessage("Please provide valid email!", getApplicationContext());
@@ -192,6 +204,12 @@ public class BusinessProfileActivity extends AppCompatActivity{
      */
     private void loadCategoryList()
     {
+        // Check network connection
+        if(!Commons.isNetworkAvailable(getApplicationContext()))
+        {
+            Commons.showToastMessage("No internet connection", getApplicationContext());
+            return;
+        }
         Commons.showProgressDialog(pd, "Category list", "Loading category");
         fbRef = new Firebase(Constants.FIREBASE_CATEGORY);
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -228,6 +246,12 @@ public class BusinessProfileActivity extends AppCompatActivity{
      */
     private void getShopInfo()
     {
+        // Check network connection
+        if(!Commons.isNetworkAvailable(getApplicationContext()))
+        {
+            Commons.showToastMessage("No internet connection", getApplicationContext());
+            return;
+        }
         Commons.showProgressDialog(pd, "Shop info", "Getting shop info");
         fbRef = new Firebase(Constants.FIREBASE_VENDOR);
         fbRef.child(prefs.getString(Constants.SHAREPREF_PHONE_NO, "96655485")).child("shops").addListenerForSingleValueEvent(new ValueEventListener() {

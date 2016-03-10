@@ -56,25 +56,38 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
 
         // Retrieve phone no from share preference to retrieve user information and display on the view
         phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
-        fbRef.child(phoneNo).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                fName_ET.setText(dataSnapshot.child("firstname").getValue().toString());
-                lName_ET.setText(dataSnapshot.child("lastname").getValue().toString());
-                email_ET.setText(dataSnapshot.child("email").getValue().toString());
-                phoneNo_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
-            }
+        // Check network connection
+        if(!Commons.isNetworkAvailable(getApplicationContext()))
+        {
+            Commons.showToastMessage("No internet connection", getApplicationContext());
+            setEnableAllElements(false);
+        }else {
+            fbRef.child(phoneNo).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    fName_ET.setText(dataSnapshot.child("firstname").getValue().toString());
+                    lName_ET.setText(dataSnapshot.child("lastname").getValue().toString());
+                    email_ET.setText(dataSnapshot.child("email").getValue().toString());
+                    phoneNo_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
+                }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                handleFirebaseError(firebaseError);
-            }
-        });
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    handleFirebaseError(firebaseError);
+                }
+            });
+        }
 
         // Set and implement listener to update button
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
                 setEnableAllElements(false);
 
                 // If session expired, close current activity and go to login activity

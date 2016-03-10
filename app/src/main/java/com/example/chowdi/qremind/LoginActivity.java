@@ -72,6 +72,13 @@ public class LoginActivity extends AppCompatActivity {
                 String password = passwordET.getText().toString();
 
                 if(!checkMandatoryFields(loginID, password)) return;
+
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
                 customerLogin(loginID, password);
             }
         });
@@ -82,6 +89,13 @@ public class LoginActivity extends AppCompatActivity {
                 String password = passwordET.getText().toString();
 
                 if(!checkMandatoryFields(loginID, password)) return;
+
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
                 vendorLogin(loginID, password);
             }
         });

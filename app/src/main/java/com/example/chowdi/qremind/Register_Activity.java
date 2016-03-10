@@ -61,6 +61,14 @@ public class Register_Activity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 getCurrentFocus().clearFocus(); // Clear all focuses in the view
+
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
+
                 Boolean editTextErr = isEmptyField(fNameET) | isEmptyField(lNameET) | isEmptyField(emailET) |
                         isEmptyField(phoneNoET) | isEmptyField(pwdET) | isEmptyField(cPwdET);
 
