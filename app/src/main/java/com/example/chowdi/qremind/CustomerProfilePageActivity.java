@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
     // Other variables
     private SharedPreferences prefs;
     private String phoneNo;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +49,9 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
-        // Initialise all UI elements first
+        // Initialise all UI elements first and progress dialog
         initialiseUIElements();
+        pd = new ProgressDialog(this);
 
         // Initialise getSharedPreferences for this app and Firebase setup
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
@@ -56,25 +59,42 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
 
         // Retrieve phone no from share preference to retrieve user information and display on the view
         phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
-        fbRef.child(phoneNo).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                fName_ET.setText(dataSnapshot.child("firstname").getValue().toString());
-                lName_ET.setText(dataSnapshot.child("lastname").getValue().toString());
-                email_ET.setText(dataSnapshot.child("email").getValue().toString());
-                phoneNo_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
-            }
+        // Check network connection
+        if(!Commons.isNetworkAvailable(getApplicationContext()))
+        {
+            Commons.showToastMessage("No internet connection", getApplicationContext());
+            setEnableAllElements(false);
+        }
+        else
+        {
+            Commons.showProgressDialog(pd, "Profile info", "Loading profile information");
+            fbRef.child(phoneNo).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    fName_ET.setText(dataSnapshot.child("firstname").getValue().toString());
+                    lName_ET.setText(dataSnapshot.child("lastname").getValue().toString());
+                    email_ET.setText(dataSnapshot.child("email").getValue().toString());
+                    phoneNo_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
+                    Commons.dismissProgressDialog(pd);
+                }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                handleFirebaseError(firebaseError);
-            }
-        });
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    handleFirebaseError(firebaseError);
+                }
+            });
+        }
 
         // Set and implement listener to update button
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
                 setEnableAllElements(false);
 
                 // If session expired, close current activity and go to login activity
@@ -85,10 +105,12 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
                     return;
                 }
 
+                Commons.showProgressDialog(pd, "Profile info", "Loading profile information");
                 fbRef.child(phoneNo).child("firstname").setValue(fName_ET.getText().toString());
                 fbRef.child(phoneNo).child("lastname").setValue(lName_ET.getText().toString());
                 Commons.showToastMessage("Profile updated!", getApplicationContext());
                 setEnableAllElements(true);
+                Commons.dismissProgressDialog(pd);
             }
         });
 
@@ -137,16 +159,19 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
     {
         switch (firebaseError.getCode())
         {
-            case FirebaseError.NETWORK_ERROR:
-                Commons.showToastMessage("Network error!", getApplicationContext());
-                break;
-            case FirebaseError.DISCONNECTED:
-                Commons.showToastMessage("Network disconnected!", getApplicationContext());
-                break;
-            case FirebaseError.INVALID_TOKEN:
-                Commons.showToastMessage("Your session is expired", getApplicationContext());
+            default:
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
                 break;
         }
         setEnableAllElements(true);
+        Commons.dismissProgressDialog(pd);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        // To cancel and dismiss all current toast
+        Commons.cancelToastMessage();
     }
 }

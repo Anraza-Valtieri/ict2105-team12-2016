@@ -73,6 +73,15 @@ public class LoginActivity extends AppCompatActivity {
                 String password = passwordET.getText().toString();
 
                 if(!checkMandatoryFields(loginID, password)) return;
+
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
+
+                setEnableAllElements(false);
                 customerLogin(loginID, password);
             }
         });
@@ -83,6 +92,15 @@ public class LoginActivity extends AppCompatActivity {
                 String password = passwordET.getText().toString();
 
                 if(!checkMandatoryFields(loginID, password)) return;
+
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
+
+                setEnableAllElements(false);
                 vendorLogin(loginID, password);
             }
         });
@@ -158,7 +176,6 @@ public class LoginActivity extends AppCompatActivity {
         // if no errors
         emailPhoneNoET.setError(null);
         passwordET.setError(null);
-        setEnableAllElements(false);
         return true;
     }
 
@@ -180,6 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(dataSnapshot.getValue() == null) {
                         emailPhoneNoET.setError("Phone No does not exists");
                         Commons.showToastMessage("Phone No does not exists", getApplicationContext());
+                        Commons.dismissProgressDialog(pd);
                         setEnableAllElements(true);
                     }
                     else
@@ -188,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onAuthenticated(AuthData authData) {
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR);
-                                pd.dismiss();
+                                Commons.dismissProgressDialog(pd);
                                 nextActivityAfterLogin(ChooseTaskActivity.class);
                             }
 
@@ -219,7 +237,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR);
-                                    pd.dismiss();
+                                    Commons.dismissProgressDialog(pd);
                                     nextActivityAfterLogin(ChooseTaskActivity.class);
                                     return;
                                 }
@@ -259,6 +277,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(dataSnapshot.getValue() == null) {
                         emailPhoneNoET.setError("Phone No does not exists");
                         Commons.showToastMessage("Phone No does not exists", getApplicationContext());
+                        Commons.dismissProgressDialog(pd);
                         setEnableAllElements(true);
                     }
                     else
@@ -267,7 +286,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onAuthenticated(AuthData authData) {
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_CUSTOMER);
-                                pd.dismiss();
+                                Commons.dismissProgressDialog(pd);
                                 nextActivityAfterLogin(CustomerProfilePageActivity.class);
                             }
 
@@ -297,7 +316,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_CUSTOMER);
-                                    pd.dismiss();
+                                    Commons.dismissProgressDialog(pd);
                                     nextActivityAfterLogin(CustomerProfilePageActivity.class);
                                     return;
                                 }
@@ -336,12 +355,12 @@ public class LoginActivity extends AppCompatActivity {
                 emailPhoneNoET.setError("Email does not exist!");
                 Commons.showToastMessage("Email does not exist!", getApplicationContext());
                 break;
-            case FirebaseError.INVALID_TOKEN:
-                Commons.showToastMessage("Your session is expired", getApplicationContext());
+            default:
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
                 break;
         }
         setEnableAllElements(true);
-        pd.dismiss();
+        Commons.dismissProgressDialog(pd);
     }
 
     /**
@@ -397,6 +416,14 @@ public class LoginActivity extends AppCompatActivity {
         else if(Commons.isNumberString(loginID))
             return true;
         return false;
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        // To cancel and dismiss all current toast
+        Commons.cancelToastMessage();
     }
 }
 

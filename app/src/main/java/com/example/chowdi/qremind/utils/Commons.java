@@ -3,15 +3,23 @@ package com.example.chowdi.qremind.utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+
+import java.io.IOError;
 
 /**
  * Created by anton on 9/3/2016.
  */
 public class Commons {
+    private static Toast toast = null;
+
     /**
      * Check if the value is an valid email
      * @param value email string
@@ -48,10 +56,21 @@ public class Commons {
     public static void showToastMessage(String message, Context context)
     {
         CharSequence text = message;
-        int duration = Toast.LENGTH_SHORT;
+        int duration = Toast.LENGTH_LONG;
 
-        Toast toast = Toast.makeText(context, text, duration);
+        cancelToastMessage(); // Cancel any current toast is being displayed
+
+        toast = Toast.makeText(context, text, duration);
         toast.show();
+    }
+
+    /**
+     * To cancel and dismiss the current toast displayed
+     */
+    public static void cancelToastMessage()
+    {
+        if(toast != null)
+            toast.cancel();
     }
 
     /**
@@ -73,7 +92,21 @@ public class Commons {
     {
         pd.setTitle(title);
         pd.setMessage(message);
+        pd.setCancelable(false);
         pd.show();
+    }
+
+    /**
+     * To dismiss progress dialog
+     */
+    public static void dismissProgressDialog(ProgressDialog pd)
+    {
+        try{
+            pd.dismiss();
+        }catch (Exception ex)
+        {
+            Log.d("Exception Msg", ex.getMessage());
+        }
     }
 
     /**
@@ -85,4 +118,51 @@ public class Commons {
         currActivity.finish();
     }
 
+    /**
+     * To handle all kind of firebase errors where to show the appropriate
+     * and correct error messages on each errors
+     * @param firebaseError FirebaseError
+     */
+    public static void handleCommonFirebaseError(FirebaseError firebaseError, Context context)
+    {
+        switch (firebaseError.getCode())
+        {
+            case FirebaseError.NETWORK_ERROR:
+                Commons.showToastMessage("Network error!", context);
+                break;
+            case FirebaseError.DISCONNECTED:
+                Commons.showToastMessage("Network disconnected!", context);
+                break;
+            case FirebaseError.INVALID_TOKEN:
+                Commons.showToastMessage("Your session is expired", context);
+                break;
+            case FirebaseError.PERMISSION_DENIED:
+                Commons.showToastMessage("permission denied", context);
+                break;
+            case FirebaseError.PROVIDER_ERROR:
+                Commons.showToastMessage("provide error", context);
+                break;
+            case FirebaseError.LIMITS_EXCEEDED:
+                Commons.showToastMessage("limits exceeded", context);
+                break;
+            case FirebaseError.OPERATION_FAILED:
+                Commons.showToastMessage("operation failed", context);
+                break;
+            default:
+                Commons.showToastMessage("Other errors", context);
+                break;
+        }
+    }
+
+    /**
+     * To check if there is internet connections
+     * @param context
+     * @return true - internet connection available | false - no internet connection
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }
