@@ -18,6 +18,11 @@
         <activity
             android:name=".LogoCoverPageActivity"
             android:theme="@style/SplashTheme">
+
+        </activity>
+        <activity
+            android:name=".Vendor.VendorDashBoardActivity"
+            android:label="@string/title_activity_business_queue_dashboard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

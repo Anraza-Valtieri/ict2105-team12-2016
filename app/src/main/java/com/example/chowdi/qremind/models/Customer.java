@@ -2,11 +2,14 @@ package com.example.chowdi.qremind.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.prototypes.CardWithList;
+
 /**
  * Created by L on 3/5/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Customer {
+public class Customer implements CardWithList.ListObject{
 
     private String email;
     private String firstname;
@@ -39,5 +42,45 @@ public class Customer {
 
     public String getPhoneno() {
         return phoneno;
+    }
+
+    @Override
+    public String getObjectId() {
+        return null;
+    }
+
+    @Override
+    public Card getParentCard() {
+        return null;
+    }
+
+    @Override
+    public void setOnItemClickListener(CardWithList.OnItemClickListener onItemClickListener) {
+
+    }
+
+    @Override
+    public CardWithList.OnItemClickListener getOnItemClickListener() {
+        return null;
+    }
+
+    @Override
+    public boolean isSwipeable() {
+        return false;
+    }
+
+    @Override
+    public void setSwipeable(boolean isSwipeable) {
+
+    }
+
+    @Override
+    public CardWithList.OnItemSwipeListener getOnItemSwipeListener() {
+        return null;
+    }
+
+    @Override
+    public void setOnItemSwipeListener(CardWithList.OnItemSwipeListener onSwipeListener) {
+
     }
 }
