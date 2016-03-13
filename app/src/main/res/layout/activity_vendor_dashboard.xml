@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <!-- No. of people in Queue card view -->
+    <android.support.v7.widget.CardView
+        android:layout_width="195dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
+        android:id="@+id/peoplenum_cv"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/peoplenum_textView"
+                android:text="@string/text_number_of_people_in_queue"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/peoplenum_editText"
+                android:layout_below="@id/peoplenum_textView"
+                android:layout_gravity="center_horizontal"
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <!-- No. of people served card view -->
+    <android.support.v7.widget.CardView
+        android:layout_width="193dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
+        android:id="@+id/peopleserved_cv"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_number_of_people_served"
+                android:id="@+id/peopleserved_textView"
+                android:layout_gravity="center_horizontal"
+                android:layout_centerHorizontal="true"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/peopleserved_editText"
+                android:inputType="number"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/peopleserved_textView"
+                android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <!-- Current Queue Number card view -->
+    <android.support.v7.widget.CardView
+        android:layout_width="193dp"
+        android:layout_height="200dp"
+        android:id="@+id/currentqueue_cv"
+        android:layout_below="@+id/peoplenum_cv"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_current_queue_number"
+            android:id="@+id/currentqueue_textView"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/currentqueue_editText"
+            android:inputType="number"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/currentqueue_textView"
+            android:layout_alignLeft="@+id/peopleserved_editText"
+            android:layout_alignStart="@+id/peopleserved_editText"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_next"
+            android:id="@+id/nxtcustomerbtn"
+            android:layout_gravity="center_horizontal"
+            android:background="#02bbd2"
+            android:layout_below="@+id/currentqueue_editText"/>
+
+    </android.support.v7.widget.CardView>
+
+    <!-- Queue Number request for time extension card view -->
+    <android.support.v7.widget.CardView
+        android:layout_width="193dp"
+        android:layout_height="200dp"
+        android:id="@+id/queuerequestextension_cv"
+        android:layout_below="@+id/peopleserved_cv"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_require_for_time_extension"
+            android:id="@+id/queuerequestextention_textView"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/queuerequestextension_editText"
+            android:inputType="number"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/queuerequestextention_textView"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_allow"
+            android:id="@+id/allowextensionbtn"
+            android:layout_gravity="center_horizontal"
+            android:background="#02bbd2"
+            android:layout_below="@+id/queuerequestextension_editText"
+            android:layout_centerHorizontal="true"/>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>
