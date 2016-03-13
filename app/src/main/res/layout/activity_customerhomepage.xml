@@ -48,7 +48,7 @@
     <Spinner
         android:id="@+id/spinner_category"
         android:layout_width="350px"
-        android:layout_height="100px"
+        android:layout_height="130px"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
         android:layout_below="@+id/location_textView"

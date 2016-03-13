@@ -51,14 +51,15 @@ public class CustomerHomePageActivity extends AppCompatActivity{
 
     private void getCategories() {
         firebase = new Firebase(Constants.FIREBASE_CATEGORY);
-        firebase.child("category").addValueEventListener(new ValueEventListener() {
+        firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     categories.add(ds.getValue().toString());
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(CustomerHomePageActivity.this,android.R.layout.simple_spinner_item, (String[])categories.toArray());
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(CustomerHomePageActivity.this,
+                        android.R.layout.simple_spinner_item, categories);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerCategory.setAdapter(adapter);
             }
