@@ -55,6 +55,11 @@
             android:label="@string/buss_prof_activity"
             android:windowSoftInputMode="stateHidden">
         </activity>
+        <activity
+            android:name=".CustomerHomePageActivity"
+            android:label="Customer Home Page"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
     </application>
 
 </manifest>

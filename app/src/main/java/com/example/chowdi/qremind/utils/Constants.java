@@ -1,5 +1,7 @@
 package com.example.chowdi.qremind.utils;
 
+import java.lang.reflect.Array;
+
 /**
  * Created by L on 3/6/2016.
  */
@@ -26,4 +28,5 @@ public final class Constants {
     // For others
     public static final String ROLE_VENDOR = "VENDOR";
     public static final String ROLE_CUSTOMER = "CUSTOMER";
+
 }

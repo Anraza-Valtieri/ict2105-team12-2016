@@ -55,7 +55,8 @@ public class LoginActivity extends AppCompatActivity {
             prefs = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE);
             String role = prefs.getString(Constants.SHAREPREF_ROLE, null);
             if(role.equals(Constants.ROLE_CUSTOMER))
-                nextActivityAfterLogin(CustomerProfilePageActivity.class);
+                //nextActivityAfterLogin(CustomerProfilePageActivity.class);
+                nextActivityAfterLogin(CustomerHomePageActivity.class);
             else if(role.equals(Constants.ROLE_VENDOR))
                 nextActivityAfterLogin(ChooseTaskActivity.class);
         }
