@@ -38,7 +38,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_below="@+id/businessProf_shopName_TV"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:singleLine="true"/>
 
             <TextView android:id="@+id/businessProf_category_TV"
                 android:layout_width="wrap_content"
@@ -50,14 +51,14 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"/>
 
-            <EditText android:id="@+id/businessProf_category_ET"
+            <Spinner android:id="@+id/businessProf_category_Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_vendor_category"
                 android:layout_gravity="center_horizontal"
                 android:layout_below="@+id/businessProf_category_TV"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:singleLine="true" />
 
             <TextView android:id="@+id/businessProf_location_TV"
                 android:layout_width="wrap_content"
@@ -65,7 +66,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/text_location"
                 android:textColor="@color/black"
-                android:layout_below="@+id/businessProf_category_ET"
+                android:layout_below="@+id/businessProf_category_Spinner"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"/>
 
@@ -76,7 +77,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_below="@+id/businessProf_location_TV"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:singleLine="true" />
 
             <TextView android:id="@+id/businessProf_email_TV"
                 android:layout_width="wrap_content"
@@ -96,7 +98,8 @@
                 android:inputType="textEmailAddress"
                 android:layout_below="@+id/businessProf_email_TV"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:singleLine="true" />
 
             <TextView android:id="@+id/businessProf_telephone_TV"
                 android:layout_width="wrap_content"
@@ -115,9 +118,11 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_below="@+id/businessProf_telephone_TV"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:singleLine="true"
+                android:inputType="phone" />
 
-            <Button android:id="@+id/businessprofile_updatebtn"
+            <Button android:id="@+id/businessProf_updatebtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text_update"
@@ -126,9 +131,22 @@
                 android:clickable="true"
                 android:layout_marginBottom="10dp"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/businessProf_telephone_ET"/>
+                android:layout_below="@id/businessProf_telephone_ET"
+                android:visibility="invisible"/>
 
-            <Button android:id="@+id/businessprofile_logoutbtn"
+            <Button android:id="@+id/businessProf_createbtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_create_shop"
+                android:layout_gravity="center_horizontal"
+                android:background="#02bbd2"
+                android:clickable="true"
+                android:layout_marginBottom="10dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/businessProf_telephone_ET"
+                android:visibility="invisible"/>
+
+            <Button android:id="@+id/businessProf_logoutbtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text_logout"
@@ -137,7 +155,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/businessprofile_updatebtn"/>
+                android:layout_below="@id/businessProf_updatebtn"/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

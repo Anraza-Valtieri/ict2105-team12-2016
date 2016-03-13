@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
     // Other variables
     private SharedPreferences prefs;
     private String phoneNo;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,58 +49,68 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
-        // Check if there is an authorisation for firebase which the user application have logged in previously
-        fbRef = new Firebase(Constants.FIREBASE_MAIN);
-
-//        // if there is no valid authorisation, redirect to main activity
-//        if(fbRef.getAuth() == null)
-//        {
-//            Intent intent = new Intent(this, Login_RegisterActivity.class);
-//            startActivity(intent);
-//            this.finish();
-//        }
-
-        // Initialise all UI elements first
+        // Initialise all UI elements first and progress dialog
         initialiseUIElements();
+        pd = new ProgressDialog(this);
 
+        // Initialise getSharedPreferences for this app and Firebase setup
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
         fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
 
         // Retrieve phone no from share preference to retrieve user information and display on the view
         phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
-        fbRef.child(phoneNo).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                fName_ET.setText(dataSnapshot.child("firstname").getValue().toString());
-                lName_ET.setText(dataSnapshot.child("lastname").getValue().toString());
-                email_ET.setText(dataSnapshot.child("email").getValue().toString());
-                phoneNo_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
-            }
+        // Check network connection
+        if(!Commons.isNetworkAvailable(getApplicationContext()))
+        {
+            Commons.showToastMessage("No internet connection", getApplicationContext());
+            setEnableAllElements(false);
+        }
+        else
+        {
+            Commons.showProgressDialog(pd, "Profile info", "Loading profile information");
+            fbRef.child(phoneNo).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    fName_ET.setText(dataSnapshot.child("firstname").getValue().toString());
+                    lName_ET.setText(dataSnapshot.child("lastname").getValue().toString());
+                    email_ET.setText(dataSnapshot.child("email").getValue().toString());
+                    phoneNo_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
+                    Commons.dismissProgressDialog(pd);
+                }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    handleFirebaseError(firebaseError);
+                }
+            });
+        }
 
         // Set and implement listener to update button
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
                 setEnableAllElements(false);
 
                 // If session expired, close current activity and go to login activity
                 if(fbRef.getAuth() == null)
                 {
-                    logout();
+                    Commons.logout(fbRef, CustomerProfilePageActivity.this);
                     Commons.showToastMessage("Your session expired!", getApplicationContext());
                     return;
                 }
 
+                Commons.showProgressDialog(pd, "Profile info", "Loading profile information");
                 fbRef.child(phoneNo).child("firstname").setValue(fName_ET.getText().toString());
                 fbRef.child(phoneNo).child("lastname").setValue(lName_ET.getText().toString());
-                showToastMessage("Profile updated!");
+                Commons.showToastMessage("Profile updated!", getApplicationContext());
                 setEnableAllElements(true);
+                Commons.dismissProgressDialog(pd);
             }
         });
 
@@ -106,18 +118,9 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout();
+                Commons.logout(fbRef, CustomerProfilePageActivity.this);
             }
         });
-    }
-
-    /**
-     * To logout to maint activity (Login_RegisterActivity)
-     */
-    private void logout()
-    {
-        fbRef.unauth();
-        CustomerProfilePageActivity.this.finish();
     }
 
     /**
@@ -148,28 +151,27 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
     }
 
     /**
-     * Check if str is empty
-     * @return true if empty, else false for non-empty
+     * To handle all kind of firebase errors where to show the appropriate
+     * and correct error messages on each errors
+     * @param firebaseError FirebaseError
      */
-    private Boolean isEmptyField(String value)
+    private void handleFirebaseError(FirebaseError firebaseError)
     {
-        if(TextUtils.isEmpty(value)) {
-            return true;
+        switch (firebaseError.getCode())
+        {
+            default:
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
+                break;
         }
-        return false;
+        setEnableAllElements(true);
+        Commons.dismissProgressDialog(pd);
     }
 
-    /**
-     * Show any messages on Toast
-     * @param message - message string
-     */
-    private void showToastMessage(String message)
+    @Override
+    protected void onStop()
     {
-        Context context = getApplicationContext();
-        CharSequence text = message;
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+        super.onStop();
+        // To cancel and dismiss all current toast
+        Commons.cancelToastMessage();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -40,6 +42,7 @@ public class Register_Activity extends AppCompatActivity{
 
     // Others variables
     private boolean anyETErrors = false;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +52,23 @@ public class Register_Activity extends AppCompatActivity{
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
-        // Initialise all UI elements first
+        // Initialise all UI elements first and progress dialog
         initialiseUIElements();
+        pd = new ProgressDialog(this);
 
         // Set listener to register button
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getCurrentFocus().clearFocus(); // Clear all focuses in the view
+
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
+
                 Boolean editTextErr = isEmptyField(fNameET) | isEmptyField(lNameET) | isEmptyField(emailET) |
                         isEmptyField(phoneNoET) | isEmptyField(pwdET) | isEmptyField(cPwdET);
 
@@ -68,7 +80,6 @@ public class Register_Activity extends AppCompatActivity{
                 if(anyETErrors) return;
 
                 setEnableAllElements(false);
-                fbRef = new Firebase(getFBLinkForSelectedRole());
                 registerUser();
             }
         });
@@ -190,7 +201,7 @@ public class Register_Activity extends AppCompatActivity{
             case R.id.vendor_radiobtn:
                 return Constants.FIREBASE_VENDOR;
             default:
-                return "";
+                return null;
         }
     }
 
@@ -215,11 +226,15 @@ public class Register_Activity extends AppCompatActivity{
      */
     private void registerUser()
     {
+        Commons.showProgressDialog(pd, "Registration", "Creating account");
+
         final String fname = fNameET.getText().toString();
         final String lname = lNameET.getText().toString();
         final String email = emailET.getText().toString();
         final String phoneNo = phoneNoET.getText().toString();
         final String pwd = pwdET.getText().toString();
+
+        fbRef = new Firebase(getFBLinkForSelectedRole());
 
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -237,51 +252,57 @@ public class Register_Activity extends AppCompatActivity{
                             map.put("uid", result.get("uid").toString());
 
                             fbRef.child(phoneNoET.getText().toString()).setValue(map);
-                            showToastMessage("Registration Successful");
+                            Commons.showToastMessage("Registration Successful", getApplicationContext());
                             Register_Activity.this.finish();
-                            //System.out.println("Successfully created user account with uid: " + result.get("uid"));
                         }
 
                         @Override
                         public void onError(FirebaseError firebaseError) {
-                            // there was an error
-                            switch (firebaseError.getCode()) {
-                                case FirebaseError.EMAIL_TAKEN: {
-                                    showToastMessage("Email is already taken");
-                                    emailET.setError("Email is already taken.");
-                                    break;
-                                }
-                            }
+                            handleFirebaseError(firebaseError);
                         }
                     });
-                }
-                else
-                {
-                    showToastMessage("Phone already exists");
+                } else {
+                    Commons.showToastMessage("Phone already exists", getApplicationContext());
                     phoneNoET.setError("Phone already exists");
+                    // Enable all the UI elements after this process done and dismiss the progress dialog
+                    setEnableAllElements(true);
+                    Commons.dismissProgressDialog(pd);
                 }
-                // Enable all the UI elements after this process done
-                setEnableAllElements(true);
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                handleFirebaseError(firebaseError);
             }
         });
     }
 
     /**
-     * Show any messages on Toast
-     * @param message - message string
+     * To handle all kind of firebase errors where to show the appropriate
+     * and correct error messages on each errors
+     * @param firebaseError FirebaseError
      */
-    private void showToastMessage(String message)
+    private void handleFirebaseError(FirebaseError firebaseError)
     {
-        Context context = getApplicationContext();
-        CharSequence text = message;
-        int duration = Toast.LENGTH_SHORT;
+        switch (firebaseError.getCode())
+        {
+            case FirebaseError.EMAIL_TAKEN:
+                Commons.showToastMessage("Email is already taken", getApplicationContext());
+                emailET.setError("Email is already taken.");
+                break;
+            default:
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
+                break;
+        }
+        setEnableAllElements(true);
+        Commons.dismissProgressDialog(pd);
+    }
 
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        // To cancel and dismiss all current toast
+        Commons.cancelToastMessage();
     }
 }
