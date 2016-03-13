@@ -15,6 +15,8 @@ public final class Constants {
     public static final String  FIREBASE_CUSTOMER = "https://qremind1.firebaseio.com/AppUserAccount/Customer";
     public static final String  FIREBASE_VENDOR = "https://qremind1.firebaseio.com/AppUserAccount/Vendor";
 
+    //Vendor test
+    public static final String VENDOR_QUEUES = "https://qremind1.firebaseio.com/Shops/Entertainment/Happy%20Bowling%20Center";
     // For shared preferences
     public static final String SHARE_PREF_LINK = "QREMIND_SP";
     public static final String SHAREPREF_EMAIL = "EMAIL";
