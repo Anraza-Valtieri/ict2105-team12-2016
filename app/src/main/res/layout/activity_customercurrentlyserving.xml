@@ -112,4 +112,23 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/textViewServing"
+        android:layout_above="@+id/queuenumber_textView"
+        android:layout_alignLeft="@+id/queuenumber_textView"
+        android:layout_alignStart="@+id/queuenumber_textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/textViewMyQueueNo"
+        android:layout_alignBottom="@+id/queuenumber_editText"
+        android:layout_toLeftOf="@+id/queuenumber_editText"
+        android:layout_toStartOf="@+id/queuenumber_editText"
+        android:layout_below="@+id/currentserving_claimbtn" />
+
 </RelativeLayout>

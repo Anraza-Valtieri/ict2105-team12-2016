@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.chowdi.qremind"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -21,34 +21,30 @@ android {
         }
     }
     packagingOptions {
+<<<<<<< HEAD
+        exclude 'META-INF/NOTICE' // will not include NOTICE file
+        exclude 'META-INF/LICENSE' // will not include LICENSE file
+=======
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE-FIREBASE.txt'
         exclude 'META-INF/NOTICE'
+>>>>>>> master
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+<<<<<<< HEAD
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.firebase:firebase-client-android:2.5.2+'
+    compile 'com.android.support:cardview-v7:23.0.+'
+    compile 'com.android.support:recyclerview-v7:23.0.+'
+
+=======
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
     compile 'com.firebase:firebase-client-android:2.5.2+'
-    compile 'com.firebaseui:firebase-ui:0.3.1'
-    //Core card library
-    compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
-
-    //Optional for built-in cards
-    compile 'com.github.gabrielemariotti.cards:cardslib-cards:2.1.0'
-
-    //Optional for RecyclerView
-    compile 'com.github.gabrielemariotti.cards:cardslib-recyclerview:2.1.0'
-
-    //Optional for staggered grid view support
-    compile 'com.github.gabrielemariotti.cards:cardslib-extra-staggeredgrid:2.1.0'
-
-    //Optional for drag and drop support
-    compile 'com.github.gabrielemariotti.cards:cardslib-extra-dragdrop:2.1.0'
-
-    //Optional for twowayview support (coming soon)
-    //compile 'com.github.gabrielemariotti.cards:cardslib-extra-twoway:2.1.0'
+>>>>>>> master
 }

@@ -25,6 +25,7 @@
         android:layout_centerHorizontal="true"
         android:background="#02bbd2"/>
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
