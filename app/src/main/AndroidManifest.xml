@@ -21,7 +21,7 @@
         <!-- Testing activities -->
         <activity
             android:name=".Vendor.VendorDashBoardActivity"
-            android:label="@string/title_activity_business_queue_dashboard"></activity>
+            android:label="@string/title_activity_business_queue_dashboard" />
         <activity
             android:name=".Customer.CustomerHomeActivity"
             android:label="@string/text_customer">
@@ -58,7 +58,8 @@
             android:label="@string/buss_prof_activity"
             android:parentActivityName=".ChooseTaskActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".Customer.CustomerGetQueue"></activity>
+        <activity android:name=".Customer.CustomerGetQueue" />
+        <activity android:name=".Customer.CustomerCurrentServing"></activity>
     </application>
 
 </manifest>
