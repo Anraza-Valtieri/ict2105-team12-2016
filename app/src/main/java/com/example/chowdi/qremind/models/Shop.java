@@ -10,7 +10,7 @@ public class Shop {
     private String category;
     private String email;
     private String location;
-    private String shopname;
+    private String shop_name;
     private long telephone;
     private long vendorid;
     private String image;
@@ -18,11 +18,11 @@ public class Shop {
     public Shop() {
     }
 
-    public Shop(String category, String email, String location, String shopname, long telephone, long vendorid) {
+    public Shop(String category, String email, String location, String shop_name, long telephone, long vendorid) {
         this.category = category;
         this.email = email;
         this.location = location;
-        this.shopname = shopname;
+        this.shop_name = shop_name;
         this.telephone = telephone;
         this.vendorid = vendorid;
     }
@@ -51,12 +51,12 @@ public class Shop {
         this.location = location;
     }
 
-    public String getShopname() {
-        return shopname;
+    public String getShop_name() {
+        return shop_name;
     }
 
-    public void setShopname(String shopname) {
-        this.shopname = shopname;
+    public void setShop_name(String shop_name) {
+        this.shop_name = shop_name;
     }
 
     public long getTelephone() {
