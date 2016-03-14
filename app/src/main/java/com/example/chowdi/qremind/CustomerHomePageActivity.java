@@ -29,7 +29,8 @@ public class CustomerHomePageActivity extends AppCompatActivity{
 
     //public static ArrayList categories;
     private ArrayList<String> categories = new ArrayList<String>();
-    private Spinner spinnerCategory;
+    private String[] ratings = {"1 Star","2 Stars", "3 Stars","4 Stars","5 Stars"};
+    private Spinner spinnerCategory, spinnerRatings;
 
 
     @Override
@@ -39,12 +40,13 @@ public class CustomerHomePageActivity extends AppCompatActivity{
         //String[] categories;
 
         spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
+        spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
 
         //Initialize Firebase library in Android context before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
         getCategories();
-        //converting the arraylist to array to be used in the ArrayAdapter
+        getRatings();
 
 
     }
@@ -70,5 +72,12 @@ public class CustomerHomePageActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    private void getRatings() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(CustomerHomePageActivity.this,
+                android.R.layout.simple_spinner_item, ratings);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRatings.setAdapter(adapter);
     }
 }
