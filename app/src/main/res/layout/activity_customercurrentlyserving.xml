@@ -7,128 +7,118 @@
               android:background="#efefef">
 
     <TextView
+        android:id="@+id/vendorname_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/text_currently_serving"
-        android:id="@+id/currentserving_textView"
-        android:layout_gravity="center_horizontal"
-        android:layout_above="@+id/currentlyserving_editText"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp"
+        android:layout_marginBottom="25dp"
+        android:text="Vendor Name(to be changed)"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
+        android:id="@+id/TV_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/text_your_queue_no"
-        android:id="@+id/queuenumber_textView"
         android:layout_gravity="center_horizontal"
-        android:layout_above="@+id/queuenumber_editText"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@+id/vendorname_TV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10sp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/text_currently_serving"/>
 
     <TextView
+        android:id="@+id/currentServing_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TV_1"
+        android:layout_marginBottom="15sp"
+        android:layout_centerHorizontal="true"
+        android:text="_____"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/TV_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/currentServing_TV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10sp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/text_your_queue_no"/>
+
+    <TextView
+        android:id="@+id/queue_number_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TV_2"
+        android:layout_marginBottom="15sp"
+        android:layout_centerHorizontal="true"
+        android:text="_____"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/TV_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/text_estimated_waiting_time"
-        android:id="@+id/waitingtime_textView"
         android:layout_gravity="center_horizontal"
-        android:layout_above="@+id/waitingtime_editText"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10sp"
+        android:layout_below="@+id/queue_number_TV"
+        android:text="@string/text_estimated_waiting_time" />
+
+    <TextView
+        android:id="@+id/waiting_time_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TV_3"
+        android:layout_marginBottom="15sp"
+        android:layout_centerHorizontal="true"
+        android:text="_____"
+        android:textSize="20sp"/>
 
     <Button
+        android:id="@+id/refresh_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/waiting_time_TV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="23dp"
         android:text="@string/text_refresh"
-        android:id="@+id/refreshbtn"
         android:layout_gravity="center_horizontal"
-        android:background="#02bbd2"
-        android:layout_above="@+id/timeextensionbtn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="23dp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_10_mins_time_extension"
-        android:id="@+id/timeextensionbtn"
-        android:layout_gravity="center_horizontal"
-        android:background="#02bbd2"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="57dp"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:id="@+id/waitingtime_editText"
-        android:layout_above="@+id/refreshbtn"
-        android:layout_centerHorizontal="true"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/queuenumber_editText"
-        android:inputType="number"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/currentlyserving_editText"
-        android:inputType="number"
-        android:layout_above="@+id/queuenumber_textView"
-        android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/vendorname_textView"
-        android:layout_above="@+id/currentserving_textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="41dp"
-        android:text="Vendor Name(to be changed)"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_claim"
-        android:id="@+id/currentserving_claimbtn"
-        android:layout_alignTop="@+id/queuenumber_textView"
-        android:layout_toRightOf="@+id/currentserving_textView"
-        android:layout_toEndOf="@+id/currentserving_textView"
         android:background="#02bbd2"/>
 
     <Button
+        android:id="@+id/claim_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/waiting_time_TV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="23dp"
+        android:text="@string/text_claim"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible"
+        android:background="#02bbd2"/>
+
+    <Button
+        android:id="@+id/time_ext_req_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/claim_btn"
+        android:background="#02bbd2"
+        android:text="@string/text_10_mins_time_extension"/>
+
+    <Button
+        android:id="@+id/currentserving_logoutbtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/text_logout"
-        android:id="@+id/currentserving_logoutbtn"
         android:background="#FF3232"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textViewServing"
-        android:layout_above="@+id/queuenumber_textView"
-        android:layout_alignLeft="@+id/queuenumber_textView"
-        android:layout_alignStart="@+id/queuenumber_textView" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textViewMyQueueNo"
-        android:layout_alignBottom="@+id/queuenumber_editText"
-        android:layout_toLeftOf="@+id/queuenumber_editText"
-        android:layout_toStartOf="@+id/queuenumber_editText"
-        android:layout_below="@+id/currentserving_claimbtn" />
 
 </RelativeLayout>
