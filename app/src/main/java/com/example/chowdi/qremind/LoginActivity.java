@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.chowdi.qremind.Customer.CustomerGetQueueActivity;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.AuthData;
@@ -289,7 +290,7 @@ public class LoginActivity extends AppCompatActivity {
                             public void onAuthenticated(AuthData authData) {
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_CUSTOMER);
                                 Commons.dismissProgressDialog(pd);
-                                nextActivityAfterLogin(CustomerProfilePageActivity.class);
+                                nextActivityAfterLogin(CustomerGetQueueActivity.class);
                             }
 
                             @Override
@@ -319,7 +320,7 @@ public class LoginActivity extends AppCompatActivity {
                                 {
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_CUSTOMER);
                                     Commons.dismissProgressDialog(pd);
-                                    nextActivityAfterLogin(CustomerProfilePageActivity.class);
+                                    nextActivityAfterLogin(CustomerGetQueueActivity.class);
                                     return;
                                 }
                             }
