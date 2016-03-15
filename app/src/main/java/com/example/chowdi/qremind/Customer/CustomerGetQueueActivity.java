@@ -40,7 +40,7 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_getqueuenumber);
+        setContentView(R.layout.activity_customergetqueuenumber);
 
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
