@@ -307,7 +307,7 @@ public class BusinessProfileActivity extends AppCompatActivity{
         }
         Commons.showProgressDialog(pd, "Shop info", "Getting shop info");
         fbRef = new Firebase(Constants.FIREBASE_VENDOR);
-        fbRef.child(prefs.getString(Constants.SHAREPREF_PHONE_NO, "96655485")).child("shops").addListenerForSingleValueEvent(new ValueEventListener() {
+        fbRef.child(prefs.getString(Constants.SHAREPREF_PHONE_NO, "")).child("shops").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // if no shop is created
@@ -344,13 +344,13 @@ public class BusinessProfileActivity extends AppCompatActivity{
 
     /**
      * Get all information about the shop
-     * @param shopname the name of the shop
+     * @param shopkey the key of the shop
      */
-    private void loadShopInfo(String shopname)
+    private void loadShopInfo(String shopkey)
     {
         Commons.showProgressDialog(pd, "Shop info", "Loading shop info");
         fbRef = new Firebase(Constants.FIREBASE_SHOPS);
-        fbRef.child(shopname).addListenerForSingleValueEvent(new ValueEventListener() {
+        fbRef.child(shopkey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 shopName_ET.setText(dataSnapshot.child("shop_name").getValue().toString());
