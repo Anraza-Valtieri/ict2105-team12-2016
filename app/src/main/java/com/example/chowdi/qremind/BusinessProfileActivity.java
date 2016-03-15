@@ -207,7 +207,8 @@ public class BusinessProfileActivity extends AppCompatActivity{
                 else
                 {
                     fbRef = new Firebase(Constants.FIREBASE_VENDOR);
-                    fbRef.child(phoneNo).child("shops").child(shopname).setValue(shopname);
+                    String shopkey = shopname.replaceAll(" ", "_").toLowerCase();
+                    fbRef.child(phoneNo).child("shops").child(shopkey).setValue(shopkey);
 
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("address", location);
@@ -218,7 +219,7 @@ public class BusinessProfileActivity extends AppCompatActivity{
                     map.put("vendorid", phoneNo);
 
                     fbRef = new Firebase(Constants.FIREBASE_SHOPS);
-                    fbRef.child(shopname).setValue(map);
+                    fbRef.child(shopkey).setValue(map);
                     getShopInfo();
                     Commons.showToastMessage("Shops created", getApplicationContext());
                 }
@@ -233,15 +234,12 @@ public class BusinessProfileActivity extends AppCompatActivity{
 
     private void updateShopInfo()
     {
-        String shopname = shopName_ET.getText().toString();
+        String shopnamekey = prefs.getString(Constants.SHAREPREF_VENDOR_SHOP_KEY, "");
         String location = location_ET.getText().toString();
         String email = email_ET.getText().toString();
         String phoneno = telephone_ET.getText().toString();
         String category = category_Spinner.getSelectedItem().toString().toLowerCase();
         phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, "");
-
-        fbRef = new Firebase(Constants.FIREBASE_VENDOR);
-        fbRef.child(phoneNo).child("shops").child(shopname).setValue(shopname);
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("address", location);
@@ -250,7 +248,7 @@ public class BusinessProfileActivity extends AppCompatActivity{
         map.put("email", email);
 
         fbRef = new Firebase(Constants.FIREBASE_SHOPS);
-        fbRef.child(shopname).updateChildren(map);
+        fbRef.child(shopnamekey).updateChildren(map);
         getShopInfo();
         Commons.showToastMessage("Shops info udpated", getApplicationContext());
     }
@@ -333,7 +331,6 @@ public class BusinessProfileActivity extends AppCompatActivity{
                     createBtn.setVisibility(View.INVISIBLE);
                     updateBtn.setVisibility(View.VISIBLE);
                     shopName_ET.setKeyListener(null); // set shopname_ET uneditable
-                    String s = dataSnapshot.getKey();
                     loadShopInfo(dataSnapshot.getChildren().iterator().next().getValue().toString());
                 }
             }
