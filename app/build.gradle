@@ -33,10 +33,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
     compile 'com.firebase:firebase-client-android:2.5.2+'
-<<<<<<< HEAD
     compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
-=======
     compile 'com.firebaseui:firebase-ui:0.3.1'
     //Core card library
     compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
@@ -55,5 +53,4 @@ dependencies {
 
     //Optional for twowayview support (coming soon)
     //compile 'com.github.gabrielemariotti.cards:cardslib-extra-twoway:2.1.0'
->>>>>>> 53ad26fa6b69500b4ee9d70eae64c8a1dc589063
 }
