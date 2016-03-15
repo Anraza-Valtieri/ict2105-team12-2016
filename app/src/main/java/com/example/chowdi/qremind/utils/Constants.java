@@ -18,6 +18,7 @@ public final class Constants {
     public static final String FIREBASE_VENDOR = "https://qremind1.firebaseio.com/AppUserAccount/Vendor";
     public static final String FIREBASE_CATEGORY = "https://qremind1.firebaseio.com/category";
     public static final String FIREBASE_SHOPS = "https://qremind1.firebaseio.com/shops";
+    public static final String FIREBASE_QUEUES = "https://qremind1.firebaseio.com/queues";
 
     //Vendor test
     public static final String VENDOR_QUEUES = "https://qremind1.firebaseio.com/Shops/Entertainment/Happy%20Bowling%20Center";
@@ -28,6 +29,13 @@ public final class Constants {
     public static final String SHAREPREF_PHONE_NO = "PHONE_NO";
     public static final String SHAREPREF_ROLE = "ROLE";
     public static final String SHAREPREF_VENDOR_SHOP_KEY = "SHOP_KEY";
+
+    // For extra messages
+    public static final String EX_MSG_QUEUE_KEY = "QUEUE_KEY";
+    public static final String EX_MSG_QUEUE_NO = "QUEUE_NO";
+    public static final String EX_MSG_CUSTOMER_ID = "CUSTOMER_ID";
+    public static final String EX_MSG_SHOP_NAME = "SHOP_NAME";
+    public static final String EX_MSG_SHOP_KEY = "SHOP_KEY";
 
     // For others
     public static final String ROLE_VENDOR = "VENDOR";
