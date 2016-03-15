@@ -14,7 +14,7 @@ import com.firebase.client.Firebase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomerGetQueue extends AppCompatActivity {
+public class CustomerGetQueueActivity extends AppCompatActivity {
     TextView vendorName;
     Button getQueueBtn;
     private String shop_name;

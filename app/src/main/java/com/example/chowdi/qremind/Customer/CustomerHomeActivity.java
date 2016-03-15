@@ -53,7 +53,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
                 Shop clickedShop = (Shop) parent.getItemAtPosition(position);
                 Log.d(TAG, "onItemClick: "+clickedShop.getShop_name());
                 //start get queue number activity
-                Intent intent = new Intent(getBaseContext(), CustomerGetQueue.class);
+                Intent intent = new Intent(getBaseContext(), CustomerGetQueueActivity.class);
                 intent.putExtra("SHOP_NAME", clickedShop.getShop_name());
                 intent.putExtra("CUSTOMER_ID",custID);
                 startActivity(intent);
