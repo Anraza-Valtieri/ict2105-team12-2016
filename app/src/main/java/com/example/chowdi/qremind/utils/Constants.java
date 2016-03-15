@@ -21,11 +21,13 @@ public final class Constants {
 
     //Vendor test
     public static final String VENDOR_QUEUES = "https://qremind1.firebaseio.com/Shops/Entertainment/Happy%20Bowling%20Center";
+
     // For shared preferences
     public static final String SHARE_PREF_LINK = "QREMIND_SP";
     public static final String SHAREPREF_EMAIL = "EMAIL";
     public static final String SHAREPREF_PHONE_NO = "PHONE_NO";
     public static final String SHAREPREF_ROLE = "ROLE";
+    public static final String SHAREPREF_VENDOR_SHOP_KEY = "SHOP_KEY";
 
     // For others
     public static final String ROLE_VENDOR = "VENDOR";
