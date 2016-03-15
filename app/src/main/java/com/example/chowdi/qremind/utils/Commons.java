@@ -165,4 +165,18 @@ public class Commons {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    /**
+     * Converter a string key to a number int
+     * @param key key string
+     * @return converted key number
+     */
+    public static int keyToNoConverter(String key)
+    {
+        int number = 0;
+        for(char c : key.toCharArray()){
+            number += c;
+        }
+        return number;
+    }
 }
