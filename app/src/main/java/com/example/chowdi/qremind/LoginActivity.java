@@ -205,7 +205,8 @@ public class LoginActivity extends AppCompatActivity {
                         fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
                             @Override
                             public void onAuthenticated(AuthData authData) {
-                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR);
+                                String shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
+                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR, shopkey);
                                 Commons.dismissProgressDialog(pd);
                                 nextActivityAfterLogin(ChooseTaskActivity.class);
                             }
@@ -236,7 +237,8 @@ public class LoginActivity extends AppCompatActivity {
                             {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
-                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR);
+                                    String shopkey = ds.child("shops").getChildren().iterator().next().getValue().toString();
+                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR, shopkey);
                                     Commons.dismissProgressDialog(pd);
                                     nextActivityAfterLogin(ChooseTaskActivity.class);
                                     return;
@@ -383,13 +385,17 @@ public class LoginActivity extends AppCompatActivity {
      * @param email email address
      * @param phoneNo phone number
      */
-    private void saveAuthenticatedUserInfo(String email, String phoneNo, String role)
+    private void saveAuthenticatedUserInfo(String email, String phoneNo, String role, String... shopKey)
     {
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.SHAREPREF_EMAIL, email);
         editor.putString(Constants.SHAREPREF_PHONE_NO, phoneNo);
         editor.putString(Constants.SHAREPREF_ROLE, role);
+        if(role.equals(Constants.ROLE_VENDOR))
+        {
+            editor.putString(Constants.SHAREPREF_VENDOR_SHOP_KEY, shopKey[0]);
+        }
         editor.commit();
     }
 
