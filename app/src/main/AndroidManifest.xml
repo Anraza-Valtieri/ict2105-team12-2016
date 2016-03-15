@@ -61,6 +61,7 @@
             android:label="Customer Home Page"
             android:windowSoftInputMode="stateHidden">
         </activity>
+
     </application>
 
 </manifest>
