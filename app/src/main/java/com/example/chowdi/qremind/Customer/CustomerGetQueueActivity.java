@@ -93,7 +93,7 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
         qMap.put("connected", true);
         qMap.put("current_location", "nil");
         qMap.put("in_queue_date", new SimpleDateFormat("yyyy/MM/dd").format(new Date()));
-        qMap.put("in_queue_time", new SimpleDateFormat("hh:mm").format(new Date()));
+        qMap.put("in_queue_time", new SimpleDateFormat("HH:mm").format(new Date()));
         qMap.put("time_ext_requested", false);
         queueRef.setValue(qMap); // insert into queues
 
@@ -112,8 +112,6 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
         vendorMap.put(customer_id, true);
         vendorRef.setValue(vendorMap); // insert into queues
 
-        Commons.dismissProgressDialog(pd);
-
         Intent intent = new Intent(CustomerGetQueueActivity.this, CustomerCurrentServing.class);
         intent.putExtra(Constants.EX_MSG_SHOP_NAME, shop_name);
         intent.putExtra(Constants.EX_MSG_SHOP_KEY, shop_key);
@@ -121,6 +119,7 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
         intent.putExtra(Constants.EX_MSG_QUEUE_KEY, queueKey);
         intent.putExtra(Constants.EX_MSG_QUEUE_NO, queueNo);
         startActivity(intent);
+        Commons.dismissProgressDialog(pd);
         CustomerGetQueueActivity.this.finish();
     }
 }
