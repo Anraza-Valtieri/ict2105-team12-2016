@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Time;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,7 +18,9 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 public class CustomerCurrentServing extends AppCompatActivity {
@@ -59,8 +62,9 @@ public class CustomerCurrentServing extends AppCompatActivity {
         shopKey = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_KEY);
 
         loadQueueStats();
-        estimateWaitingTime();
+        getEstimatedWaitingTime();
         waitForTurn();
+
     }
 
     /**
@@ -86,31 +90,26 @@ public class CustomerCurrentServing extends AppCompatActivity {
     }
 
     /**
-     * To calculate estimate waiting time before the user's turn
+     * To get estimated waiting time from firebase and show it to the user
      * There is a listener to Firebase to update the estimate time when there is on data changed in firebase for queues
      */
-    private void estimateWaitingTime()
+    private void getEstimatedWaitingTime()
     {
-        fbRefWaitingTime = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey);
+        fbRefWaitingTime = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
         waitingTimeListener = fbRefWaitingTime.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int total = 0;
-                do {
-                    total = 0;
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        int r = new Random().nextInt(13) + 5;
-                        total += (r>13)? 13 : r; // for each queue add 13 minutes
-                        if (ds.getKey().equals(queueKey)) {
-                            break;
-                        }
-                    }
-                } while (total > lastWaitingTime && lastWaitingTime != -1);
-
-                int hours = total / 60;
-                int minutes = total % 60;
-                waitingTime_TV.setText(((hours > 0) ? hours + " hrs " : "") + minutes + " mins");
-                lastWaitingTime = total;
+                if (dataSnapshot.child("waiting_time").getValue() == null) {
+                    String inQueuetime = dataSnapshot.child("in_queue_time").getValue().toString();
+                    estimateWaitingTime(Integer.parseInt(inQueuetime.split(":")[0]), Integer.parseInt(inQueuetime.split(":")[1]));
+                } else {
+                    String inQueuetime = dataSnapshot.child("in_queue_time").getValue().toString();
+                    int hours = Integer.parseInt(inQueuetime.split(":")[0]);
+                    int minutes = Integer.parseInt(inQueuetime.split(":")[1]);
+                    int waitingTime = (int) dataSnapshot.child("waiting_time").getValue();
+                    GregorianCalendar time = calcRemainingWaitingTime(waitingTime, hours, minutes);
+                    dispRemainingTime(time);
+                }
             }
 
             @Override
@@ -118,6 +117,85 @@ public class CustomerCurrentServing extends AppCompatActivity {
                 handleFirebaseError(firebaseError);
             }
         });
+    }
+
+    /**
+     * To estimate waiting time before the user's turn
+     * @param hours the hour that the queue number is enqueued
+     * @param minutes the minute that the queue number is enqueued
+     */
+    private void estimateWaitingTime(final int hours, final int minutes)
+    {
+        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey);
+        fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int total = 0;
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    int r = new Random().nextInt(13) + 5;
+                    total += (r > 13) ? 13 : r; // for each queue add at least 5 minutes and at most 13 mins
+                    if (ds.getKey().equals(queueKey)) {
+                        break;
+                    }
+                }
+                GregorianCalendar time = calcRemainingWaitingTime(total, hours, minutes);
+                dispRemainingTime(time);
+                new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey).child("waiting_time").setValue(
+                        (time.get(Calendar.HOUR) * 60) + time.get(Calendar.MINUTE));
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                handleFirebaseError(firebaseError);
+            }
+        });
+    }
+
+    /**
+     * To display the remaining time for the queue's turn
+     * @param time GregorianCalendar that stores the remaining hours and minutes
+     */
+    private void dispRemainingTime(GregorianCalendar time)
+    {
+        String hrsStr = new SimpleDateFormat("hh").format(time.getTime()) + " hrs ";
+        String minsStr = new SimpleDateFormat("mm").format(time.getTime()) + " mins";
+
+        waitingTime_TV.setText(
+                ((time.get(Calendar.HOUR) <= 0) && (time.get(Calendar.MINUTE) <= 0)) ?
+                        ("Your turn's coming.") // if no remaining time left
+                        : // if still got remaining time. If hours > 0 then display hours else not display hours
+                        (((time.get(Calendar.HOUR) > 0) ? hrsStr : "") + minsStr)
+        );
+    }
+
+    /**
+     * To calculate the remaining waiting time before the customer's queue's turn
+     * @param waitingTime the initial waiting time given when the queue is created
+     * @param hours the hour that the queue is created
+     * @param minutes the minute that the queue is created
+     * @return
+     */
+    private GregorianCalendar calcRemainingWaitingTime(int waitingTime, int hours, int minutes)
+    {
+        hours += waitingTime/60;
+        minutes += waitingTime%60;
+        if(minutes >= 60)
+        {
+            hours += minutes/60;
+            minutes = minutes%60;
+        }
+
+        hours -= new GregorianCalendar().get(Calendar.HOUR_OF_DAY);
+        minutes -= new GregorianCalendar().get(Calendar.MINUTE);
+
+        if(hours < 0 || minutes <= 0) // if there is no remaining time left
+            return new GregorianCalendar(0,0,0,0,0);
+
+        int remainingTime = (hours * 60) + minutes; // remaining time in minutes
+        hours = (int) remainingTime / 60;
+        minutes = (int) remainingTime % 60;
+
+        return new GregorianCalendar(0,0,0,hours,minutes);
     }
 
     /**
@@ -134,6 +212,7 @@ public class CustomerCurrentServing extends AppCompatActivity {
                     if((boolean) dataSnapshot.getValue() == true)
                     {
                         fbRefWaitingTime.removeEventListener(waitingTimeListener);
+                        fbRefQueueTurn.removeEventListener(queueTurnListener);
                         waitingTime_TV.setText("Your turn's up!");
                         refresh_btn.setVisibility(View.INVISIBLE);
                         claim_btn.setVisibility(View.VISIBLE);
