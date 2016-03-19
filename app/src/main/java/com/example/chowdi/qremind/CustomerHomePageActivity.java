@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -61,7 +62,8 @@ public class CustomerHomePageActivity extends AppCompatActivity{
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             public void onItemSelected(AdapterView<?> parent,View view,int pos,long id) {
                 userSelection = String.valueOf(parent.getItemIdAtPosition(pos));
-                //getShops();
+                Commons.showToastMessage(parent.getSelectedItem().toString(), getApplicationContext());
+                getShops(parent.getSelectedItem().toString());
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -109,7 +111,7 @@ public class CustomerHomePageActivity extends AppCompatActivity{
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         // An item was selected. You can retrieve the selected item usinG parent.getItemAtPosition(pos)
         userSelection = String.valueOf(parent.getItemIdAtPosition(pos));
-        getShops();
+        //getShops();
 
 
     }
@@ -118,15 +120,15 @@ public class CustomerHomePageActivity extends AppCompatActivity{
         //Another Interface callback
     }
 
-    private void getShops() {
-        firebase = new Firebase("FIREBASE_SHOPS");
+    private void getShops(final String category) {
+        firebase = new Firebase(Constants.FIREBASE_SHOPS);
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if(ds.child("category").getValue().toString().equals(userSelection)) {
+                    if(ds.child("category").getValue().toString().equals(category.toLowerCase())) {
                         shopName = ds.child("shop_name").getValue().toString();
-                        shopNameTV.setText("shopName");
+                        shopNameTV.setText(shopName);
                     }
                 }
 
