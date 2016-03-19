@@ -32,7 +32,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Constants.FIREBASE_SHOPS);
         //bind listview
-        custShopsListView = (ListView)findViewById(R.id.FandB_listView);
+      //  custShopsListView = (ListView)findViewById(R.id.FandB_listView);
 
         // Create and populate names.
         shopNameList = new ArrayList<String>();

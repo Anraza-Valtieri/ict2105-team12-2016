@@ -17,7 +17,7 @@ public class CustomerShopListAdapter extends FirebaseListAdapter<Shop> {
     ProgressBar spinner;
     public CustomerShopListAdapter(Activity activity, Class<Shop> modelClass, int modelLayout, Firebase ref) {
         super(activity, modelClass, modelLayout, ref);
-        spinner = (ProgressBar)activity.findViewById(R.id.progressBar1);
+      //  spinner = (ProgressBar)activity.findViewById(R.id.progressBar1);
 
     }
 

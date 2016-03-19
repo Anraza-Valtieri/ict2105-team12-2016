@@ -1,39 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:weightSum="1"
-                android:background="#efefef">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/text_location"
-        android:id="@+id/location_textView"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignTop="@+id/category_textView"
-        android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/text_ratings"
-        android:id="@+id/ratings_textView"
-        android:layout_gravity="end"
-        android:layout_alignTop="@+id/location_textView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/FandB_textView"
-        android:layout_marginTop="131dp"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:background="#efefef"
+    tools:context=".CustomerHomePageActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,84 +17,149 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
-
     <Spinner
         android:id="@+id/spinner_category"
-        android:layout_width="360px"
+        android:layout_width="600px"
         android:layout_height="130px"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
-        android:layout_below="@+id/location_textView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/text_ratings"
+        android:id="@+id/ratings_textView"
+        android:layout_gravity="end"
+        android:layout_alignTop="@+id/spinner_ratings"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <Spinner
-        android:id="@+id/spinner_location"
-        android:layout_width="360px"
-        android:layout_height="130px"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"
-
-        android:layout_below="@+id/location_textView"
-        android:layout_centerHorizontal="true" />
-
-    <Spinner
         android:id="@+id/spinner_ratings"
-        android:layout_width="360px"
+        android:layout_width="600dp"
         android:layout_height="130px"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
-        android:layout_below="@+id/ratings_textView"
+        android:layout_below="@+id/spinner_category"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/spinner_category"
+        android:layout_alignStart="@+id/spinner_category" />
 
-    <android.support.v7.widget.CardView
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+    <!--android:id="@+id/FandB_textView"-->
+    <!--android:layout_marginTop="131dp"/>-->
+
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinner_ratings"
-        android:id="@+id/cv"
-        >
+        android:layout_height="match_parent"
+        android:layout_marginTop="112dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
 
-        <RelativeLayout
+
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            >
+            android:id="@+id/rv"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            />
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/shopName"
-                android:text="test1"
-                android:textSize="20sp"
-                />
+    </LinearLayout>
 
 
 
-        </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
+    <!--<android.support.v7.widget.CardView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/spinner_ratings"-->
+    <!--android:id="@+id/cv"-->
+    <!-->-->
 
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:padding="16dp"-->
+    <!-->-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/shopnameTV"-->
+
+    <!--/>-->
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/shopnameTV"-->
+    <!--android:id="@+id/categoryTV"-->
+    <!--/>-->
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/phoneNumberTV"-->
+    <!--android:layout_below="@+id/categoryTV"-->
+    <!--/>-->
+
+    <!--</RelativeLayout>-->
+
+    <!--</android.support.v7.widget.CardView>-->
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:padding="16dp"-->
+    <!--android:layout_below="@+id/rv"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_marginTop="119dp">-->
+
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/shopName"-->
+    <!--android:text="test2"-->
+    <!--android:textSize="20sp"-->
+    <!--android:clickable="true"-->
+    <!--/>-->
+
+
+    <!--</RelativeLayout>-->
+
+
+    <!--<ListView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/listView"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_below="@+id/FandB_textView"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"/>-->
 
     <!--android:id="@+id/FandB_listView"-->
     <!--android:layout_marginTop="10dp"-->
     <!--android:layout_below="@+id/FandB_textView"-->
     <!--android:layout_alignParentLeft="true"-->
     <!--android:layout_alignParentStart="true"/>-->
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/FandB_listView"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/FandB_textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-    <ProgressBar
-        android:id="@+id/progressBar1"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true" />
+    <!--<ProgressBar-->
+    <!--android:id="@+id/progressBar1"-->
+    <!--style="?android:attr/progressBarStyleLarge"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:layout_centerHorizontal="true" />-->
 </RelativeLayout>
