@@ -1,14 +1,24 @@
 package com.example.chowdi.qremind.Customer;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Time;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.chowdi.qremind.BusinessProfileActivity;
+import com.example.chowdi.qremind.Login_RegisterActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
@@ -36,6 +46,10 @@ public class CustomerCurrentServing extends AppCompatActivity {
 
     // Others variables
     private SharedPreferences prefs;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ArrayAdapter<String> mAdapter;
+    private ActionBarDrawerToggle mDrawerToggle;
     private ProgressDialog pd;
     private static int lastWaitingTime = -1;
     private String queueNo, queueKey, shopName, shopKey;
@@ -61,6 +75,12 @@ public class CustomerCurrentServing extends AppCompatActivity {
         shopName = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_NAME);
         shopKey = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_KEY);
 
+        addDrawerItems();
+        setupDrawer();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         loadQueueStats();
         getEstimatedWaitingTime();
         waitForTurn();
@@ -79,6 +99,8 @@ public class CustomerCurrentServing extends AppCompatActivity {
         time_ext_req_btn = (Button) findViewById(R.id.time_ext_req_btn);
         claim_btn = (Button) findViewById(R.id.claim_btn);
         refresh_btn = (Button) findViewById(R.id.refresh_btn);
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
     }
 
     /**
@@ -243,5 +265,69 @@ public class CustomerCurrentServing extends AppCompatActivity {
                 break;
         }
         Commons.dismissProgressDialog(pd);
+    }
+
+    private void addDrawerItems() {
+        String[] navSidebar = { "Profile", "Logout"};
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navSidebar);
+        mDrawerList.setAdapter(mAdapter);
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    Intent intent = new Intent(CustomerCurrentServing.this, BusinessProfileActivity.class);
+                    startActivity(intent);
+                } else if (position == 1) {
+                    Intent intent = new Intent(CustomerCurrentServing.this, Login_RegisterActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    private void setupDrawer() {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Activate the navigation drawer toggle
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
