@@ -95,20 +95,22 @@ public class CustomerCurrentServing extends AppCompatActivity {
      */
     private void getEstimatedWaitingTime()
     {
-        fbRefWaitingTime = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
+        fbRefWaitingTime = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey);
         waitingTimeListener = fbRefWaitingTime.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("waiting_time").getValue() == null) {
-                    String inQueuetime = dataSnapshot.child("in_queue_time").getValue().toString();
+                if (dataSnapshot.child(queueKey).child("waiting_time").getValue() == null) {
+                    String inQueuetime = dataSnapshot.child(queueKey).child("in_queue_time").getValue().toString();
                     estimateWaitingTime(Integer.parseInt(inQueuetime.split(":")[0]), Integer.parseInt(inQueuetime.split(":")[1]));
                 } else {
-                    String inQueuetime = dataSnapshot.child("in_queue_time").getValue().toString();
+                    String inQueuetime = dataSnapshot.child(queueKey).child("in_queue_time").getValue().toString();
                     int hours = Integer.parseInt(inQueuetime.split(":")[0]);
                     int minutes = Integer.parseInt(inQueuetime.split(":")[1]);
-                    int waitingTime = (int) dataSnapshot.child("waiting_time").getValue();
-                    GregorianCalendar time = calcRemainingWaitingTime(waitingTime, hours, minutes);
-                    dispRemainingTime(time);
+                    int waitingTime = Integer.parseInt(dataSnapshot.child(queueKey).child("waiting_time").getValue().toString());
+                    if(waitingTime > 0) {
+                        GregorianCalendar time = calcRemainingWaitingTime(waitingTime, hours, minutes);
+                        dispRemainingTime(time);
+                    }
                 }
             }
 
@@ -173,7 +175,7 @@ public class CustomerCurrentServing extends AppCompatActivity {
      * @param waitingTime the initial waiting time given when the queue is created
      * @param hours the hour that the queue is created
      * @param minutes the minute that the queue is created
-     * @return
+     * @return GregorianCalendar return the calculated remaining time
      */
     private GregorianCalendar calcRemainingWaitingTime(int waitingTime, int hours, int minutes)
     {
@@ -192,8 +194,8 @@ public class CustomerCurrentServing extends AppCompatActivity {
             return new GregorianCalendar(0,0,0,0,0);
 
         int remainingTime = (hours * 60) + minutes; // remaining time in minutes
-        hours = (int) remainingTime / 60;
-        minutes = (int) remainingTime % 60;
+        hours = remainingTime / 60;
+        minutes = remainingTime % 60;
 
         return new GregorianCalendar(0,0,0,hours,minutes);
     }
@@ -209,7 +211,7 @@ public class CustomerCurrentServing extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null)
                 {
-                    if((boolean) dataSnapshot.getValue() == true)
+                    if((boolean) dataSnapshot.getValue())
                     {
                         fbRefWaitingTime.removeEventListener(waitingTimeListener);
                         fbRefQueueTurn.removeEventListener(queueTurnListener);
