@@ -71,5 +71,6 @@
     <string name="text_create_shop">Create shop</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_s3_task4_1">S3Task4_1</string>
 
 </resources>
