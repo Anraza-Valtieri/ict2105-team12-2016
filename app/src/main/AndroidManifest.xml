@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.chowdi.qremind">
+    package="com.example.chowdi.qremind" >
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -14,10 +14,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".LogoCoverPageActivity"
-            android:theme="@style/SplashTheme"></activity>
+            android:theme="@style/SplashTheme" />
         <!-- Testing activities -->
         <activity
             android:name=".Vendor.VendorDashBoardActivity"
@@ -26,15 +26,15 @@
         <activity
             android:name=".Customer.CustomerHomeActivity"
             android:label="@string/title_activity_customer_home"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Customer.CustomerGetQueueActivity"
             android:label="@string/title_activity_customer_get_queue"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Customer.CustomerCurrentServing"
             android:label="@string/title_activity_customer_home"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <!-- End Testing activities -->
         <activity
             android:name=".Login_RegisterActivity"
@@ -67,18 +67,20 @@
             android:label="@string/title_activity_buss_prof"
             android:parentActivityName=".ChooseTaskActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".CustomerHomePageActivity"
             android:label="Customer Home Page"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
-
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name=".Customer.S3Task4_1"
             android:label="@string/title_activity_s3_task4_1"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
+
+        </activity>
+        <activity android:name=".Customer.S3Task3" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
