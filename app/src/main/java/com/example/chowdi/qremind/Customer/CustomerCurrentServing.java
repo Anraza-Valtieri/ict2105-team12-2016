@@ -4,24 +4,22 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.Time;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.chowdi.qremind.BusinessProfileActivity;
-import com.example.chowdi.qremind.Login_RegisterActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
+import com.example.chowdi.qremind.utils.QRCodeScanner;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -29,9 +27,10 @@ import com.firebase.client.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Random;
+
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class CustomerCurrentServing extends AppCompatActivity {
 
@@ -52,6 +51,12 @@ public class CustomerCurrentServing extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private ProgressDialog pd;
     private String queueNo, queueKey, shopName, shopKey;
+
+    // For QR Code camera
+    private ZXingScannerView mScannerView;
+    private View view;
+    public static boolean finishScanning = false;
+    public static String result = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +100,28 @@ public class CustomerCurrentServing extends AppCompatActivity {
                     waitingTimeListener = null;
                 }
                 getEstimatedWaitingTime();
+            }
+        });
+
+        // set listener to claim button
+        claim_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CustomerCurrentServing.this, QRCodeScanner.class);
+                startActivity(intent);
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        try {
+                            Log.d("RESULT", "Start Scanning");
+                            while(!CustomerCurrentServing.finishScanning);
+                            Log.d("RESULT", "Finish Scanning");
+                            Log.d("RESULT", result);
+                        } catch (Exception exception) {
+                        }
+                        return null;
+                    }
+                }.execute();
             }
         });
     }
@@ -172,18 +199,21 @@ public class CustomerCurrentServing extends AppCompatActivity {
      * @param hours the hour that the queue number is enqueued
      * @param minutes the minute that the queue number is enqueued
      */
-    private void estimateWaitingTime(final int hours, final int minutes)
-    {
+    private void estimateWaitingTime(final int hours, final int minutes) {
         Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey);
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int total = 0;
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    int r = new Random().nextInt(13) + 5;
-                    total += (r > 13) ? 13 : r; // for each queue add at least 5 minutes and at most 13 mins
-                    if (ds.getKey().equals(queueKey)) {
-                        break;
+                while (total == 0) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (ds.child("calling").getValue() != null)
+                            continue; // if this queue is already being called
+                        int r = new Random().nextInt(13) + 5;
+                        total += (r > 13) ? 13 : r; // for each queue add at least 5 minutes and at most 13 mins
+                        if (ds.getKey().equals(queueKey)) {
+                            break;
+                        }
                     }
                 }
                 GregorianCalendar time = calcRemainingWaitingTime(total, hours, minutes);
