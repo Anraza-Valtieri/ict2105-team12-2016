@@ -19,7 +19,11 @@
         <activity
             android:name=".LogoCoverPageActivity"
             android:theme="@style/SplashTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!-- Testing activities -->
         <activity
@@ -79,11 +83,6 @@
             android:label="Customer Home Page"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
     </application>
