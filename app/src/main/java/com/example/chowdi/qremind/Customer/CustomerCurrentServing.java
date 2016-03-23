@@ -51,7 +51,6 @@ public class CustomerCurrentServing extends AppCompatActivity {
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private ProgressDialog pd;
-    private static int lastWaitingTime = -1;
     private String queueNo, queueKey, shopName, shopKey;
 
     @Override
@@ -85,6 +84,27 @@ public class CustomerCurrentServing extends AppCompatActivity {
         getEstimatedWaitingTime();
         waitForTurn();
 
+
+        // set listener to refresh button
+        refresh_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(waitingTimeListener != null)
+                {
+                    fbRefWaitingTime.removeEventListener(waitingTimeListener);
+                    waitingTimeListener = null;
+                }
+                getEstimatedWaitingTime();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        fbRefWaitingTime.removeEventListener(waitingTimeListener);
+        fbRefQueueTurn.removeEventListener(queueTurnListener);
     }
 
     /**
