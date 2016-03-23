@@ -1,14 +1,27 @@
 package com.example.chowdi.qremind.utils;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.chowdi.qremind.BusinessProfileActivity;
+import com.example.chowdi.qremind.Customer.CustomerCurrentServing;
+import com.example.chowdi.qremind.CustomerProfilePageActivity;
+import com.example.chowdi.qremind.Login_RegisterActivity;
+import com.example.chowdi.qremind.R;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
@@ -178,5 +191,45 @@ public class Commons {
             number += c;
         }
         return number;
+    }
+
+    public static void addDrawerItems(final Activity currContext, ListView mDrawerList) {
+        String[] navSidebar = { "Profile", "Logout"};
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(currContext, android.R.layout.simple_list_item_1, navSidebar);
+        mDrawerList.setAdapter(mAdapter);
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    Intent intent = new Intent(currContext, CustomerProfilePageActivity.class);
+                    currContext.startActivity(intent);
+                } else if (position == 1) {
+                    Intent intent = new Intent(currContext, Login_RegisterActivity.class);
+                    currContext.startActivity(intent);
+                }
+            }
+        });
+    }
+
+    public static ActionBarDrawerToggle setupDrawer(final Activity currContext, DrawerLayout mDrawerLayout) {
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(currContext, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                currContext.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                currContext.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        return mDrawerToggle;
     }
 }
