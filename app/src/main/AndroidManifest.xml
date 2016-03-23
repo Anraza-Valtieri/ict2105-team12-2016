@@ -62,7 +62,7 @@
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CustomerProfilePageActivity"
+            android:name=".Customer.CustomerProfilePageActivity"
             android:label="@string/title_activity_cust_prof"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />

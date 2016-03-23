@@ -1,6 +1,5 @@
 package com.example.chowdi.qremind.utils;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,15 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.chowdi.qremind.BusinessProfileActivity;
-import com.example.chowdi.qremind.Customer.CustomerCurrentServing;
-import com.example.chowdi.qremind.CustomerProfilePageActivity;
+import com.example.chowdi.qremind.Customer.CustomerProfilePageActivity;
 import com.example.chowdi.qremind.Login_RegisterActivity;
 import com.example.chowdi.qremind.R;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-
-import java.io.IOError;
 
 /**
  * Created by anton on 9/3/2016.
