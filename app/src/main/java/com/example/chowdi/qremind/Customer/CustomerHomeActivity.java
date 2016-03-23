@@ -17,6 +17,7 @@ import com.example.chowdi.qremind.BusinessProfileActivity;
 import com.example.chowdi.qremind.Login_RegisterActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.models.Shop;
+import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.Firebase;
 import com.firebase.ui.FirebaseListAdapter;
@@ -63,59 +64,20 @@ public class CustomerHomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
                 Shop clickedShop = (Shop) parent.getItemAtPosition(position);
-                Log.d(TAG, "onItemClick: "+clickedShop.getShop_name());
+                Log.d(TAG, "onItemClick: " + clickedShop.getShop_name());
                 //start get queue number activity
                 Intent intent = new Intent(getBaseContext(), CustomerGetQueueActivity.class);
                 intent.putExtra("SHOP_NAME", clickedShop.getShop_name());
-                intent.putExtra("CUSTOMER_ID",custID);
+                intent.putExtra("CUSTOMER_ID", custID);
                 startActivity(intent);
             }
         });
 
-        addDrawerItems();
-        setupDrawer();
+        Commons.addDrawerItems(this, mDrawerList);
+        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-    }
-
-    private void addDrawerItems() {
-        String[] navSidebar = { "Profile", "Logout"};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navSidebar);
-        mDrawerList.setAdapter(mAdapter);
-
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    Intent intent = new Intent(CustomerHomeActivity.this, BusinessProfileActivity.class);
-                    startActivity(intent);
-                } else if (position == 1) {
-                    Intent intent = new Intent(CustomerHomeActivity.this, Login_RegisterActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-    }
-
-    private void setupDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     @Override

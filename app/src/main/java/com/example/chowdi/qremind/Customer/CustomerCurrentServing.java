@@ -48,7 +48,7 @@ public class CustomerCurrentServing extends AppCompatActivity {
     private SharedPreferences prefs;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
-    private ArrayAdapter<String> mAdapter;
+//    private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private ProgressDialog pd;
     private String queueNo, queueKey, shopName, shopKey;
@@ -74,8 +74,8 @@ public class CustomerCurrentServing extends AppCompatActivity {
         shopName = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_NAME);
         shopKey = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_KEY);
 
-        addDrawerItems();
-        setupDrawer();
+        Commons.addDrawerItems(this, mDrawerList);
+        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -152,6 +152,10 @@ public class CustomerCurrentServing extends AppCompatActivity {
                     if(waitingTime > 0) {
                         GregorianCalendar time = calcRemainingWaitingTime(waitingTime, hours, minutes);
                         dispRemainingTime(time);
+                    }
+                    else if (waitingTime <= 0)
+                    {
+                        estimateWaitingTime(Integer.parseInt(inQueuetime.split(":")[0]), Integer.parseInt(inQueuetime.split(":")[1]));
                     }
                 }
             }
@@ -285,45 +289,6 @@ public class CustomerCurrentServing extends AppCompatActivity {
                 break;
         }
         Commons.dismissProgressDialog(pd);
-    }
-
-    private void addDrawerItems() {
-        String[] navSidebar = { "Profile", "Logout"};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navSidebar);
-        mDrawerList.setAdapter(mAdapter);
-
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    Intent intent = new Intent(CustomerCurrentServing.this, BusinessProfileActivity.class);
-                    startActivity(intent);
-                } else if (position == 1) {
-                    Intent intent = new Intent(CustomerCurrentServing.this, Login_RegisterActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-    }
-
-    private void setupDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     @Override

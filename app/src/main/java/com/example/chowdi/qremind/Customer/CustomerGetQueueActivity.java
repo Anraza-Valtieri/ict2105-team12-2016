@@ -65,8 +65,8 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
         // Initialise getSharedPreferences for this app
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
 
-        addDrawerItems();
-        setupDrawer();
+        Commons.addDrawerItems(this, mDrawerList);
+        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -143,46 +143,7 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
         Commons.dismissProgressDialog(pd);
         CustomerGetQueueActivity.this.finish();
     }
-
-    private void addDrawerItems() {
-        String[] navSidebar = { "Profile", "Logout"};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navSidebar);
-        mDrawerList.setAdapter(mAdapter);
-
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    Intent intent = new Intent(CustomerGetQueueActivity.this, BusinessProfileActivity.class);
-                    startActivity(intent);
-                } else if (position == 1) {
-                    Intent intent = new Intent(CustomerGetQueueActivity.this, Login_RegisterActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-    }
-
-    private void setupDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
+    
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
