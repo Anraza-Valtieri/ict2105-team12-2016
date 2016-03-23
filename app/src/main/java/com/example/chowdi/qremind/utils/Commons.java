@@ -188,6 +188,11 @@ public class Commons {
         return number;
     }
 
+    /**
+     * To add clickable items for current context side navigation menu into an adapter and set this adapter to mDrawerList's adapter.
+     * @param currContext current context
+     * @param mDrawerList a listview in the current context
+     */
     public static void addDrawerItems(final Activity currContext, ListView mDrawerList) {
         String[] navSidebar = { "Profile", "Logout"};
         ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(currContext, android.R.layout.simple_list_item_1, navSidebar);
@@ -207,6 +212,12 @@ public class Commons {
         });
     }
 
+    /**
+     * To set and attach drawer to current context as side navigation menu
+     * @param currContext current context
+     * @param mDrawerLayout the layout for the drawer that is created for the current context
+     * @return ActionBarDrawerToggle will be used for override method in current context
+     */
     public static ActionBarDrawerToggle setupDrawer(final Activity currContext, DrawerLayout mDrawerLayout) {
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(currContext, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
