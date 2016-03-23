@@ -53,4 +53,7 @@ dependencies {
 
     //Optional for twowayview support (coming soon)
     //compile 'com.github.gabrielemariotti.cards:cardslib-extra-twoway:2.1.0'
+
+    // For QR Code Scanner
+    compile 'me.dm7.barcodescanner:zxing:1.8.4'
 }
