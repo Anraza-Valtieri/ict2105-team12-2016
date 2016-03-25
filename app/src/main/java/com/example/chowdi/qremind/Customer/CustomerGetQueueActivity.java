@@ -1,10 +1,15 @@
 package com.example.chowdi.qremind.Customer;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +25,7 @@ import android.widget.TextView;
 import com.example.chowdi.qremind.BusinessProfileActivity;
 import com.example.chowdi.qremind.Login_RegisterActivity;
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.models.Customer;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.Firebase;
@@ -168,4 +174,6 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

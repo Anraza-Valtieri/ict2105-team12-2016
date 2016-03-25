@@ -71,5 +71,7 @@
     <string name="text_create_shop">Create shop</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="notification_title">QRemind Notification</string>
+    <string name="notification_text">Notification Text</string>
 
 </resources>

@@ -1,11 +1,16 @@
 package com.example.chowdi.qremind.Customer;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.models.Customer;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.example.chowdi.qremind.utils.QRCodeScanner;
@@ -62,6 +68,7 @@ public class CustomerCurrentServing extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customercurrentlyserving);
+
 
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
@@ -292,9 +299,12 @@ public class CustomerCurrentServing extends AppCompatActivity {
                         fbRefWaitingTime.removeEventListener(waitingTimeListener);
                         fbRefQueueTurn.removeEventListener(queueTurnListener);
                         waitingTime_TV.setText("Your turn's up!");
+
                         refresh_btn.setVisibility(View.INVISIBLE);
                         claim_btn.setVisibility(View.VISIBLE);
                     }
+
+
                 }
             }
 
@@ -345,4 +355,20 @@ public class CustomerCurrentServing extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    public void showNotification() {
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, CustomerCurrentServing.class), 0);
+        Resources r = getResources();
+        Notification notification = new NotificationCompat.Builder(this)
+                .setTicker(r.getString(R.string.notification_title))
+                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                .setContentTitle(r.getString(R.string.notification_title))
+                .setContentText(r.getString(R.string.notification_text))
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notification);
+    }
+
 }
