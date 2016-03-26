@@ -1,4 +1,4 @@
-package com.example.chowdi.qremind.models;
+package com.example.chowdi.qremind.infrastructure;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

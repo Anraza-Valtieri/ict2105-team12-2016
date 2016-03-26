@@ -5,23 +5,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
+import com.example.chowdi.qremind.views.CustomerMainNavDrawer;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class CustomerProfilePageActivity extends AppCompatActivity{
+public class CustomerProfilePageActivity extends BaseActivity{
 
     // Firebase variables
     Firebase fbRef;
@@ -42,7 +41,7 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customerprofilepage);
-
+        setNavDrawer(new CustomerMainNavDrawer(this));
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
@@ -53,13 +52,6 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         // Initialise getSharedPreferences for this app and Firebase setup
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
         fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
-
-        // Create navigation sidebar
-        Commons.addDrawerItems(this, mDrawerList);
-        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
 
         // Retrieve phone no from share preference to retrieve user information and display on the view
@@ -184,25 +176,4 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         Commons.cancelToastMessage();
     }
 
-    /**
-     * Sync the toggle state of the Navigation Sidebar after onCreate has occurred
-     * @param savedInstanceState state of the Activity
-     */
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    /**
-     * Handle the clicking of an item in the navigation sidebar
-     * If successfully handled, return true
-     * else return false which is the default implementation
-     * @param item clickable options in the navigation sidebar
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-    }
 }

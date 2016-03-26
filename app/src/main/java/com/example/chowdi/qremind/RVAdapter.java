@@ -1,20 +1,11 @@
 package com.example.chowdi.qremind;
 
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.example.chowdi.qremind.Customer.CustomerGetQueueActivity;
-import com.example.chowdi.qremind.R;
-import com.example.chowdi.qremind.models.Shop_Winnie;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -42,9 +33,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ShopViewHolder> {
             });
         }
     }
-    List<Shop_Winnie> shops;
+    List<Shop> shops;
 
-    RVAdapter(List<Shop_Winnie> shops){
+    public RVAdapter(List<Shop> shops){
         this.shops = shops;
     }
 

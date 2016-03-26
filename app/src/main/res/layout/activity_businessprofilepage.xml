@@ -5,130 +5,137 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:weightSum="1"
-                    android:background="#efefef">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ScrollView
+    <include layout="@layout/include_toolbar"/>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageView android:id="@+id/businessProf_picture"
-                           android:src="@drawable/unknown_building"
-                           android:layout_width="150sp"
-                           android:layout_height="150sp"
-                           android:layout_marginTop="10dp"
-                           android:layout_marginBottom="20dp"
-                           android:layout_alignParentTop="true"
-                           android:layout_centerHorizontal="true"/>
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:background="#efefef">
 
-                <TextView android:id="@+id/businessProf_shopName_TV"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:textAppearance="?android:attr/textAppearanceMedium"
-                          android:text="@string/text_shop_name"
-                          android:textColor="@color/black"
-                          android:layout_below="@+id/businessProf_picture"
-                          android:layout_alignParentLeft="true"
-                          android:layout_alignParentStart="true"/>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView android:id="@+id/businessProf_picture"
+                        android:src="@drawable/unknown_building"
+                        android:layout_width="150sp"
+                        android:layout_height="150sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"/>
 
-                <EditText android:id="@+id/businessProf_shopName_ET"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:hint="@string/hint_vendor_name"
-                          android:layout_gravity="center_horizontal"
-                          android:layout_below="@+id/businessProf_shopName_TV"
-                          android:layout_alignParentLeft="true"
-                          android:layout_alignParentStart="true"
-                          android:singleLine="true"/>
+                    <TextView android:id="@+id/businessProf_shopName_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/text_shop_name"
+                        android:textColor="@color/black"
+                        android:layout_below="@+id/businessProf_picture"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"/>
 
-                <TextView android:id="@+id/businessProf_category_TV"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:textAppearance="?android:attr/textAppearanceMedium"
-                          android:text="@string/text_category"
-                          android:textColor="@color/black"
-                          android:layout_below="@+id/businessProf_shopName_ET"
-                          android:layout_alignParentLeft="true"
-                          android:layout_alignParentStart="true"/>
+                    <EditText android:id="@+id/businessProf_shopName_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_vendor_name"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_below="@+id/businessProf_shopName_TV"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:singleLine="true"/>
 
-                <Spinner android:id="@+id/businessProf_category_Spinner"
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:layout_gravity="center_horizontal"
-                         android:layout_below="@+id/businessProf_category_TV"
-                         android:layout_alignParentLeft="true"
-                         android:layout_alignParentStart="true"
-                         android:singleLine="true" />
+                    <TextView android:id="@+id/businessProf_category_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/text_category"
+                        android:textColor="@color/black"
+                        android:layout_below="@+id/businessProf_shopName_ET"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"/>
 
-                <TextView android:id="@+id/businessProf_location_TV"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:textAppearance="?android:attr/textAppearanceMedium"
-                          android:text="@string/text_location"
-                          android:textColor="@color/black"
-                          android:layout_below="@+id/businessProf_category_Spinner"
-                          android:layout_alignParentLeft="true"
-                          android:layout_alignParentStart="true"/>
+                    <Spinner android:id="@+id/businessProf_category_Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_below="@+id/businessProf_category_TV"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:singleLine="true" />
 
-                <EditText android:id="@+id/businessProf_location_ET"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:hint="@string/hint_vendor_location"
-                          android:layout_gravity="center_horizontal"
-                          android:layout_below="@+id/businessProf_location_TV"
-                          android:layout_alignParentLeft="true"
-                          android:layout_alignParentStart="true"
-                          android:singleLine="true" />
+                    <TextView android:id="@+id/businessProf_location_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/text_location"
+                        android:textColor="@color/black"
+                        android:layout_below="@+id/businessProf_category_Spinner"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"/>
 
-                <TextView android:id="@+id/businessProf_email_TV"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:textAppearance="?android:attr/textAppearanceMedium"
-                          android:text="@string/text_email"
-                          android:textColor="@color/black"
-                          android:layout_below="@+id/businessProf_location_ET"
-                          android:layout_alignParentLeft="true"
-                          android:layout_alignParentStart="true"/>
+                    <EditText android:id="@+id/businessProf_location_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_vendor_location"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_below="@+id/businessProf_location_TV"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:singleLine="true" />
 
-                <EditText android:id="@+id/businessProf_email_ET"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:hint="@string/hint_vendor_email"
-                          android:layout_gravity="center_horizontal"
-                          android:inputType="textEmailAddress"
-                          android:layout_below="@+id/businessProf_email_TV"
-                          android:layout_alignParentLeft="true"
-                          android:layout_alignParentStart="true"
-                          android:singleLine="true" />
+                    <TextView android:id="@+id/businessProf_email_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/text_email"
+                        android:textColor="@color/black"
+                        android:layout_below="@+id/businessProf_location_ET"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"/>
 
-                <TextView android:id="@+id/businessProf_telephone_TV"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:textAppearance="?android:attr/textAppearanceMedium"
-                          android:text="@string/text_telephone"
-                          android:textColor="@color/black"
-                          android:layout_below="@+id/businessProf_email_ET"
-                          android:layout_alignParentLeft="true"
-                          android:layout_alignParentStart="true"/>
+                    <EditText android:id="@+id/businessProf_email_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_vendor_email"
+                        android:layout_gravity="center_horizontal"
+                        android:inputType="textEmailAddress"
+                        android:layout_below="@+id/businessProf_email_TV"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:singleLine="true" />
 
-                <EditText android:id="@+id/businessProf_telephone_ET"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:hint="@string/hint_vendor_number"
-                          android:layout_gravity="center_horizontal"
-                          android:layout_below="@+id/businessProf_telephone_TV"
-                          android:layout_alignParentLeft="true"
-                          android:layout_alignParentStart="true"
-                          android:singleLine="true"
-                          android:inputType="phone" />
+                    <TextView android:id="@+id/businessProf_telephone_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/text_telephone"
+                        android:textColor="@color/black"
+                        android:layout_below="@+id/businessProf_email_ET"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"/>
 
-                <Button android:id="@+id/businessProf_updatebtn"
+                    <EditText android:id="@+id/businessProf_telephone_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_vendor_number"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_below="@+id/businessProf_telephone_TV"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:singleLine="true"
+                        android:inputType="phone" />
+
+                    <Button android:id="@+id/businessProf_updatebtn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/text_update"
@@ -140,7 +147,7 @@
                         android:layout_below="@id/businessProf_telephone_ET"
                         android:visibility="invisible"/>
 
-                <Button android:id="@+id/businessProf_createbtn"
+                    <Button android:id="@+id/businessProf_createbtn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/text_create_shop"
@@ -152,7 +159,7 @@
                         android:layout_below="@id/businessProf_telephone_ET"
                         android:visibility="invisible"/>
 
-                <Button android:id="@+id/businessProf_logoutbtn"
+                    <Button android:id="@+id/businessProf_logoutbtn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/text_logout"
@@ -162,15 +169,20 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_below="@id/businessProf_updatebtn"/>
-            </RelativeLayout>
-        </ScrollView>
-    </RelativeLayout>
+                </RelativeLayout>
+            </ScrollView>
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <!-- Side navigation drawer UI -->
+    <include layout="@layout/include_main_nav_drawer"/>
+    <!-- Side navigation drawer UI
     <ListView
         android:id="@+id/navList"
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
         android:background="#ffeeeeee"/>
+        -->
 </android.support.v4.widget.DrawerLayout>

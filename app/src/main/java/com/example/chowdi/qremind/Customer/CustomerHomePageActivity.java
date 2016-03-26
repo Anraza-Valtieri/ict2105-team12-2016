@@ -1,40 +1,34 @@
-package com.example.chowdi.qremind;
+package com.example.chowdi.qremind.Customer;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ListView;
 
-import com.example.chowdi.qremind.utils.Commons;
+import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.RVAdapter;
+import com.example.chowdi.qremind.Shop;
+import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.utils.Constants;
-import com.example.chowdi.qremind.models.Shop_Winnie;
+import com.example.chowdi.qremind.views.CustomerMainNavDrawer;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import org.w3c.dom.Text;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class CustomerHomePageActivity extends AppCompatActivity{
+public class CustomerHomePageActivity extends BaseActivity{
     //Variable for Firebase
     private Firebase firebase;
     private SharedPreferences sharedPreferences;
@@ -46,7 +40,7 @@ public class CustomerHomePageActivity extends AppCompatActivity{
     private Spinner spinnerCategory, spinnerRatings;
     private String userSelectCategory,userSelectRatings, shopName,phoneNumber,email,ratingsOfShop,categoryOfShop;
     private RecyclerView rv;
-    private List<Shop_Winnie> shops;
+    private List<Shop> shops;
     private ListView listView;
     private TextView shopNameTV,categoryTV,phoneNumberTV;
     private ListView mDrawerList;
@@ -57,16 +51,9 @@ public class CustomerHomePageActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customerhomepage);
-
+        setNavDrawer(new CustomerMainNavDrawer(this));
         // Initialise all UI elements
         initialiseUIElements();
-
-        // Create navigation sidebar
-        Commons.addDrawerItems(this, mDrawerList);
-        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         /* Recycler View Initialization*/
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -171,11 +158,12 @@ public class CustomerHomePageActivity extends AppCompatActivity{
                         phoneNumber = ds.child("phone_no").getValue().toString();
                         categoryOfShop = ds.child("category").getValue().toString();
                         email = ds.child("email").getValue().toString();
-                        shops.add(new Shop_Winnie(shopName,categoryOfShop,phoneNumber,userSelectRatings,email));
+                        shops.add(new Shop(shopName, categoryOfShop, phoneNumber, userSelectRatings, email));
                         initializeAdapter();
                     }
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
             }
@@ -197,7 +185,7 @@ public class CustomerHomePageActivity extends AppCompatActivity{
                         phoneNumber = ds.child("phone_no").getValue().toString();
                         ratingsOfShop = ds.child("ratings").getValue().toString();
                         email = ds.child("email").getValue().toString();
-                        shops.add(new Shop_Winnie(shopName, userSelectCategory, phoneNumber, ratingsOfShop, email));
+                        shops.add(new Shop(shopName, userSelectCategory, phoneNumber, ratingsOfShop, email));
                         initializeAdapter();
                     } else {
                         //what to display when there are no records?
@@ -220,25 +208,4 @@ public class CustomerHomePageActivity extends AppCompatActivity{
         rv.setAdapter(adapter);
     }
 
-    /**
-     * Sync the toggle state of the Navigation Sidebar after onCreate has occurred
-     * @param savedInstanceState state of the Activity
-     */
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    /**
-     * Handle the clicking of an item in the navigation sidebar
-     * If successfully handled, return true
-     * else return false which is the default implementation
-     * @param item clickable options in the navigation sidebar
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-    }
 }

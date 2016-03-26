@@ -6,7 +6,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
-import com.example.chowdi.qremind.models.Shop;
+import com.example.chowdi.qremind.infrastructure.Shop;
 import com.firebase.client.Firebase;
 import com.firebase.ui.FirebaseListAdapter;
 

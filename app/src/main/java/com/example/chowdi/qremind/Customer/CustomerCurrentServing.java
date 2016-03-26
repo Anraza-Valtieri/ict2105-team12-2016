@@ -6,26 +6,24 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
-import com.example.chowdi.qremind.models.Customer;
+import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.example.chowdi.qremind.utils.QRCodeScanner;
+import com.example.chowdi.qremind.views.CustomerMainNavDrawer;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -38,7 +36,7 @@ import java.util.Random;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class CustomerCurrentServing extends AppCompatActivity {
+public class CustomerCurrentServing extends BaseActivity {
 
     // Variable for Firebase
     private Firebase fbRefWaitingTime;
@@ -68,7 +66,7 @@ public class CustomerCurrentServing extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customercurrentlyserving);
-
+        setNavDrawer(new CustomerMainNavDrawer(this));
 
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
@@ -85,12 +83,6 @@ public class CustomerCurrentServing extends AppCompatActivity {
         queueKey = getIntent().getExtras().getString(Constants.EX_MSG_QUEUE_KEY);
         shopName = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_NAME);
         shopKey = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_KEY);
-
-        Commons.addDrawerItems(this, mDrawerList);
-        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         loadQueueStats();
         getEstimatedWaitingTime();
@@ -330,28 +322,6 @@ public class CustomerCurrentServing extends AppCompatActivity {
                 break;
         }
         Commons.dismissProgressDialog(pd);
-    }
-
-    /**
-     * Sync the toggle state of the Navigation Sidebar after onCreate has occurred
-     * @param savedInstanceState state of the Activity
-     */
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    /**
-     * Handle the clicking of an item in the navigation sidebar
-     * If successfully handled, return true
-     * else return false which is the default implementation
-     * @param item clickable options in the navigation sidebar
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     public void showNotification() {

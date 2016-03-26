@@ -1,10 +1,11 @@
 package com.example.chowdi.qremind.Vendor;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.views.VendorMainNavDrawer;
 import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerViewAdapter;
 import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
 
-public class VendorDashBoardActivity extends AppCompatActivity {
+public class VendorDashBoardActivity extends BaseActivity {
     ArrayList<Card> dashboardCards;
 
     @Override
@@ -22,6 +23,7 @@ public class VendorDashBoardActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_dash_board);
+        setNavDrawer(new VendorMainNavDrawer(this));
         //Firebase stuff
         Firebase.setAndroidContext(this);
         //instantiate dashboardCards AL
@@ -69,10 +71,12 @@ public class VendorDashBoardActivity extends AppCompatActivity {
         cardExensionH.setTitle("Extension Requests");
         cardExtension.addCardHeader(cardCurrentH);
 
+        dashboardCards.add(cardExtension);
+        dashboardCards.add(cardCurrent);
         dashboardCards.add(cardCust);
         dashboardCards.add(cardServed);
-        dashboardCards.add(cardCurrent);
-        dashboardCards.add(cardExtension);
+
+
     }
 
 

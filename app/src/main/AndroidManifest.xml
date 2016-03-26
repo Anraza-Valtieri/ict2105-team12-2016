@@ -16,25 +16,30 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:name=".infrastructure.QremindApplication"
         >
         <activity
             android:name=".LogoCoverPageActivity"
             android:theme="@style/SplashTheme" >
+
+        </activity>
+        <!-- Testing activities -->
+        <activity
+            android:name=".Vendor.VendorDashBoardActivity"
+            android:label="@string/title_activity_business_queue_dashboard"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Testing activities -->
-        <activity
-            android:name=".Vendor.VendorDashBoardActivity"
-            android:label="@string/title_activity_business_queue_dashboard"
-            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".Customer.CustomerHomeActivity"
             android:label="@string/title_activity_customer_home"
             android:screenOrientation="portrait">
+
         </activity>
         <activity android:name=".Customer.CustomerGetQueueActivity"
             android:label="@string/title_activity_customer_get_queue"
@@ -73,17 +78,18 @@
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".BusinessProfileActivity"
+            android:name=".Vendor.BusinessProfileActivity"
             android:label="@string/title_activity_buss_prof"
             android:parentActivityName=".ChooseTaskActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".CustomerHomePageActivity"
+            android:name=".Customer.CustomerHomePageActivity"
             android:label="Customer Home Page"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
+
         </activity>
 
         <activity android:name=".utils.QRCodeScanner"
