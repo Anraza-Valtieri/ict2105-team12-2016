@@ -15,8 +15,6 @@ public class Shop {
     private long vendorid;
     private String image;
 
-    public Shop() {
-    }
 
     public Shop(String category, String email, String location, String shop_name, long telephone, long vendorid) {
         this.category = category;
@@ -27,9 +25,7 @@ public class Shop {
         this.vendorid = vendorid;
     }
 
-    public String getCategory() {
-        return category;
-    }
+    public String getCategory() { return category; }
 
     public void setCategory(String category) {
         this.category = category;

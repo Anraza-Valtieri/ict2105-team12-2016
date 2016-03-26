@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind;
 
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,8 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.chowdi.qremind.Customer.CustomerGetQueueActivity;
 import com.example.chowdi.qremind.R;
-//import com.example.chowdi.qremind.models.Shop;
+import com.example.chowdi.qremind.models.Shop_Winnie;
 
 import org.w3c.dom.Text;
 
@@ -32,12 +34,17 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ShopViewHolder> {
             phoneNumberTV = (TextView)itemView.findViewById(R.id.phoneNumberTV);
             ratingsTV = (TextView) itemView.findViewById(R.id.ratingsTV);
             emailTV = (TextView) itemView.findViewById(R.id.emailTV);
-            //itemView.setOnClickListener(this);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Code that will redirect user to CustomerGetQueueActivity
+                }
+            });
         }
     }
-    List<Shop> shops;
+    List<Shop_Winnie> shops;
 
-    RVAdapter(List<Shop> shops){
+    RVAdapter(List<Shop_Winnie> shops){
         this.shops = shops;
     }
 

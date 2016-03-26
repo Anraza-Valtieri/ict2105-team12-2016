@@ -22,6 +22,7 @@ import android.widget.ListView;
 
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
+import com.example.chowdi.qremind.models.Shop_Winnie;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -45,7 +46,7 @@ public class CustomerHomePageActivity extends AppCompatActivity{
     private Spinner spinnerCategory, spinnerRatings;
     private String userSelectCategory,userSelectRatings, shopName,phoneNumber,email,ratingsOfShop,categoryOfShop;
     private RecyclerView rv;
-    private List<Shop> shops;
+    private List<Shop_Winnie> shops;
     private ListView listView;
     private TextView shopNameTV,categoryTV,phoneNumberTV;
     private ListView mDrawerList;
@@ -85,7 +86,6 @@ public class CustomerHomePageActivity extends AppCompatActivity{
 
                 /* Calls the getShops() function and populates the category spinner with data from Firebase */
                 getShops();
-
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -171,7 +171,7 @@ public class CustomerHomePageActivity extends AppCompatActivity{
                         phoneNumber = ds.child("phone_no").getValue().toString();
                         categoryOfShop = ds.child("category").getValue().toString();
                         email = ds.child("email").getValue().toString();
-                        shops.add(new Shop(shopName,categoryOfShop,phoneNumber,userSelectRatings,email));
+                        shops.add(new Shop_Winnie(shopName,categoryOfShop,phoneNumber,userSelectRatings,email));
                         initializeAdapter();
                     }
                 }
@@ -197,7 +197,7 @@ public class CustomerHomePageActivity extends AppCompatActivity{
                         phoneNumber = ds.child("phone_no").getValue().toString();
                         ratingsOfShop = ds.child("ratings").getValue().toString();
                         email = ds.child("email").getValue().toString();
-                        shops.add(new Shop(shopName, userSelectCategory, phoneNumber, ratingsOfShop, email));
+                        shops.add(new Shop_Winnie(shopName, userSelectCategory, phoneNumber, ratingsOfShop, email));
                         initializeAdapter();
                     } else {
                         //what to display when there are no records?

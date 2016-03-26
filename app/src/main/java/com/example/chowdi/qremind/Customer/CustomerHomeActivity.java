@@ -28,9 +28,8 @@ public class CustomerHomeActivity extends AppCompatActivity {
 
     private String TAG = CustomerHomeActivity.class.getSimpleName();
 
-    private ListView custShopsListView;
+    private ListView custShopsListView, mDrawerList;
     private ArrayAdapter<String> listAdapter;
-    private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     protected ArrayList<String> shopNameList;
@@ -46,6 +45,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
         Firebase ref = new Firebase(Constants.FIREBASE_SHOPS);
         //bind listview
       //  custShopsListView = (ListView)findViewById(R.id.FandB_listView);
+
 
         // Create and populate names.
         shopNameList = new ArrayList<String>();
