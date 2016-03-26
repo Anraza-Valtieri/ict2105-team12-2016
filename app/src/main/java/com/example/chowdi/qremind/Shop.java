@@ -1,8 +1,5 @@
 package com.example.chowdi.qremind;
 
-/**
- * Created by Winnie Lew on 17/3/2016.
- */
 class Shop{
 
     String name;

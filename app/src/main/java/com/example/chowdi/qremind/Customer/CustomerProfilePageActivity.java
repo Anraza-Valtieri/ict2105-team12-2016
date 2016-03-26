@@ -3,10 +3,15 @@ package com.example.chowdi.qremind.Customer;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.utils.Commons;
@@ -16,21 +21,17 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-/**
- * Created by chowdi on 2/3/2016.
- */
 public class CustomerProfilePageActivity extends AppCompatActivity{
 
     // Firebase variables
     Firebase fbRef;
 
     // Variables for all UI elements
-    private EditText fName_ET;
-    private EditText lName_ET;
-    private EditText email_ET;
-    private EditText phoneNo_ET;
-    private Button updateBtn;
-    private Button logoutBtn;
+    private EditText fName_ET, lName_ET, email_ET, phoneNo_ET;
+    private Button updateBtn, logoutBtn;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     // Other variables
     private SharedPreferences prefs;
@@ -52,6 +53,14 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         // Initialise getSharedPreferences for this app and Firebase setup
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
         fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
+
+        // Create navigation sidebar
+        Commons.addDrawerItems(this, mDrawerList);
+        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
 
         // Retrieve phone no from share preference to retrieve user information and display on the view
         phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
@@ -130,6 +139,8 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         phoneNo_ET = (EditText) findViewById(R.id.custProfile_phone_no_ET);
         updateBtn = (Button) findViewById(R.id.custProfile_udpatebtn);
         logoutBtn = (Button) findViewById(R.id.custProfile_logoutbtn);
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
     }
 
     /**
@@ -144,6 +155,8 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         phoneNo_ET.setEnabled(value);
         updateBtn.setEnabled(value);
         logoutBtn.setEnabled(value);
+        mDrawerList.setEnabled(value);
+        mDrawerLayout.setEnabled(value);
     }
 
     /**
@@ -169,5 +182,27 @@ public class CustomerProfilePageActivity extends AppCompatActivity{
         super.onStop();
         // To cancel and dismiss all current toast
         Commons.cancelToastMessage();
+    }
+
+    /**
+     * Sync the toggle state of the Navigation Sidebar after onCreate has occurred
+     * @param savedInstanceState state of the Activity
+     */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    /**
+     * Handle the clicking of an item in the navigation sidebar
+     * If successfully handled, return true
+     * else return false which is the default implementation
+     * @param item clickable options in the navigation sidebar
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 }

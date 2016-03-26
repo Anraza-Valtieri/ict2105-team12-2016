@@ -3,19 +3,20 @@ package com.example.chowdi.qremind;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.Firebase;
 
-/**
- * Created by chowdi on 2/3/2016.
- */
 public class ChooseTaskActivity extends AppCompatActivity{
 
     // Firebase variables
@@ -25,6 +26,9 @@ public class ChooseTaskActivity extends AppCompatActivity{
     private Button manageBtn;
     private Button settingsBtn;
     private Button logoutBtn;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,13 @@ public class ChooseTaskActivity extends AppCompatActivity{
 
         // Initialise all UI elements first
         initialiseUIElements();
+
+        // Create navigation sidebar
+        Commons.addDrawerItems(this, mDrawerList);
+        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         // set and implement click listener to manage, setting, and logout buttons
         manageBtn.setOnClickListener(new View.OnClickListener() {
@@ -66,5 +77,29 @@ public class ChooseTaskActivity extends AppCompatActivity{
         manageBtn = (Button) findViewById(R.id.choosetask_managequeuebtn);
         settingsBtn = (Button) findViewById(R.id.choosetask_settingsbtn);
         logoutBtn = (Button) findViewById(R.id.choosetask_logoutbtn);
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+    }
+
+    /**
+     * Sync the toggle state of the Navigation Sidebar after onCreate has occurred
+     * @param savedInstanceState state of the Activity
+     */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    /**
+     * Handle the clicking of an item in the navigation sidebar
+     * If successfully handled, return true
+     * else return false which is the default implementation
+     * @param item clickable options in the navigation sidebar
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 }

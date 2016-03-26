@@ -3,17 +3,24 @@ package com.example.chowdi.qremind;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ListView;
+
+import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -31,31 +38,36 @@ public class CustomerHomePageActivity extends AppCompatActivity{
     private Firebase firebase;
     private SharedPreferences sharedPreferences;
 
+    // Variable for UI Elements
     //public static ArrayList categories;
     private ArrayList<String> categories = new ArrayList<String>();
     private String[] ratings = {"1","2", "3","4","5"};
     private Spinner spinnerCategory, spinnerRatings;
     private String userSelectCategory,userSelectRatings, shopName,phoneNumber,email,ratingsOfShop,categoryOfShop;
-    //private TextView shopNameTV;
     private RecyclerView rv;
     private List<Shop> shops;
     private ListView listView;
     private TextView shopNameTV,categoryTV,phoneNumberTV;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customerhomepage);
-        spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
-        spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
-        //listView = (ListView) findViewById(R.id.listView);
 
-        shopNameTV = (TextView) findViewById(R.id.shopnameTV);
-        categoryTV = (TextView) findViewById(R.id.categoryTV);
-        phoneNumberTV = (TextView) findViewById(R.id.phoneNumberTV);
+        // Initialise all UI elements
+        initialiseUIElements();
+
+        // Create navigation sidebar
+        Commons.addDrawerItems(this, mDrawerList);
+        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         /* Recycler View Initialization*/
-        rv = (RecyclerView)findViewById(R.id.rv);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
         //rv.setHasFixedSize(true);
@@ -97,6 +109,25 @@ public class CustomerHomePageActivity extends AppCompatActivity{
         });
 
     }
+
+    /**
+     * Find and assign the correct UI elements to the correct variables from activity_register layout
+     */
+    private void initialiseUIElements()
+    {
+        spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
+        spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
+        rv = (RecyclerView)findViewById(R.id.rv);
+        //listView = (ListView) findViewById(R.id.listView);
+
+        shopNameTV = (TextView) findViewById(R.id.shopnameTV);
+        categoryTV = (TextView) findViewById(R.id.categoryTV);
+        phoneNumberTV = (TextView) findViewById(R.id.phoneNumberTV);
+
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+    }
+
     /* Initializing the */
     private void getCategories() {
         firebase = new Firebase(Constants.FIREBASE_CATEGORY);
@@ -151,7 +182,6 @@ public class CustomerHomePageActivity extends AppCompatActivity{
         });
     }
 
-
     private void getShops() {
         //firebase = new Firebase(Constants.FIREBASE_SHOPS);
         firebase = new Firebase("https://qremind1.firebaseio.com/shop_test");
@@ -167,11 +197,9 @@ public class CustomerHomePageActivity extends AppCompatActivity{
                         phoneNumber = ds.child("phone_no").getValue().toString();
                         ratingsOfShop = ds.child("ratings").getValue().toString();
                         email = ds.child("email").getValue().toString();
-                        shops.add(new Shop(shopName,userSelectCategory,phoneNumber,ratingsOfShop,email));
+                        shops.add(new Shop(shopName, userSelectCategory, phoneNumber, ratingsOfShop, email));
                         initializeAdapter();
-                    }
-
-                    else {
+                    } else {
                         //what to display when there are no records?
 
 
@@ -179,6 +207,7 @@ public class CustomerHomePageActivity extends AppCompatActivity{
                     // Log.d("pass short_test_1", "if loop failed/");
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
@@ -189,5 +218,27 @@ public class CustomerHomePageActivity extends AppCompatActivity{
     private void initializeAdapter(){
         RVAdapter adapter = new RVAdapter(shops);
         rv.setAdapter(adapter);
+    }
+
+    /**
+     * Sync the toggle state of the Navigation Sidebar after onCreate has occurred
+     * @param savedInstanceState state of the Activity
+     */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    /**
+     * Handle the clicking of an item in the navigation sidebar
+     * If successfully handled, return true
+     * else return false which is the default implementation
+     * @param item clickable options in the navigation sidebar
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 }

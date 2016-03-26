@@ -25,16 +25,18 @@ import com.firebase.ui.FirebaseListAdapter;
 import java.util.ArrayList;
 
 public class CustomerHomeActivity extends AppCompatActivity {
+
     private String TAG = CustomerHomeActivity.class.getSimpleName();
+
     private ListView custShopsListView;
     private ArrayAdapter<String> listAdapter;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
-    private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     protected ArrayList<String> shopNameList;
     protected FirebaseListAdapter<Shop> fbAdapter;
     private String custID = "91513429";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
             }
         });
 
+        // Create navigation sidebar
         Commons.addDrawerItems(this, mDrawerList);
         mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
 
@@ -80,29 +83,26 @@ public class CustomerHomeActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
+    /**
+     * Sync the toggle state of the Navigation Sidebar after onCreate has occurred
+     * @param savedInstanceState state of the Activity
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-
+    /**
+     * Handle the clicking of an item in the navigation sidebar
+     * If successfully handled, return true
+     * else return false which is the default implementation
+     * @param item clickable options in the navigation sidebar
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // Activate the navigation drawer toggle
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
 

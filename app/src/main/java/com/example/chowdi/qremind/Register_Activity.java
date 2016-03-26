@@ -22,9 +22,6 @@ import com.firebase.client.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by chowdi on 2/3/2016.
- */
 public class Register_Activity extends AppCompatActivity{
 
     // Variable for Firebase

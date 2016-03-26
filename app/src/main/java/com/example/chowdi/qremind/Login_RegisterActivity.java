@@ -9,10 +9,8 @@ import android.widget.Button;
 
 import com.firebase.client.Firebase;
 
-/**
- * Created by chowdi on 2/3/2016.
- */
 public class Login_RegisterActivity extends AppCompatActivity{
+
     // Variables for all UI elements
     private Button loginBtn;
     private Button createAccBtn;

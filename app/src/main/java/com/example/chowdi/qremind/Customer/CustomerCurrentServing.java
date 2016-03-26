@@ -49,11 +49,11 @@ public class CustomerCurrentServing extends AppCompatActivity {
     private TextView vendorName_TV, currentlyServing_TV, myQueueNo_TV, waitingTime_TV;
     private Button time_ext_req_btn, claim_btn, refresh_btn;
 
+
     // Others variables
     private SharedPreferences prefs;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
-//    private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private ProgressDialog pd;
     private String queueNo, queueKey, shopName, shopKey;
@@ -125,6 +125,7 @@ public class CustomerCurrentServing extends AppCompatActivity {
                             Log.d("RESULT", "Finish Scanning");
                             Log.d("RESULT", result);
                         } catch (Exception exception) {
+                            exception.printStackTrace();
                         }
                         return null;
                     }
@@ -331,30 +332,28 @@ public class CustomerCurrentServing extends AppCompatActivity {
         Commons.dismissProgressDialog(pd);
     }
 
+    /**
+     * Sync the toggle state of the Navigation Sidebar after onCreate has occurred
+     * @param savedInstanceState state of the Activity
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-
+    /**
+     * Handle the clicking of an item in the navigation sidebar
+     * If successfully handled, return true
+     * else return false which is the default implementation
+     * @param item clickable options in the navigation sidebar
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // Activate the navigation drawer toggle
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
+
     public void showNotification() {
         PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, CustomerCurrentServing.class), 0);
         Resources r = getResources();
