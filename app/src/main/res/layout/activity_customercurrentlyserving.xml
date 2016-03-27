@@ -4,138 +4,151 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:weightSum="1"
-                    android:background="#efefef">
-
-        <TextView
-            android:id="@+id/vendorname_TV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="41dp"
-            android:layout_marginBottom="25dp"
-            android:text="Vendor Name(to be changed)"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-        <TextView
-            android:id="@+id/TV_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_below="@+id/vendorname_TV"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10sp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/text_currently_serving"/>
-
-        <TextView
-            android:id="@+id/currentServing_TV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/TV_1"
-            android:layout_marginBottom="15sp"
-            android:layout_centerHorizontal="true"
-            android:text="_____"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:id="@+id/TV_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/currentServing_TV"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10sp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/text_your_queue_no"/>
-
-        <TextView
-            android:id="@+id/queue_number_TV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/TV_2"
-            android:layout_marginBottom="15sp"
-            android:layout_centerHorizontal="true"
-            android:text="_____"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:id="@+id/TV_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_gravity="center_horizontal"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10sp"
-            android:layout_below="@+id/queue_number_TV"
-            android:text="@string/text_estimated_waiting_time" />
-
-        <TextView
-            android:id="@+id/waiting_time_TV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/TV_3"
-            android:layout_marginBottom="15sp"
-            android:layout_centerHorizontal="true"
-            android:text="_____"
-            android:textSize="20sp"/>
-
-        <Button
-            android:id="@+id/refresh_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/waiting_time_TV"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="23dp"
-            android:text="@string/text_refresh"
-            android:layout_gravity="center_horizontal"
-            android:background="#02bbd2"/>
-
-        <Button
-            android:id="@+id/claim_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/waiting_time_TV"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="23dp"
-            android:text="@string/text_claim"
-            android:layout_gravity="center_horizontal"
-            android:visibility="invisible"
-            android:background="#02bbd2"/>
-
-        <Button
-            android:id="@+id/time_ext_req_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/claim_btn"
-            android:background="#02bbd2"
-            android:text="@string/text_10_mins_time_extension"/>
-
-        <Button
-            android:id="@+id/currentserving_logoutbtn"
+    android:layout_height="match_parent"
+    tools:context=".Customer.CustomerCurrentServing">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#efefef"
+        tools:context=".Customer.CustomerCurrentServing">
+        <include layout="@layout/include_toolbar"/>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/text_logout"
-            android:background="#FF3232"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:background="#efefef">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/vendorname_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="41dp"
+                android:layout_marginBottom="25dp"
+                android:text="Vendor Name(to be changed)"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+            <TextView
+                android:id="@+id/TV_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/vendorname_TV"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/text_currently_serving"/>
+
+            <TextView
+                android:id="@+id/currentServing_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/TV_1"
+                android:layout_marginBottom="15sp"
+                android:layout_centerHorizontal="true"
+                android:text="_____"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/TV_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/currentServing_TV"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/text_your_queue_no"/>
+
+            <TextView
+                android:id="@+id/queue_number_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/TV_2"
+                android:layout_marginBottom="15sp"
+                android:layout_centerHorizontal="true"
+                android:text="_____"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/TV_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_gravity="center_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10sp"
+                android:layout_below="@+id/queue_number_TV"
+                android:text="@string/text_estimated_waiting_time" />
+
+            <TextView
+                android:id="@+id/waiting_time_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/TV_3"
+                android:layout_marginBottom="15sp"
+                android:layout_centerHorizontal="true"
+                android:text="_____"
+                android:textSize="20sp"/>
+
+            <Button
+                android:id="@+id/refresh_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/waiting_time_TV"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="23dp"
+                android:text="@string/text_refresh"
+                android:layout_gravity="center_horizontal"
+                android:background="#02bbd2"/>
+
+            <Button
+                android:id="@+id/claim_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/waiting_time_TV"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="23dp"
+                android:text="@string/text_claim"
+                android:layout_gravity="center_horizontal"
+                android:visibility="invisible"
+                android:background="#02bbd2"/>
+
+            <Button
+                android:id="@+id/time_ext_req_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/claim_btn"
+                android:background="#02bbd2"
+                android:text="@string/text_10_mins_time_extension"/>
+
+            <Button
+                android:id="@+id/currentserving_logoutbtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_logout"
+                android:background="#FF3232"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+        </RelativeLayout>
+        </LinearLayout>
+
 
     <!-- Side navigation drawer UI -->
+    <include layout="@layout/include_main_nav_drawer"/>
+   <!--
     <ListView
         android:id="@+id/navList"
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
-        android:background="#ffeeeeee"/>
+        android:background="#ffeeeeee"/>-->
 
 </android.support.v4.widget.DrawerLayout>
