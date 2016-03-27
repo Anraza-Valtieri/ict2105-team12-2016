@@ -37,6 +37,9 @@ public final class Constants {
     public static final String EX_MSG_SHOP_NAME = "SHOP_NAME";
     public static final String EX_MSG_SHOP_KEY = "SHOP_KEY";
 
+    // For QR code content
+    public static final String QR_CLAIM_QUEUE = "QRemind_Claim_Queue:";
+
     // For others
     public static final String ROLE_VENDOR = "VENDOR";
     public static final String ROLE_CUSTOMER = "CUSTOMER";
