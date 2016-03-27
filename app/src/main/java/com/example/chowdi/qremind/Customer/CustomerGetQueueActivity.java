@@ -63,8 +63,8 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
         Commons.addDrawerItems(this, mDrawerList);
         mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
 
         // Retrieve information passed from previous intent
         shop_key = "test_one"; //getIntent().getExtras().getString("SHOP_KEY");
@@ -99,7 +99,7 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
     public void getQueue(){
         Commons.showProgressDialog(pd, "Please wait", "Getting queue number.");
 
-        Firebase vendorRef = new Firebase(Constants.FIREBASE_SHOPS + "/" + shop_key + "/queues");
+//        Firebase vendorRef = new Firebase(Constants.FIREBASE_SHOPS + "/" + shop_key + "/queues");
         Firebase custRef = new Firebase(Constants.FIREBASE_CUSTOMER +"/"+ customer_id +"/current_queue");
         Firebase queueRef = new Firebase(Constants.FIREBASE_QUEUES +"/"+ shop_key).push();
 
@@ -123,10 +123,10 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
         custMap.put("shop", shop_key);
         custRef.setValue(custMap); // insert into queues
 
-        // map for customer current queue
-        Map<String, Object> vendorMap = new HashMap<String, Object>();
-        vendorMap.put(customer_id, true);
-        vendorRef.setValue(vendorMap); // insert into queues
+//        // map for customer current queue
+//        Map<String, Object> vendorMap = new HashMap<String, Object>();
+//        vendorMap.put(customer_id, true);
+//        vendorRef.setValue(vendorMap); // insert into queues
 
         Intent intent = new Intent(CustomerGetQueueActivity.this, CustomerCurrentServing.class);
         intent.putExtra(Constants.EX_MSG_SHOP_NAME, shop_name);
