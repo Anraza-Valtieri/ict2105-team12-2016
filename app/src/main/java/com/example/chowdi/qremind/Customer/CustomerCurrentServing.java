@@ -54,13 +54,11 @@ public class CustomerCurrentServing extends BaseActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ProgressDialog pd;
-    private String queueNo, queueKey, shopName, shopKey;
+    private String queueNo, queueKey, shopName, shopKey, customerid;
 
     // For QR Code camera
     private ZXingScannerView mScannerView;
     private View view;
-    public static boolean finishScanning = false;
-    public static String result = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +81,7 @@ public class CustomerCurrentServing extends BaseActivity {
         queueKey = getIntent().getExtras().getString(Constants.EX_MSG_QUEUE_KEY);
         shopName = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_NAME);
         shopKey = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_KEY);
+        customerid = getIntent().getExtras().getString(Constants.EX_MSG_CUSTOMER_ID);;
 
         loadQueueStats();
         getEstimatedWaitingTime();
@@ -113,17 +112,47 @@ public class CustomerCurrentServing extends BaseActivity {
                     protected Void doInBackground(Void... params) {
                         try {
                             Log.d("RESULT", "Start Scanning");
-                            while(!CustomerCurrentServing.finishScanning);
+                            while(!QRCodeScanner.scanningFinished);
+
+                            if(QRCodeScanner.scanningCancelled)
+                                return null;
+
                             Log.d("RESULT", "Finish Scanning");
-                            Log.d("RESULT", result);
+                            Log.d("RESULT", QRCodeScanner.result);
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
                         return null;
                     }
+
+                    @Override
+                    protected void onPostExecute(Void result)
+                    {
+                        claimQueue(QRCodeScanner.result);
+                    }
                 }.execute();
             }
         });
+    }
+
+    private void claimQueue(String queuekey)
+    {
+        if(!Commons.isNetworkAvailable(getApplicationContext()))
+        {
+            Commons.showToastMessage("No internet connection", getApplicationContext());
+            return;
+        }
+
+        if(!queuekey.equals(queueKey))
+        {
+            Commons.showToastMessage("Claim queue failed", getApplicationContext());
+            return;
+        }
+        Firebase fbref = new Firebase(Constants.FIREBASE_CUSTOMER).child(customerid).child("current_queue");
+        fbref.removeValue();
+        fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
+        fbref.removeValue();
+        this.finish();
     }
 
     @Override
