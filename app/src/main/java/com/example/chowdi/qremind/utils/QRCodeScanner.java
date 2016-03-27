@@ -14,12 +14,18 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  */
 public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
+    public static boolean scanningCancelled = false;
+    public static boolean scanningFinished = false;
+    public static String result = "";
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
+        scanningCancelled = false;
+        scanningFinished = false;
+        result = "";
     }
 
     @Override
@@ -36,12 +42,27 @@ public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView
     }
 
     @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        scanningCancelled = true;
+        scanningFinished = true;
+    }
+
+    @Override
     public void handleResult(Result rawResult) {
         // Do something with the result here
         // If you would like to resume scanning, call this method below:
-        CustomerCurrentServing.result = rawResult.getText();
+        if(!rawResult.getText().contains(Constants.QR_CLAIM_QUEUE))
+        {
+            Commons.showToastMessage("Invalid QR Code", this);
+            mScannerView.resumeCameraPreview(this);
+            return;
+        }
+        result = rawResult.getText().replace(Constants.QR_CLAIM_QUEUE,"");
         mScannerView.stopCamera();
-        CustomerCurrentServing.finishScanning = true;
+        scanningFinished = true;
+        scanningCancelled = false;
         this.finish();
     }
 }
