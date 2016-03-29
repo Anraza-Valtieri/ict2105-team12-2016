@@ -21,13 +21,18 @@
         <activity
             android:name=".LogoCoverPageActivity"
             android:theme="@style/SplashTheme" >
+
+        </activity>
+        <!-- Testing activities -->
+        <activity android:name=".Vendor.ClaimQRCodeActivity"
+            android:label="Claim Queue"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Testing activities -->
         <activity
             android:name=".Vendor.VendorDashBoardActivity"
             android:label="@string/title_activity_business_queue_dashboard"
