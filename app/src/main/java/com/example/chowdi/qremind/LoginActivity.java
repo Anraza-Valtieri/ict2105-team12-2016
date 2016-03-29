@@ -57,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
             prefs = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE);
             String role = prefs.getString(Constants.SHAREPREF_ROLE, null);
             if(role.equals(Constants.ROLE_CUSTOMER))
-                nextActivityAfterLogin(CustomerGetQueueActivity.class);
-                //nextActivityAfterLogin(CustomerHomePageActivity.class);
+                //nextActivityAfterLogin(CustomerGetQueueActivity.class);
+                nextActivityAfterLogin(CustomerHomePageActivity.class);
             else if(role.equals(Constants.ROLE_VENDOR))
                 nextActivityAfterLogin(ChooseTaskActivity.class);
         }
@@ -182,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * To login as customer
+     * To login as vendor
      * @param loginID login id
      * @param password password
      */
@@ -291,8 +291,8 @@ public class LoginActivity extends AppCompatActivity {
                             public void onAuthenticated(AuthData authData) {
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_CUSTOMER);
                                 Commons.dismissProgressDialog(pd);
-                                nextActivityAfterLogin(CustomerGetQueueActivity.class);
-                                //nextActivityAfterLogin(CustomerHomePageActivity.class);
+                                //nextActivityAfterLogin(CustomerGetQueueActivity.class);
+                                nextActivityAfterLogin(CustomerHomePageActivity.class);
                             }
 
                             @Override

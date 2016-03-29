@@ -1,13 +1,17 @@
 package com.example.chowdi.qremind.Customer;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.chowdi.qremind.R;
@@ -28,6 +32,7 @@ public class CustomerProfilePageActivity extends BaseActivity{
     // Variables for all UI elements
     private EditText fName_ET, lName_ET, email_ET, phoneNo_ET;
     private Button updateBtn, logoutBtn;
+    private ImageView profilePic;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -56,6 +61,7 @@ public class CustomerProfilePageActivity extends BaseActivity{
 
         // Retrieve phone no from share preference to retrieve user information and display on the view
         phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
+
         // Check network connection
         if(!Commons.isNetworkAvailable(getApplicationContext()))
         {
@@ -111,6 +117,15 @@ public class CustomerProfilePageActivity extends BaseActivity{
             }
         });
 
+        // Open camera app and take picture to update customer's profile picture
+        profilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(camera_intent, 0);
+            }
+        });
+
         // For temporary only
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +144,7 @@ public class CustomerProfilePageActivity extends BaseActivity{
         lName_ET = (EditText) findViewById(R.id.custProfile_lName_ET);
         email_ET = (EditText) findViewById(R.id.custProfile_email_ET);
         phoneNo_ET = (EditText) findViewById(R.id.custProfile_phone_no_ET);
+        profilePic = (ImageView) findViewById(R.id.custProfile_picture);
         updateBtn = (Button) findViewById(R.id.custProfile_udpatebtn);
         logoutBtn = (Button) findViewById(R.id.custProfile_logoutbtn);
         mDrawerList = (ListView)findViewById(R.id.navList);
@@ -167,6 +183,24 @@ public class CustomerProfilePageActivity extends BaseActivity{
         setEnableAllElements(true);
         Commons.dismissProgressDialog(pd);
     }
+
+    /**
+     * To set customer's profile image based on the requestCode passed to startActivityForResult(),
+     * resultCode whether it passed or failed and the result data the intent is carrying
+     * @param requestCode - Helps you to identify from which Intent you came back
+     * @param resultCode - This is either RESULT_OK if the operation was successful or
+     *                     RESULT_CANCELED if the user backed out or the operation
+     *                     failed for some reason.
+     * @param data - Result data Intent is carrying
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bitmap bp = (Bitmap) data.getExtras().get("data");
+        profilePic.setImageBitmap(bp);
+    }
+
 
     @Override
     protected void onStop()
