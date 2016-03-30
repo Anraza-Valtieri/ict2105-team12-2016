@@ -1,8 +1,10 @@
 package com.example.chowdi.qremind.utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
@@ -32,6 +34,11 @@ import com.google.zxing.common.BitMatrix;
  */
 public class Commons {
     private static Toast toast = null;
+
+    // For Generating QR Code
+    private static int WIDTH = 500;
+    private static int BLACK = 0xFF000000;
+    private static int WHITE = 0xFFFFFFFF;
 
     /**
      * Check if the value is an valid email
@@ -194,61 +201,12 @@ public class Commons {
     }
 
     /**
-     * To add clickable items for current context side navigation menu into an adapter and set this adapter to mDrawerList's adapter.
-     * @param currContext current context
-     * @param mDrawerList a listview in the current context
+     * To generate a QR code image
+     * @param str string of url or any text to be converted to QR code
+     * @return QR code image
+     * @throws WriterException
      */
-    public static void addDrawerItems(final Activity currContext, ListView mDrawerList) {
-        String[] navSidebar = { "Profile", "Logout"};
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(currContext, android.R.layout.simple_list_item_1, navSidebar);
-        mDrawerList.setAdapter(mAdapter);
-
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    Intent intent = new Intent(currContext, CustomerProfilePageActivity.class);
-                    currContext.startActivity(intent);
-                } else if (position == 1) {
-                    Intent intent = new Intent(currContext, Login_RegisterActivity.class);
-                    currContext.startActivity(intent);
-                }
-            }
-        });
-    }
-
-    /**
-     * To set and attach drawer to current context as side navigation menu
-     * @param currContext current context
-     * @param mDrawerLayout the layout for the drawer that is created for the current context
-     * @return ActionBarDrawerToggle will be used for override method in current context
-     */
-    public static ActionBarDrawerToggle setupDrawer(final Activity currContext, DrawerLayout mDrawerLayout) {
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(currContext, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                currContext.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                currContext.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        return mDrawerToggle;
-    }
-
-
-    private static int WIDTH = 500;
-    private static int BLACK = 0xFF000000;
-    private static int WHITE = 0xFFFFFFFF;
-    public static Bitmap encodeAsBitmap(String str) throws WriterException {
+    public static Bitmap generateQRCodeImage(String str) throws WriterException {
         BitMatrix result;
         try {
             result = new MultiFormatWriter().encode(str,
@@ -270,4 +228,5 @@ public class Commons {
         bitmap.setPixels(pixels, 0, w, 0, 0, w, h);
         return bitmap;
     }
+
 }
