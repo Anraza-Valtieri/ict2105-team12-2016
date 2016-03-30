@@ -31,8 +31,8 @@ public class BaseActivity extends AppCompatActivity {
     protected QremindApplication application;
     protected NavDrawer navDrawer;
     protected Toolbar toolbar;
-    protected ValueEventListener queueTurnListener = null;
-    protected Firebase fbRefQueueTurn;
+    protected static ValueEventListener queueTurnListener = null;
+    protected static Firebase fbRefQueueTurn;
     protected static boolean notificationPoppedOut = false;
 
     @Override
@@ -177,7 +177,7 @@ public class BaseActivity extends AppCompatActivity {
         final AlertDialog.Builder dlg;
         dlg = new AlertDialog.Builder(this);
         notificationPoppedOut = true;
-        
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -242,6 +242,7 @@ public class CustomerHomePageActivity extends BaseActivity{
     public void getQueue(String shop_key,String customer_id,String shop_name){
         Commons.showProgressDialog(pd, "Please wait", "Getting queue number.");
         application.notificationSend = false;
+        notificationPoppedOut = false;
 
         Firebase vendorRef = new Firebase(Constants.FIREBASE_SHOPS + "/" + shop_key + "/queues");
         Firebase custRef = new Firebase(Constants.FIREBASE_CUSTOMER +"/"+ customer_id +"/current_queue");

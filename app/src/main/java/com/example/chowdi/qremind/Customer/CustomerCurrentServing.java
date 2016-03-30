@@ -333,7 +333,8 @@ public class CustomerCurrentServing extends BaseActivity {
 
                         refresh_btn.setVisibility(View.INVISIBLE);
                         claim_btn.setVisibility(View.VISIBLE);
-                        popUpNotification(queueNo);
+                        if(!notificationPoppedOut)
+                            popUpNotification(queueNo);
                         if(!application.notificationSend)
                             application.showNotification();
                     }
