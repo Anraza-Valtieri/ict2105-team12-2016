@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
+import com.example.chowdi.qremind.Vendor.VendorDashBoardActivity;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.infrastructure.Vendor;
@@ -200,7 +201,7 @@ public class LoginActivity extends BaseActivity {
                                 getQremindApplication().setVendorUser(vendorUser);
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR, shopkey);
                                 Commons.dismissProgressDialog(pd);
-                                nextActivityAfterLogin(ChooseTaskActivity.class);
+                                nextActivityAfterLogin(VendorDashBoardActivity.class);
                             }
 
                             @Override
@@ -236,7 +237,7 @@ public class LoginActivity extends BaseActivity {
                                     getQremindApplication().setVendorUser(vendorUser);
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR, shopkey);
                                     Commons.dismissProgressDialog(pd);
-                                    nextActivityAfterLogin(ChooseTaskActivity.class);
+                                    nextActivityAfterLogin(VendorDashBoardActivity.class);
                                     return;
                                 }
                             }

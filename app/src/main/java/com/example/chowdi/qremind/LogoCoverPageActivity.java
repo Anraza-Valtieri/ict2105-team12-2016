@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
+import com.example.chowdi.qremind.Vendor.VendorDashBoardActivity;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.infrastructure.Vendor;
@@ -69,7 +70,7 @@ public class LogoCoverPageActivity extends BaseActivity{
                 {
                     Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
                     getQremindApplication().setVendorUser(vendorUser);
-                    nextActivityAfterLogin(ChooseTaskActivity.class);
+                    nextActivityAfterLogin(VendorDashBoardActivity.class);
                 }
             }
 
