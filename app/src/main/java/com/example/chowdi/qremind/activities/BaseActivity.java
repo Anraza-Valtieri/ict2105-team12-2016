@@ -1,15 +1,27 @@
 package com.example.chowdi.qremind.activities;
 
 import android.animation.Animator;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
+import com.example.chowdi.qremind.utils.Commons;
+import com.example.chowdi.qremind.utils.Constants;
 import com.example.chowdi.qremind.views.NavDrawer;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 /**
  * Created by L on 3/26/2016.
@@ -19,11 +31,18 @@ public class BaseActivity extends AppCompatActivity {
     protected QremindApplication application;
     protected NavDrawer navDrawer;
     protected Toolbar toolbar;
+    protected ValueEventListener queueTurnListener = null;
+    protected Firebase fbRefQueueTurn;
+    protected static boolean notificationPoppedOut = false;
 
     @Override
     protected void onCreate(Bundle savedState){
         super.onCreate(savedState);
         application = (QremindApplication)getApplication();//get application manifested in AndroidManifest.xml
+        if(application.getCustomerUser() != null && application.getCustomerUser().getCurrent_queue() != null) {
+            Object[] current_queue = application.getCustomerUser().getCurrent_queue().values().toArray();
+            waitForTurn(Commons.keyToNoConverter((String)current_queue[1]) + "");
+        }
     }
 
     @Override
@@ -88,5 +107,92 @@ public class BaseActivity extends AppCompatActivity {
 
     public interface FadeOutListener{
         void onFadeOutEnd();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // To prevent the actual back button is press, instead like pressing home button
+        moveTaskToBack(true);
+    }
+
+    /**
+     * To set a listener to firebase queues for checking user's turns
+     * Invoke popup notification when user's turn is up
+     * @param queueNo to show the queue in the notification
+     */
+    public void waitForTurn(final String queueNo)
+    {
+        if(fbRefQueueTurn != null)
+        {
+            fbRefQueueTurn.removeEventListener(queueTurnListener);
+        }
+        Object[] current_queue = application.getCustomerUser().getCurrent_queue().values().toArray();
+        String queueKey = current_queue[1].toString();
+        String shopKey = current_queue[0].toString();
+        fbRefQueueTurn = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey).child("calling");
+        queueTurnListener = fbRefQueueTurn.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null)
+                {
+                    if((boolean) dataSnapshot.getValue())
+                    {
+                        fbRefQueueTurn.removeEventListener(queueTurnListener);
+                        if(!notificationPoppedOut)
+                            popUpNotification(queueNo);
+                        if(!application.notificationSend)
+                            application.showNotification();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                handleFirebaseError(firebaseError);
+            }
+        });
+    }
+
+    /**
+     * To handle all kind of firebase errors where to show the appropriate
+     * and correct error messages on each errors
+     * @param firebaseError FirebaseError
+     */
+    private void handleFirebaseError(FirebaseError firebaseError)
+    {
+        switch (firebaseError.getCode())
+        {
+            default:
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
+                break;
+        }
+    }
+
+    /**
+     * Initialization of pop up box when queue number is reached
+     * @param qNumber
+     */
+    public void popUpNotification(final String qNumber) {
+
+        final AlertDialog.Builder dlg;
+        dlg = new AlertDialog.Builder(this);
+        notificationPoppedOut = true;
+        
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = dlg.create();
+                alertDialog.setTitle("QRemind Notification");
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, (CharSequence) "OK", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int box) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.setMessage(qNumber + " , your turn is approaching.");
+                alertDialog.setCancelable(false);
+                alertDialog.show();
+            }
+        });
     }
 }
