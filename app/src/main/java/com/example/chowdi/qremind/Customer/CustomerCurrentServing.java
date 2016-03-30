@@ -1,9 +1,11 @@
 package com.example.chowdi.qremind.Customer;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -86,6 +88,7 @@ public class CustomerCurrentServing extends BaseActivity {
         loadQueueStats();
         getEstimatedWaitingTime();
         waitForTurn();
+
 
 
         // set listener to refresh button
@@ -324,6 +327,7 @@ public class CustomerCurrentServing extends BaseActivity {
 
                         refresh_btn.setVisibility(View.INVISIBLE);
                         claim_btn.setVisibility(View.VISIBLE);
+                        popUpNotification(queueNo);
                     }
 
 
@@ -353,20 +357,29 @@ public class CustomerCurrentServing extends BaseActivity {
         Commons.dismissProgressDialog(pd);
     }
 
-    public void showNotification() {
-        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, CustomerCurrentServing.class), 0);
-        Resources r = getResources();
-        Notification notification = new NotificationCompat.Builder(this)
-                .setTicker(r.getString(R.string.notification_title))
-                .setSmallIcon(android.R.drawable.ic_menu_report_image)
-                .setContentTitle(r.getString(R.string.notification_title))
-                .setContentText(r.getString(R.string.notification_text))
-                .setContentIntent(pi)
-                .setAutoCancel(true)
-                .build();
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
+/*Initialization of pop up box when queue number is reached */
+    public void popUpNotification(final String qNumber) {
+
+        final AlertDialog.Builder dlg;
+        dlg = new AlertDialog.Builder(this);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = dlg.create();
+                alertDialog.setTitle("QRemind Notification");
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, (CharSequence) "OK", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int box) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.setMessage(qNumber + " , your turn is approaching.");
+                alertDialog.setCancelable(false);
+                alertDialog.show();
+            }
+        });
     }
 
 }

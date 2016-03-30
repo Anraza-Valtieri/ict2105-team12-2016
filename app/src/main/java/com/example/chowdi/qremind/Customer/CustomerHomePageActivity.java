@@ -16,6 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.RVAdapter;
+import com.example.chowdi.qremind.Shop;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Shop;
 import com.example.chowdi.qremind.utils.Constants;
@@ -26,6 +28,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerHomePageActivity extends BaseActivity{
     //Variable for Firebase
@@ -38,9 +41,8 @@ public class CustomerHomePageActivity extends BaseActivity{
     private String[] ratings = {"1","2", "3","4","5"};
     private Spinner spinnerCategory, spinnerRatings;
     private String userSelectCategory,userSelectRatings, shopName,phoneNumber,email,ratingsOfShop,categoryOfShop;
-    private ShopListAdapter adapter;
     private RecyclerView rv;
-    private ArrayList<Shop> shops;
+    private List<Shop> shops;
     private ListView listView;
     private TextView shopNameTV,categoryTV,phoneNumberTV;
     private ListView mDrawerList;
@@ -54,9 +56,6 @@ public class CustomerHomePageActivity extends BaseActivity{
         setNavDrawer(new CustomerMainNavDrawer(this));
         // Initialise all UI elements
         initialiseUIElements();
-        shops = new ArrayList<>();
-        RecyclerView rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
-        rv.setLayoutManager(new LinearLayoutManager(this));//layout to layout the items in RV
 
         adapter = new ShopListAdapter();
         rv.setAdapter(adapter);
@@ -101,6 +100,15 @@ public class CustomerHomePageActivity extends BaseActivity{
     {
         spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
         spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
+        rv = (RecyclerView)findViewById(R.id.rv);
+        //listView = (ListView) findViewById(R.id.listView);
+
+        shopNameTV = (TextView) findViewById(R.id.shopnameTV);
+        categoryTV = (TextView) findViewById(R.id.categoryTV);
+        phoneNumberTV = (TextView) findViewById(R.id.phoneNumberTV);
+
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
     }
 
     /* Initializing the */
@@ -161,6 +169,7 @@ public class CustomerHomePageActivity extends BaseActivity{
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                shops = new ArrayList<>();
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Shop shop = new Shop();
@@ -169,6 +178,7 @@ public class CustomerHomePageActivity extends BaseActivity{
                         shop.setEmail(email = ds.child("email").getValue().toString());
                         adapter.addShop(shop);
                     }
+                    // Log.d("pass short_test_1", "if loop failed/");
                 }
             }
 
