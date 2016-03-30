@@ -35,5 +35,14 @@ public class VendorMainNavDrawer extends NavDrawer{
         avaatarImage = (ImageView)navDrawerView.findViewById(R.id.include_main_nav_drawer_avatar);
 
         //TODO: change avatarImage to avatarURL from user
+        UpdateNavbarView();
+    }
+
+    public void UpdateNavbarView()
+    {
+        if(activity.getQremindApplication().getVendorUser() != null){
+            displayNameText.setText(activity.getQremindApplication().getVendorUser().getFirstname());
+            avaatarImage.setImageBitmap(activity.getQremindApplication().getVendorUser().getMyImage());
+        }
     }
 }
