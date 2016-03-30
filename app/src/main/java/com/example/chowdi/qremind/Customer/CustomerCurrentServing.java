@@ -382,4 +382,28 @@ public class CustomerCurrentServing extends BaseActivity {
         });
     }
 
+    public void showNotification() {
+
+        Intent intent = new Intent(getApplicationContext(), CustomerCurrentServing.class);
+        intent.putExtra(Constants.EX_MSG_QUEUE_NO, Integer.parseInt(queueNo));
+        intent.putExtra(Constants.EX_MSG_QUEUE_KEY, queueKey);
+        intent.putExtra(Constants.EX_MSG_SHOP_NAME, shopName);
+        intent.putExtra(Constants.EX_MSG_SHOP_KEY, shopKey);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        Resources r = getResources();
+        Notification notification = new NotificationCompat.Builder(this)
+                .setTicker(r.getString(R.string.notification_title))
+                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                .setContentTitle(r.getString(R.string.notification_title))
+                .setContentText(r.getString(R.string.notification_text))
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notification);
+
+    }
+
 }
