@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -51,14 +50,16 @@ public class CustomerHomePageActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customerhomepage);
         setNavDrawer(new CustomerMainNavDrawer(this));
-        // Initialise all UI elements
-        initialiseUIElements();
         shops = new ArrayList<>();
-        RecyclerView rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
+        // Initialise all UI elements
+        spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
+        spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
+        rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
         adapter = new ShopListAdapter();
         rv.setAdapter(adapter);
-
+        //init spinner data
         initializeCategory();
+        //initializeRating();
 
         /* Setting the Listener for the category spinner */
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -74,32 +75,7 @@ public class CustomerHomePageActivity extends BaseActivity{
             }
         });
 
-        /* Initializing the ratings spinner*/
-        initializeRating();
-        spinnerRatings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                Log.d("pass short_test_1", "point  reached");
-                userSelectRatings = String.valueOf(parent.getItemAtPosition(pos));
-                populateShopListByRating();
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) {
-                //Another Interface callback
-            }
-        });
-
     }
-
-    /**
-     * Find and assign the correct UI elements to the correct variables from activity_register layout
-     */
-    private void initialiseUIElements()
-    {
-        spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
-        spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
-    }
-
     /* Initializing the */
     private void initializeCategory() {
         firebase = new Firebase(Constants.FIREBASE_CATEGORY);
@@ -123,34 +99,27 @@ public class CustomerHomePageActivity extends BaseActivity{
 
     }
 
-    private void initializeRating() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(CustomerHomePageActivity.this,
-                android.R.layout.simple_spinner_item, ratings);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRatings.setAdapter(adapter);
-    }
-
-    private void populateShopListByRating() {
-        firebase = new Firebase("https://qremind1.firebaseio.com/shop_test");
-        firebase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Shop shop = new Shop();
-                    if (ds.child("ratings").getValue().toString().equals(userSelectRatings)) {
-                        shop.setShop_name(ds.child("shop_name").getValue().toString());
-                        shop.setEmail(email = ds.child("email").getValue().toString());
-                        adapter.addShop(shop);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-            }
-        });
-    }
+//    private void populateShopListByRating() {
+//        firebase = new Firebase("https://qremind1.firebaseio.com/shop_test");
+//        firebase.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//                    Shop shop = new Shop();
+//                    if (ds.child("ratings").getValue().toString().equals(userSelectRatings)) {
+//                        shop.setShop_name(ds.child("shop_name").getValue().toString());
+//                        shop.setEmail(email = ds.child("email").getValue().toString());
+//                        adapter.addShop(shop);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//            }
+//        });
+//    }
 
     private void populateShopListByCategory() {
         //firebase = new Firebase(Constants.FIREBASE_SHOPS);
@@ -158,8 +127,8 @@ public class CustomerHomePageActivity extends BaseActivity{
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                shops = new ArrayList<>();
-
+                //clear previous data.
+                adapter.clearShops();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Shop shop = new Shop();
                     if (ds.child("category").getValue().toString().equals(userSelectCategory)) {
@@ -220,6 +189,11 @@ public class CustomerHomePageActivity extends BaseActivity{
         public void addShop(Shop shop){
             shops.add(shop);
             notifyItemInserted(shops.size()-1);
+        }
+
+        public void clearShops(){
+            shops.clear();
+            notifyDataSetChanged();
         }
     }
 
