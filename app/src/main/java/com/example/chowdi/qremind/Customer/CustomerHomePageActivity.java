@@ -193,8 +193,8 @@ public class CustomerHomePageActivity extends BaseActivity{
                 @Override
                 public void onClick(View v) {
                    //getQueue(shop.getVendor_id(),shop.getShop_name(),application.getCustomerUser().getPhoneno());
-                    if(application.getCustomerUser().getCurrent_queue().isEmpty()){
-                        getQueue(shop.getShop_key(),shop.getShop_name(),"91513429");
+                    if(application.getCustomerUser().getCurrent_queue() == null){
+                        getQueue(shop.getShop_key(),shop.getShop_name(),application.getCustomerUser().getPhoneno());
                     }else{
                         Toast.makeText(CustomerHomePageActivity.this,"You are already in queue",Toast.LENGTH_SHORT).show();
                     }
