@@ -20,12 +20,12 @@ public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView
 
     @Override
     public void onCreate(Bundle state) {
-        super.onCreate(state);
-        mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
-        setContentView(mScannerView);                // Set the scanner view as the content view
+        super.onCreate(state);             // Set the scanner view as the content view
         scanningCancelled = false;
         scanningFinished = false;
         result = "";
+        mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
+        setContentView(mScannerView);
     }
 
     @Override
