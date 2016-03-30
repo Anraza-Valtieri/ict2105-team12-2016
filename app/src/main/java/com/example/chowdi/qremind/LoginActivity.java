@@ -48,26 +48,6 @@ public class LoginActivity extends BaseActivity {
         // Initialise Firebase library with android context once before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
-        // Check if there is already an authorisation for firebase which the user application have logged in previously
-        fbRef = new Firebase(Constants.FIREBASE_MAIN);
-        // if there is valid authorisation, redirect to next activity
-        if(fbRef.getAuth() != null)
-        {
-            prefs = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE);
-            String role = prefs.getString(Constants.SHAREPREF_ROLE, null);
-            if(role.equals(Constants.ROLE_CUSTOMER))
-            {
-                String email = prefs.getString(Constants.SHAREPREF_EMAIL, null);
-                String phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
-                Customer custUser = new Customer(email, "", "", phoneNo);
-                getQremindApplication().setCustomerUser(custUser);
-            }
-            if(role.equals(Constants.ROLE_CUSTOMER))
-                nextActivityAfterLogin(CustomerHomePageActivity.class);
-            else if(role.equals(Constants.ROLE_VENDOR))
-                nextActivityAfterLogin(ChooseTaskActivity.class);
-        }
-
         // Initialise all UI elements first and progress dialog
         initialiseUIElements();
         pd = new ProgressDialog(this);
@@ -294,6 +274,10 @@ public class LoginActivity extends BaseActivity {
                         fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
                             @Override
                             public void onAuthenticated(AuthData authData) {
+                                //test
+                                Customer custUser = dataSnapshot.getValue(Customer.class);
+                                getQremindApplication().setCustomerUser(custUser);
+                                //test
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_CUSTOMER);
                                 Commons.dismissProgressDialog(pd);
                                 nextActivityAfterLogin(CustomerHomePageActivity.class);
@@ -324,6 +308,10 @@ public class LoginActivity extends BaseActivity {
                             {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
+                                    //test
+                                    Customer custUser = dataSnapshot.getValue(Customer.class);
+                                    getQremindApplication().setCustomerUser(custUser);
+                                    //test
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_CUSTOMER);
                                     Commons.dismissProgressDialog(pd);
                                     nextActivityAfterLogin(CustomerHomePageActivity.class);
@@ -382,6 +370,7 @@ public class LoginActivity extends BaseActivity {
         if(fbRef.getAuth() == null) return;
 
         Intent intent = new Intent(LoginActivity.this, activityClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_NEW_TASK );
         startActivity(intent);
         LoginActivity.this.finish();
     }
@@ -405,12 +394,6 @@ public class LoginActivity extends BaseActivity {
 
         }
         editor.commit();
-
-        if(role.equals(Constants.ROLE_CUSTOMER))
-        {
-            Customer custUser = new Customer(email, "", "", phoneNo);
-            getQremindApplication().setCustomerUser(custUser);
-        }
     }
 
     /**
