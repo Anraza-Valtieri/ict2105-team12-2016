@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind.Customer;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,17 +36,20 @@ public class CustomerHomePageActivity extends BaseActivity{
     //Variable for Firebase
     private Firebase firebase;
     private Firebase fireBaseQueues;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences prefs;
 
     // Variable for UI Elements
     //public static ArrayList categories;
-    private ArrayList<String> categories = new ArrayList<String>();
-    private String[] ratings = {"1","2", "3","4","5"};
     private Spinner spinnerCategory, spinnerRatings;
     private String userSelectCategory,userSelectRatings, shopName,phoneNumber,email,ratingsOfShop,categoryOfShop;
     private RecyclerView rv;
+
+    // Other variables
     private ArrayList<Shop> shops;
     private ShopListAdapter adapter;
+    private ArrayList<String> categories = new ArrayList<String>();
+    private String[] ratings = {"1","2", "3","4","5"};
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,11 @@ public class CustomerHomePageActivity extends BaseActivity{
         setContentView(R.layout.activity_customerhomepage);
         setNavDrawer(new CustomerMainNavDrawer(this));
         shops = new ArrayList<>();
+
+        // Initialise getSharedPreferences for this app and progress dialog
+        prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
+        pd = new ProgressDialog(this);
+
         // Initialise all UI elements
         spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
         //spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
@@ -60,6 +69,7 @@ public class CustomerHomePageActivity extends BaseActivity{
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ShopListAdapter();
         rv.setAdapter(adapter);
+
         //init spinner data
         initializeCategory();
         //initializeRating();
@@ -192,9 +202,8 @@ public class CustomerHomePageActivity extends BaseActivity{
             holder.qButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   //getQueue(shop.getVendor_id(),shop.getShop_name(),application.getCustomerUser().getPhoneno());
                     if(application.getCustomerUser().getCurrent_queue() == null){
-                        getQueue(shop.getShop_key(),shop.getShop_name(),application.getCustomerUser().getPhoneno());
+                        getQueue(shop.getShop_key(),application.getCustomerUser().getPhoneno(),shop.getShop_name());
                     }else{
                         Toast.makeText(CustomerHomePageActivity.this,"You are already in queue",Toast.LENGTH_SHORT).show();
                     }
@@ -230,11 +239,9 @@ public class CustomerHomePageActivity extends BaseActivity{
 
     }
 
-    public void getQueue(String shopKey,String shopName,String custId){
-        String shop_key = shopKey;
-        String customer_id = custId;
-        String shop_name = shopName;
-        //Commons.showProgressDialog(pd, "Please wait", "Getting queue number.");
+    public void getQueue(String shop_key,String customer_id,String shop_name){
+        Commons.showProgressDialog(pd, "Please wait", "Getting queue number.");
+        application.notificationSend = false;
 
         Firebase vendorRef = new Firebase(Constants.FIREBASE_SHOPS + "/" + shop_key + "/queues");
         Firebase custRef = new Firebase(Constants.FIREBASE_CUSTOMER +"/"+ customer_id +"/current_queue");
@@ -265,14 +272,16 @@ public class CustomerHomePageActivity extends BaseActivity{
         vendorMap.put(customer_id, true);
         vendorRef.setValue(vendorMap); // insert into queues
 
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.EX_MSG_SHOP_NAME, shop_name);
+        editor.putString(Constants.EX_MSG_SHOP_KEY, shop_key);
+        editor.putString(Constants.EX_MSG_QUEUE_KEY, queueKey);
+        editor.putString(Constants.EX_MSG_QUEUE_NO, queueNo + "");
+        editor.commit();
+
         Intent intent = new Intent(CustomerHomePageActivity.this, CustomerCurrentServing.class);
-        intent.putExtra(Constants.EX_MSG_SHOP_NAME, shop_name);
-        intent.putExtra(Constants.EX_MSG_SHOP_KEY, shop_key);
-        intent.putExtra(Constants.EX_MSG_CUSTOMER_ID, customer_id);
-        intent.putExtra(Constants.EX_MSG_QUEUE_KEY, queueKey);
-        intent.putExtra(Constants.EX_MSG_QUEUE_NO, queueNo);
         startActivity(intent);
-        //Commons.dismissProgressDialog(pd);
+        Commons.dismissProgressDialog(pd);
         CustomerHomePageActivity.this.finish();
     }
 }
