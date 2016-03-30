@@ -99,7 +99,7 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
     public void getQueue(){
         Commons.showProgressDialog(pd, "Please wait", "Getting queue number.");
 
-//        Firebase vendorRef = new Firebase(Constants.FIREBASE_SHOPS + "/" + shop_key + "/queues");
+        Firebase vendorRef = new Firebase(Constants.FIREBASE_SHOPS + "/" + shop_key + "/queues");
         Firebase custRef = new Firebase(Constants.FIREBASE_CUSTOMER +"/"+ customer_id +"/current_queue");
         Firebase queueRef = new Firebase(Constants.FIREBASE_QUEUES +"/"+ shop_key).push();
 

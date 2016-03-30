@@ -3,14 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/activity_customer_home_page_list_card"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    card_view:cardCornerRadius="4dp"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    android:layout_gravity="center"
+    android:foreground="?android:attr/selectableItemBackground">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:onClick="onClickGetQueue"
-        >
+        android:padding="4dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,8 +44,9 @@
             android:layout_height="wrap_content"
             android:text="Q"
             android:id="@+id/activity_customerHomePage_list_item_joinQueue"
-            android:layout_below="@+id/activity_customerHomePage_list_item_shopName"
-            android:layout_toRightOf="@+id/activity_customerHomePage_list_item_inQueue"/>
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            />
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

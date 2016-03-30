@@ -38,7 +38,7 @@
             android:layout_toRightOf="@id/category_textView"/>
 
 
-
+        <!--
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,13 +56,14 @@
             android:spinnerMode="dropdown"
             android:layout_below="@id/spinner_category"
             android:layout_toRightOf="@id/ratings_textView"/>
-
+        -->
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/activity_customerHomePage_recyclerView"
-            android:layout_below="@id/spinner_ratings"
+            android:layout_below="@+id/spinner_category"
+            android:scrollbars="vertical"
             />
         </RelativeLayout>
     </LinearLayout>

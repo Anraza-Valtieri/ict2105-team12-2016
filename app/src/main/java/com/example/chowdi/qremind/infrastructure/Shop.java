@@ -1,12 +1,15 @@
 package com.example.chowdi.qremind.infrastructure;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by L on 3/5/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Shop {
+public class Shop implements Parcelable {
     private String address;
     private String category;
     private String email;
@@ -15,7 +18,8 @@ public class Shop {
     private String shop_name;
     private String vendor_id;
     private String image;
-
+    private long queueCount;
+    private String shop_key;
     public Shop() {
     }
 
@@ -87,4 +91,63 @@ public class Shop {
     public String getImage() {
         return image;
     }
+
+    public long getQueueCount() {
+        return queueCount;
+    }
+
+    public void setQueueCount(long queueCount) {
+        this.queueCount = queueCount;
+    }
+
+    public String getShop_key() {
+        return shop_key;
+    }
+
+    public void setShop_key(String shop_key) {
+        this.shop_key = shop_key;
+    }
+
+    protected Shop(Parcel in) {
+        address = in.readString();
+        category = in.readString();
+        email = in.readString();
+        phone_no = in.readString();
+        ratings = in.readLong();
+        shop_name = in.readString();
+        vendor_id = in.readString();
+        image = in.readString();
+        queueCount = in.readLong();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(address);
+        dest.writeString(category);
+        dest.writeString(email);
+        dest.writeString(phone_no);
+        dest.writeLong(ratings);
+        dest.writeString(shop_name);
+        dest.writeString(vendor_id);
+        dest.writeString(image);
+        dest.writeLong(queueCount);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Shop> CREATOR = new Parcelable.Creator<Shop>() {
+        @Override
+        public Shop createFromParcel(Parcel in) {
+            return new Shop(in);
+        }
+
+        @Override
+        public Shop[] newArray(int size) {
+            return new Shop[size];
+        }
+    };
 }
