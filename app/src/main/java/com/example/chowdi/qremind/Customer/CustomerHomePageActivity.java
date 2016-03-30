@@ -64,6 +64,7 @@ public class CustomerHomePageActivity extends BaseActivity{
         //Initialize Firebase library in Android context before any Firebase reference is created or used
         Firebase.setAndroidContext(getApplicationContext());
 
+        //Populate the categories spinner with values from Firebase
         getCategories();
 
         /* Setting the Listener for the category spinner */
@@ -71,29 +72,31 @@ public class CustomerHomePageActivity extends BaseActivity{
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 userSelectCategory = String.valueOf(parent.getItemAtPosition(pos));
 
-                /* Calls the getShops() function and populates the category spinner with data from Firebase */
-                getShops();
-            }
+                //Initialization of Ratings Spinner
+                setRatings();
 
+                //Set listener on Ratings Spinner
+                spinnerRatings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                        //Log.d("pass short_test_1", "point  reached");
+                        userSelectRatings = String.valueOf(parent.getItemAtPosition(pos));
+
+                        //Connect to Firebase and retrieve the shops that matches the spinner values
+                        getShops();
+
+                    }
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        //Another Interface callback
+                    }
+                });
+
+            }
             public void onNothingSelected(AdapterView<?> parent) {
                 //Another Interface callback
             }
         });
 
-        /* Initializing the ratings spinner*/
-        setRatings();
-        spinnerRatings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                Log.d("pass short_test_1", "point  reached");
-                userSelectRatings = String.valueOf(parent.getItemAtPosition(pos));
-                getRatings();
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) {
-                //Another Interface callback
-            }
-        });
 
     }
 
@@ -115,7 +118,7 @@ public class CustomerHomePageActivity extends BaseActivity{
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
     }
 
-    /* Initializing the */
+    /* Initializing the Categories Spinner*/
     private void getCategories() {
         firebase = new Firebase(Constants.FIREBASE_CATEGORY);
         firebase.addValueEventListener(new ValueEventListener() {
@@ -145,30 +148,6 @@ public class CustomerHomePageActivity extends BaseActivity{
         spinnerRatings.setAdapter(adapter);
     }
 
-    private void getRatings() {
-        firebase = new Firebase("https://qremind1.firebaseio.com/shop_test");
-        firebase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                shops = new ArrayList<>();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                    if (ds.child("ratings").getValue().toString().equals(userSelectRatings)) {
-                        shopName = ds.child("shop_name").getValue().toString();
-                        phoneNumber = ds.child("phone_no").getValue().toString();
-                        categoryOfShop = ds.child("category").getValue().toString();
-                        email = ds.child("email").getValue().toString();
-                        shops.add(new Shop(shopName, categoryOfShop, phoneNumber, userSelectRatings, email));
-                        initializeAdapter();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-            }
-        });
-    }
 
     private void getShops() {
         //firebase = new Firebase(Constants.FIREBASE_SHOPS);
@@ -180,7 +159,7 @@ public class CustomerHomePageActivity extends BaseActivity{
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                    if (ds.child("category").getValue().toString().equals(userSelectCategory)) {
+                    if ((ds.child("category").getValue().toString().equals(userSelectCategory)) && (ds.child("ratings").getValue().toString().equals(userSelectRatings))) {
                         shopName = ds.child("shop_name").getValue().toString();
                         phoneNumber = ds.child("phone_no").getValue().toString();
                         ratingsOfShop = ds.child("ratings").getValue().toString();
@@ -188,9 +167,7 @@ public class CustomerHomePageActivity extends BaseActivity{
                         shops.add(new Shop(shopName, userSelectCategory, phoneNumber, ratingsOfShop, email));
                         initializeAdapter();
                     } else {
-                        //what to display when there are no records?
-
-
+                        initializeAdapter();
                     }
                     // Log.d("pass short_test_1", "if loop failed/");
                 }
@@ -203,9 +180,11 @@ public class CustomerHomePageActivity extends BaseActivity{
         });
     }
 
+    //Initialization of RecyclerView Adapter
     private void initializeAdapter(){
         RVAdapter adapter = new RVAdapter(shops);
         rv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
 }
