@@ -1,5 +1,9 @@
 package com.example.chowdi.qremind.infrastructure;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -15,6 +19,9 @@ public class Customer implements CardWithList.ListObject{
     private String firstname;
     private String lastname;
     private String phoneno;
+    private String image;
+    private Bitmap myImage;
+
 
     public Customer(){
 
@@ -44,6 +51,23 @@ public class Customer implements CardWithList.ListObject{
         this.phoneno = phoneno;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public Bitmap getMyImage() {
+        return myImage;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+        convertImage(image);
+    }
+
+    public void setMyImage(Bitmap myImage) {
+        this.myImage = myImage;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -60,6 +84,11 @@ public class Customer implements CardWithList.ListObject{
         return phoneno;
     }
 
+    public void convertImage(String imageString)
+    {
+        byte[] imageAsBytes = Base64.decode(imageString.getBytes(), Base64.DEFAULT);
+        setMyImage(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+    }
     @Override
     public String getObjectId() {
         return null;
