@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,8 +43,7 @@ public class CustomerCurrentServing extends BaseActivity {
 
     // Variable for Firebase
     private Firebase fbRefWaitingTime;
-    private Firebase fbRefQueueTurn;
-    private ValueEventListener waitingTimeListener = null, queueTurnListener = null;
+    private ValueEventListener waitingTimeListener = null;
 
     // Variable for all relevant UI elements
     private TextView vendorName_TV, currentlyServing_TV, myQueueNo_TV, waitingTime_TV;
@@ -52,9 +52,6 @@ public class CustomerCurrentServing extends BaseActivity {
 
     // Others variables
     private SharedPreferences prefs;
-    private ListView mDrawerList;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
     private ProgressDialog pd;
     private String queueNo, queueKey, shopName, shopKey, customerid;
 
@@ -79,24 +76,21 @@ public class CustomerCurrentServing extends BaseActivity {
         pd = new ProgressDialog(this);
 
         // Get all strings passed from previous activity
-        queueNo = String.valueOf(getIntent().getExtras().getInt(Constants.EX_MSG_QUEUE_NO));
-        queueKey = getIntent().getExtras().getString(Constants.EX_MSG_QUEUE_KEY);
-        shopName = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_NAME);
-        shopKey = getIntent().getExtras().getString(Constants.EX_MSG_SHOP_KEY);
-        customerid = getIntent().getExtras().getString(Constants.EX_MSG_CUSTOMER_ID);;
+        queueNo = prefs.getString(Constants.EX_MSG_QUEUE_NO, null); //String.valueOf(getIntent().getExtras().getInt(Constants.EX_MSG_QUEUE_NO));
+        queueKey = prefs.getString(Constants.EX_MSG_QUEUE_KEY, null); //getIntent().getExtras().getString(Constants.EX_MSG_QUEUE_KEY);
+        shopName = prefs.getString(Constants.EX_MSG_SHOP_NAME, null); //getIntent().getExtras().getString(Constants.EX_MSG_SHOP_NAME);
+        shopKey = prefs.getString(Constants.EX_MSG_SHOP_KEY, null); //getIntent().getExtras().getString(Constants.EX_MSG_SHOP_KEY);
+        customerid = getQremindApplication().getCustomerUser().getPhoneno(); //getIntent().getExtras().getString(Constants.EX_MSG_CUSTOMER_ID);;
 
         loadQueueStats();
         getEstimatedWaitingTime();
         waitForTurn();
 
-
-
         // set listener to refresh button
         refresh_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(waitingTimeListener != null)
-                {
+                if (waitingTimeListener != null) {
                     fbRefWaitingTime.removeEventListener(waitingTimeListener);
                     waitingTimeListener = null;
                 }
@@ -114,11 +108,10 @@ public class CustomerCurrentServing extends BaseActivity {
                     @Override
                     protected Void doInBackground(Void... params) {
                         try {
+                            // Wait for the camera starts up
+                            SystemClock.sleep(1000);
                             Log.d("RESULT", "Start Scanning");
-                            while(!QRCodeScanner.scanningFinished);
-
-                            if(QRCodeScanner.scanningCancelled)
-                                return null;
+                            while (!QRCodeScanner.scanningFinished) ;
 
                             Log.d("RESULT", "Finish Scanning");
                             Log.d("RESULT", QRCodeScanner.result);
@@ -129,8 +122,9 @@ public class CustomerCurrentServing extends BaseActivity {
                     }
 
                     @Override
-                    protected void onPostExecute(Void result)
-                    {
+                    protected void onPostExecute(Void result) {
+                        if (QRCodeScanner.scanningCancelled)
+                            return;
                         claimQueue(QRCodeScanner.result);
                     }
                 }.execute();
@@ -155,6 +149,13 @@ public class CustomerCurrentServing extends BaseActivity {
         fbref.removeValue();
         fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
         fbref.removeValue();
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(Constants.EX_MSG_QUEUE_KEY);
+        editor.remove(Constants.EX_MSG_SHOP_KEY);
+        editor.remove(Constants.EX_MSG_SHOP_NAME);
+        editor.remove(Constants.EX_MSG_QUEUE_NO);
+        editor.commit();
         this.finish();
     }
 
@@ -163,7 +164,6 @@ public class CustomerCurrentServing extends BaseActivity {
     {
         super.onDestroy();
         fbRefWaitingTime.removeEventListener(waitingTimeListener);
-        fbRefQueueTurn.removeEventListener(queueTurnListener);
     }
 
     /**
@@ -178,8 +178,6 @@ public class CustomerCurrentServing extends BaseActivity {
         time_ext_req_btn = (Button) findViewById(R.id.time_ext_req_btn);
         claim_btn = (Button) findViewById(R.id.claim_btn);
         refresh_btn = (Button) findViewById(R.id.refresh_btn);
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
     }
 
     /**
@@ -196,6 +194,7 @@ public class CustomerCurrentServing extends BaseActivity {
      */
     private void getEstimatedWaitingTime()
     {
+        Commons.showProgressDialog(pd, "Loading", "Calculating estimated waiting time.");
         fbRefWaitingTime = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey);
         waitingTimeListener = fbRefWaitingTime.addValueEventListener(new ValueEventListener() {
             @Override
@@ -216,6 +215,7 @@ public class CustomerCurrentServing extends BaseActivity {
                     {
                         estimateWaitingTime(Integer.parseInt(inQueuetime.split(":")[0]), Integer.parseInt(inQueuetime.split(":")[1]));
                     }
+                    Commons.dismissProgressDialog(pd);
                 }
             }
 
@@ -252,6 +252,7 @@ public class CustomerCurrentServing extends BaseActivity {
                 dispRemainingTime(time);
                 new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey).child("waiting_time").setValue(
                         (time.get(Calendar.HOUR) * 60) + time.get(Calendar.MINUTE));
+                Commons.dismissProgressDialog(pd);
             }
 
             @Override
@@ -313,6 +314,10 @@ public class CustomerCurrentServing extends BaseActivity {
      */
     private void waitForTurn()
     {
+        if(fbRefQueueTurn != null)
+        {
+            fbRefQueueTurn.removeEventListener(queueTurnListener);
+        }
         fbRefQueueTurn = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey).child("calling");
         queueTurnListener = fbRefQueueTurn.addValueEventListener(new ValueEventListener() {
             @Override
@@ -321,6 +326,7 @@ public class CustomerCurrentServing extends BaseActivity {
                 {
                     if((boolean) dataSnapshot.getValue())
                     {
+                        Commons.dismissProgressDialog(pd);
                         fbRefWaitingTime.removeEventListener(waitingTimeListener);
                         fbRefQueueTurn.removeEventListener(queueTurnListener);
                         waitingTime_TV.setText("Your turn's up!");
@@ -328,9 +334,9 @@ public class CustomerCurrentServing extends BaseActivity {
                         refresh_btn.setVisibility(View.INVISIBLE);
                         claim_btn.setVisibility(View.VISIBLE);
                         popUpNotification(queueNo);
+                        if(!application.notificationSend)
+                            application.showNotification();
                     }
-
-
                 }
             }
 
@@ -356,54 +362,4 @@ public class CustomerCurrentServing extends BaseActivity {
         }
         Commons.dismissProgressDialog(pd);
     }
-
-
-/*Initialization of pop up box when queue number is reached */
-    public void popUpNotification(final String qNumber) {
-
-        final AlertDialog.Builder dlg;
-        dlg = new AlertDialog.Builder(this);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog alertDialog = dlg.create();
-                alertDialog.setTitle("QRemind Notification");
-                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, (CharSequence) "OK", new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int box) {
-                        dialog.dismiss();
-                    }
-                });
-                alertDialog.setMessage(qNumber + " , your turn is approaching.");
-                alertDialog.setCancelable(false);
-                alertDialog.show();
-            }
-        });
-    }
-
-    public void showNotification() {
-
-        Intent intent = new Intent(getApplicationContext(), CustomerCurrentServing.class);
-        intent.putExtra(Constants.EX_MSG_QUEUE_NO, Integer.parseInt(queueNo));
-        intent.putExtra(Constants.EX_MSG_QUEUE_KEY, queueKey);
-        intent.putExtra(Constants.EX_MSG_SHOP_NAME, shopName);
-        intent.putExtra(Constants.EX_MSG_SHOP_KEY, shopKey);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        Resources r = getResources();
-        Notification notification = new NotificationCompat.Builder(this)
-                .setTicker(r.getString(R.string.notification_title))
-                .setSmallIcon(android.R.drawable.ic_menu_report_image)
-                .setContentTitle(r.getString(R.string.notification_title))
-                .setContentText(r.getString(R.string.notification_text))
-                .setContentIntent(pi)
-                .setAutoCancel(true)
-                .build();
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
-
-    }
-
 }
