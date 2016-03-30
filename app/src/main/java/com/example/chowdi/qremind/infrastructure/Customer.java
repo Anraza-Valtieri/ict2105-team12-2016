@@ -6,6 +6,8 @@ import android.util.Base64;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Map;
+
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.prototypes.CardWithList;
 
@@ -19,6 +21,7 @@ public class Customer implements CardWithList.ListObject{
     private String firstname;
     private String lastname;
     private String phoneno;
+    private Map<String,String> current_queue;
     private String image;
     private Bitmap myImage;
 
@@ -66,6 +69,14 @@ public class Customer implements CardWithList.ListObject{
 
     public void setMyImage(Bitmap myImage) {
         this.myImage = myImage;
+    }
+
+    public Map<String,String> getCurrent_queue() {
+        return current_queue;
+    }
+
+    public void setCurrent_queue(Map<String, String> current_queue) {
+        this.current_queue = current_queue;
     }
 
     public String getEmail() {
