@@ -1,18 +1,24 @@
 package com.example.chowdi.qremind.Customer;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
@@ -23,6 +29,12 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class CustomerProfilePageActivity extends BaseActivity{
 
@@ -41,6 +53,7 @@ public class CustomerProfilePageActivity extends BaseActivity{
     private SharedPreferences prefs;
     private String phoneNo;
     private ProgressDialog pd;
+    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,8 +134,7 @@ public class CustomerProfilePageActivity extends BaseActivity{
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(camera_intent, 0);
+                selectImage();
             }
         });
 
@@ -197,10 +209,94 @@ public class CustomerProfilePageActivity extends BaseActivity{
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Bitmap bp = (Bitmap) data.getExtras().get("data");
-        profilePic.setImageBitmap(bp);
+        // Allow user to choose whether customer wants to update his profile picture with camera or
+        // choose from gallery
+        if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
     }
 
+    /**
+     * To open a new window within app allowing user to choose the different options to set
+     * his profile picture
+     * @param
+     */
+    private void selectImage(){
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(CustomerProfilePageActivity.this);
+        builder.setTitle("Change Profile Picture");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Take Photo")) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);
+                } else if (items[item].equals("Choose from Library")) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select File"),
+                            SELECT_FILE);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    // Open camera app, take picture and update customer's profile picture
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        profilePic.setImageBitmap(thumbnail);
+    }
+
+    // Choose photo from gallery and set it as customer's profile picture
+    private void onSelectFromGalleryResult(Intent data) {
+        try
+        {
+            Commons.uri = data.getData();
+            if (Commons.uri != null)
+            {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Commons.uri);
+                profilePic.setImageBitmap(bitmap);
+            } else
+            {
+                Toast toast = Toast.makeText(this, "Sorry!!! You haven't select any image.", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        } catch (Exception e)
+        {
+            // you get this when you did not select any single image
+            Log.e("onActivityResult", "" + e);
+
+        }
+    }
 
     @Override
     protected void onStop()
