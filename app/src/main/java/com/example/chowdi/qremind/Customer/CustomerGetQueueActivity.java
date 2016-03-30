@@ -60,8 +60,8 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
         prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
 
         // Create the navigation sidebar
-        Commons.addDrawerItems(this, mDrawerList);
-        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
+        //Commons.addDrawerItems(this, mDrawerList);
+       // mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setHomeButtonEnabled(true);
