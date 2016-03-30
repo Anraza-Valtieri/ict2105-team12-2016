@@ -11,11 +11,13 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.chowdi.qremind.Vendor.BusinessProfileActivity;
+import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
+import com.example.chowdi.qremind.views.VendorMainNavDrawer;
 import com.firebase.client.Firebase;
 
-public class ChooseTaskActivity extends AppCompatActivity{
+public class ChooseTaskActivity extends BaseActivity{
 
     // Firebase variables
     Firebase fbRef;
@@ -40,11 +42,12 @@ public class ChooseTaskActivity extends AppCompatActivity{
         initialiseUIElements();
 
         // Create navigation sidebar
-        Commons.addDrawerItems(this, mDrawerList);
-        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
+        setNavDrawer(new VendorMainNavDrawer(this));
+//        Commons.addDrawerItems(this, mDrawerList);
+//        mDrawerToggle = Commons.setupDrawer(this, this.mDrawerLayout);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setHomeButtonEnabled(true);
 
         // set and implement click listener to manage, setting, and logout buttons
         manageBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,11 +86,11 @@ public class ChooseTaskActivity extends AppCompatActivity{
      * Sync the toggle state of the Navigation Sidebar after onCreate has occurred
      * @param savedInstanceState state of the Activity
      */
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
+//    @Override
+//    protected void onPostCreate(Bundle savedInstanceState) {
+//        super.onPostCreate(savedInstanceState);
+//        mDrawerToggle.syncState();
+//    }
 
     /**
      * Handle the clicking of an item in the navigation sidebar
@@ -95,9 +98,9 @@ public class ChooseTaskActivity extends AppCompatActivity{
      * else return false which is the default implementation
      * @param item clickable options in the navigation sidebar
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+//    }
 }
