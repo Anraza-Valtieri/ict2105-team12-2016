@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -15,9 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
-import com.example.chowdi.qremind.RVAdapter;
-import com.example.chowdi.qremind.Shop;
 import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.infrastructure.Shop;
 import com.example.chowdi.qremind.utils.Constants;
 import com.example.chowdi.qremind.views.CustomerMainNavDrawer;
 import com.firebase.client.DataSnapshot;
@@ -26,7 +26,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CustomerHomePageActivity extends BaseActivity{
     //Variable for Firebase
@@ -39,8 +38,9 @@ public class CustomerHomePageActivity extends BaseActivity{
     private String[] ratings = {"1","2", "3","4","5"};
     private Spinner spinnerCategory, spinnerRatings;
     private String userSelectCategory,userSelectRatings, shopName,phoneNumber,email,ratingsOfShop,categoryOfShop;
+    private ShopListAdapter adapter;
     private RecyclerView rv;
-    private List<Shop> shops;
+    private ArrayList<Shop> shops;
     private ListView listView;
     private TextView shopNameTV,categoryTV,phoneNumberTV;
     private ListView mDrawerList;
@@ -54,25 +54,22 @@ public class CustomerHomePageActivity extends BaseActivity{
         setNavDrawer(new CustomerMainNavDrawer(this));
         // Initialise all UI elements
         initialiseUIElements();
+        shops = new ArrayList<>();
+        RecyclerView rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
+        rv.setLayoutManager(new LinearLayoutManager(this));//layout to layout the items in RV
 
-        /* Recycler View Initialization*/
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rv.setLayoutManager(llm);
-        //rv.setHasFixedSize(true);
+        adapter = new ShopListAdapter();
+        rv.setAdapter(adapter);
 
-
-        //Initialize Firebase library in Android context before any Firebase reference is created or used
-        Firebase.setAndroidContext(getApplicationContext());
-
-        getCategories();
+        initializeCategory();
 
         /* Setting the Listener for the category spinner */
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 userSelectCategory = String.valueOf(parent.getItemAtPosition(pos));
 
-                /* Calls the getShops() function and populates the category spinner with data from Firebase */
-                getShops();
+                /* Calls the populateShopListByCategory() function and populates the category spinner with data from Firebase */
+                populateShopListByCategory();
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -81,13 +78,13 @@ public class CustomerHomePageActivity extends BaseActivity{
         });
 
         /* Initializing the ratings spinner*/
-        setRatings();
+        initializeRating();
         spinnerRatings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 Log.d("pass short_test_1", "point  reached");
                 userSelectRatings = String.valueOf(parent.getItemAtPosition(pos));
-                getRatings();
+                populateShopListByRating();
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -104,19 +101,10 @@ public class CustomerHomePageActivity extends BaseActivity{
     {
         spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
         spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
-        rv = (RecyclerView)findViewById(R.id.rv);
-        //listView = (ListView) findViewById(R.id.listView);
-
-        shopNameTV = (TextView) findViewById(R.id.shopnameTV);
-        categoryTV = (TextView) findViewById(R.id.categoryTV);
-        phoneNumberTV = (TextView) findViewById(R.id.phoneNumberTV);
-
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
     }
 
     /* Initializing the */
-    private void getCategories() {
+    private void initializeCategory() {
         firebase = new Firebase(Constants.FIREBASE_CATEGORY);
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -138,28 +126,25 @@ public class CustomerHomePageActivity extends BaseActivity{
 
     }
 
-    private void setRatings() {
+    private void initializeRating() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(CustomerHomePageActivity.this,
                 android.R.layout.simple_spinner_item, ratings);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRatings.setAdapter(adapter);
     }
 
-    private void getRatings() {
+    private void populateShopListByRating() {
         firebase = new Firebase("https://qremind1.firebaseio.com/shop_test");
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                shops = new ArrayList<>();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Shop shop = new Shop();
                     if (ds.child("ratings").getValue().toString().equals(userSelectRatings)) {
-                        shopName = ds.child("shop_name").getValue().toString();
-                        phoneNumber = ds.child("phone_no").getValue().toString();
-                        categoryOfShop = ds.child("category").getValue().toString();
-                        email = ds.child("email").getValue().toString();
-                        shops.add(new Shop(shopName, categoryOfShop, phoneNumber, userSelectRatings, email));
-                        initializeAdapter();
+                        shop.setShop_name(ds.child("shop_name").getValue().toString());
+                        shop.setEmail(email = ds.child("email").getValue().toString());
+                        adapter.addShop(shop);
                     }
                 }
             }
@@ -170,29 +155,20 @@ public class CustomerHomePageActivity extends BaseActivity{
         });
     }
 
-    private void getShops() {
+    private void populateShopListByCategory() {
         //firebase = new Firebase(Constants.FIREBASE_SHOPS);
         firebase = new Firebase("https://qremind1.firebaseio.com/shop_test");
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                shops = new ArrayList<>();
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
+                    Shop shop = new Shop();
                     if (ds.child("category").getValue().toString().equals(userSelectCategory)) {
-                        shopName = ds.child("shop_name").getValue().toString();
-                        phoneNumber = ds.child("phone_no").getValue().toString();
-                        ratingsOfShop = ds.child("ratings").getValue().toString();
-                        email = ds.child("email").getValue().toString();
-                        shops.add(new Shop(shopName, userSelectCategory, phoneNumber, ratingsOfShop, email));
-                        initializeAdapter();
-                    } else {
-                        //what to display when there are no records?
-
-
+                        shop.setShop_name(ds.child("shop_name").getValue().toString());
+                        shop.setEmail(email = ds.child("email").getValue().toString());
+                        adapter.addShop(shop);
                     }
-                    // Log.d("pass short_test_1", "if loop failed/");
                 }
             }
 
@@ -203,9 +179,60 @@ public class CustomerHomePageActivity extends BaseActivity{
         });
     }
 
-    private void initializeAdapter(){
-        RVAdapter adapter = new RVAdapter(shops);
-        rv.setAdapter(adapter);
+    private class ShopListAdapter extends RecyclerView.Adapter<ShopViewHolder> {
+
+
+        public ShopListAdapter(){
+            shops.add(new Shop("Shop","test shop"));
+        }
+
+        @Override
+        public ShopViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            final View view = getLayoutInflater().inflate(R.layout.activity_customer_home_page_rv_list_item, parent, false);//layout inflater from the activity this class is in, the passed layout is given to the viewholder to inflate individual views
+//            view.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    String name = (String) view.getTag();
+//                    removeName(name);
+//                }
+//            });
+            return new ShopViewHolder(view);
+        }
+
+        @Override
+        public int getItemCount() {
+            return shops.size();
+        }
+
+        @Override
+        public void onBindViewHolder(ShopViewHolder holder, int position) {
+            Shop shop = shops.get(position);
+            holder.shopName.setText(shop.getShop_name());
+            holder.shopEmail.setText(shop.getEmail());
+
+            //holder.itemView.setTag(name);//tag each view to the DTO
+//            if(position % 2 == 0){//if even
+//                holder.NameTextView.setBackgroundColor(Color.parseColor("#22000000"));//alpha value first "22"
+//            }else{
+//                holder.NameTextView.setBackground(null);
+//            }
+        }
+
+        public void addShop(Shop shop){
+            shops.add(shop);
+            notifyItemInserted(shops.size()-1);
+        }
     }
 
+    private class ShopViewHolder extends RecyclerView.ViewHolder {
+        public TextView shopName;
+        public TextView shopEmail;
+
+        public ShopViewHolder(View itemView) {
+            super(itemView);
+            shopName = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_shopName);
+            shopEmail = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_shopEmail);
+
+        }
+    }
 }

@@ -61,19 +61,12 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/rv"
+            android:id="@+id/activity_customerHomePage_recyclerView"
             android:layout_below="@id/spinner_ratings"
             />
         </RelativeLayout>
     </LinearLayout>
 
     <include layout="@layout/include_main_nav_drawer"/>
-    <!-- Side navigation drawer UI
-    <ListView
-        android:id="@+id/navList"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#ffeeeeee"/>
-    -->
+
 </android.support.v4.widget.DrawerLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/activity_customer_home_page_list_card"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:onClick="onClickGetQueue"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/activity_customerHomePage_list_item_shopName"
+            android:text="Shop Name"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/activity_customerHomePage_list_item_shopEmail"
+            android:layout_below="@+id/activity_customerHomePage_list_item_shopName"
+            android:text="Shop Email"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_customerHomePage_list_item_shopEmail"
+            android:id="@+id/activity_customerHomePage_list_item_inQueue"
+            android:text="People in Queue"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Q"
+            android:id="@+id/activity_customerHomePage_list_item_joinQueue"
+            android:layout_below="@+id/activity_customerHomePage_list_item_shopName"
+            android:layout_toRightOf="@+id/activity_customerHomePage_list_item_inQueue"/>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

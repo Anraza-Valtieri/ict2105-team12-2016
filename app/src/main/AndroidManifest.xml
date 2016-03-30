@@ -21,17 +21,11 @@
         <activity
             android:name=".LogoCoverPageActivity"
             android:theme="@style/SplashTheme" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <!-- Testing activities -->
         <activity android:name=".Vendor.ClaimQRCodeActivity"
             android:label="Claim Queue"
             android:screenOrientation="portrait">
-
         </activity>
         <activity
             android:name=".Vendor.VendorDashBoardActivity"
@@ -39,12 +33,6 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity
-            android:name=".Customer.CustomerHomeActivity"
-            android:label="@string/title_activity_customer_home"
-            android:screenOrientation="portrait">
-
-        </activity>
         <activity android:name=".Customer.CustomerGetQueueActivity"
             android:label="@string/title_activity_customer_get_queue"
             android:screenOrientation="portrait">
@@ -91,9 +79,12 @@
         <activity
             android:name=".Customer.CustomerHomePageActivity"
             android:label="Customer Home Page"
-            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".utils.QRCodeScanner"

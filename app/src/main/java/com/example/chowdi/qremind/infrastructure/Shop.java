@@ -7,25 +7,34 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Shop {
+    private String address;
     private String category;
     private String email;
-    private String location;
+    private String phone_no;
+    private long ratings;
     private String shop_name;
-    private long telephone;
-    private long vendorid;
+    private String vendor_id;
     private String image;
 
-
-    public Shop(String category, String email, String location, String shop_name, long telephone, long vendorid) {
-        this.category = category;
-        this.email = email;
-        this.location = location;
-        this.shop_name = shop_name;
-        this.telephone = telephone;
-        this.vendorid = vendorid;
+    public Shop() {
     }
 
-    public String getCategory() { return category; }
+    public Shop(String shop_name, String email) {
+        this.shop_name = shop_name;
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCategory() {
+        return category;
+    }
 
     public void setCategory(String category) {
         this.category = category;
@@ -39,12 +48,20 @@ public class Shop {
         this.email = email;
     }
 
-    public String getLocation() {
-        return location;
+    public String getPhone_no() {
+        return phone_no;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setPhone_no(String phone_no) {
+        this.phone_no = phone_no;
+    }
+
+    public long getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(long ratings) {
+        this.ratings = ratings;
     }
 
     public String getShop_name() {
@@ -55,20 +72,16 @@ public class Shop {
         this.shop_name = shop_name;
     }
 
-    public long getTelephone() {
-        return telephone;
+    public String getVendor_id() {
+        return vendor_id;
     }
 
-    public void setTelephone(long telephone) {
-        this.telephone = telephone;
+    public void setVendor_id(String vendor_id) {
+        this.vendor_id = vendor_id;
     }
 
-    public long getVendorid() {
-        return vendorid;
-    }
-
-    public void setVendorid(long vendorid) {
-        this.vendorid = vendorid;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getImage() {
