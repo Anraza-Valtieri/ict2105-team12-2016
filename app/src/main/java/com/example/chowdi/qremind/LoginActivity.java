@@ -14,6 +14,7 @@ import android.widget.EditText;
 import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Customer;
+import com.example.chowdi.qremind.infrastructure.Vendor;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.AuthData;
@@ -192,7 +193,11 @@ public class LoginActivity extends BaseActivity {
                         fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
                             @Override
                             public void onAuthenticated(AuthData authData) {
-                                String shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
+                                String shopkey = "";
+                                if(dataSnapshot.child("shops").getValue() != null)
+                                    shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
+                                Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
+                                getQremindApplication().setVendorUser(vendorUser);
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR, shopkey);
                                 Commons.dismissProgressDialog(pd);
                                 nextActivityAfterLogin(ChooseTaskActivity.class);
@@ -224,7 +229,11 @@ public class LoginActivity extends BaseActivity {
                             {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
-                                    String shopkey = ds.child("shops").getChildren().iterator().next().getValue().toString();
+                                    String shopkey = "";
+                                    if(dataSnapshot.child("shops").getValue() != null)
+                                        shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
+                                    Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
+                                    getQremindApplication().setVendorUser(vendorUser);
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR, shopkey);
                                     Commons.dismissProgressDialog(pd);
                                     nextActivityAfterLogin(ChooseTaskActivity.class);
@@ -274,10 +283,8 @@ public class LoginActivity extends BaseActivity {
                         fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
                             @Override
                             public void onAuthenticated(AuthData authData) {
-                                //test
                                 Customer custUser = dataSnapshot.getValue(Customer.class);
                                 getQremindApplication().setCustomerUser(custUser);
-                                //test
                                 saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_CUSTOMER);
                                 Commons.dismissProgressDialog(pd);
                                 nextActivityAfterLogin(CustomerHomePageActivity.class);
@@ -308,10 +315,8 @@ public class LoginActivity extends BaseActivity {
                             {
                                 if(ds.child("email").getValue().toString().equals(loginID))
                                 {
-                                    //test
                                     Customer custUser = dataSnapshot.getValue(Customer.class);
                                     getQremindApplication().setCustomerUser(custUser);
-                                    //test
                                     saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_CUSTOMER);
                                     Commons.dismissProgressDialog(pd);
                                     nextActivityAfterLogin(CustomerHomePageActivity.class);
