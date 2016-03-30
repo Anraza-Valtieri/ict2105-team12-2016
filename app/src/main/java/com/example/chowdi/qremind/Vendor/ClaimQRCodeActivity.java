@@ -27,7 +27,7 @@ public class ClaimQRCodeActivity extends BaseActivity {
         initialiseUIElements();
 
         try {
-            Bitmap bitmap = Commons.encodeAsBitmap("12345");
+            Bitmap bitmap = Commons.generateQRCodeImage("12345");
             qrCodeImage.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();
