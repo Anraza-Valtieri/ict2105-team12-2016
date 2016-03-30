@@ -21,7 +21,7 @@ public class Customer implements CardWithList.ListObject{
     private String firstname;
     private String lastname;
     private String phoneno;
-    private Map<String,String> current_queue;
+    private Map<String,Object> current_queue;
     private String image;
     private Bitmap myImage;
 
@@ -71,11 +71,11 @@ public class Customer implements CardWithList.ListObject{
         this.myImage = myImage;
     }
 
-    public Map<String,String> getCurrent_queue() {
+    public Map<String,Object> getCurrent_queue() {
         return current_queue;
     }
 
-    public void setCurrent_queue(Map<String, String> current_queue) {
+    public void setCurrent_queue(Map<String, Object> current_queue) {
         this.current_queue = current_queue;
     }
 
