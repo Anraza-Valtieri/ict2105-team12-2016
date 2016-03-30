@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
-import com.example.chowdi.qremind.RVAdapter;
-import com.example.chowdi.qremind.Shop;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Shop;
 import com.example.chowdi.qremind.utils.Constants;
@@ -28,7 +25,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CustomerHomePageActivity extends BaseActivity{
     //Variable for Firebase
@@ -42,12 +38,13 @@ public class CustomerHomePageActivity extends BaseActivity{
     private Spinner spinnerCategory, spinnerRatings;
     private String userSelectCategory,userSelectRatings, shopName,phoneNumber,email,ratingsOfShop,categoryOfShop;
     private RecyclerView rv;
-    private List<Shop> shops;
+    private ArrayList<Shop> shops;
     private ListView listView;
     private TextView shopNameTV,categoryTV,phoneNumberTV;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ShopListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +53,8 @@ public class CustomerHomePageActivity extends BaseActivity{
         setNavDrawer(new CustomerMainNavDrawer(this));
         // Initialise all UI elements
         initialiseUIElements();
-
+        shops = new ArrayList<>();
+        RecyclerView rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
         adapter = new ShopListAdapter();
         rv.setAdapter(adapter);
 
@@ -100,15 +98,6 @@ public class CustomerHomePageActivity extends BaseActivity{
     {
         spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
         spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
-        rv = (RecyclerView)findViewById(R.id.rv);
-        //listView = (ListView) findViewById(R.id.listView);
-
-        shopNameTV = (TextView) findViewById(R.id.shopnameTV);
-        categoryTV = (TextView) findViewById(R.id.categoryTV);
-        phoneNumberTV = (TextView) findViewById(R.id.phoneNumberTV);
-
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
     }
 
     /* Initializing the */

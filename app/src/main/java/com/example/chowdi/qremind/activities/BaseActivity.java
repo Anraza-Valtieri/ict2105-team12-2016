@@ -53,7 +53,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    public QremindApplication getYoraApplication() {
+    public QremindApplication getQremindApplication() {
         return application;
     }
 

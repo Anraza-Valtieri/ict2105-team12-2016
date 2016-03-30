@@ -3,8 +3,6 @@ package com.example.chowdi.qremind;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,8 +11,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.chowdi.qremind.Customer.CustomerGetQueueActivity;
 import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
+import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.AuthData;
@@ -26,7 +25,7 @@ import com.firebase.client.ValueEventListener;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     // Variable for Firebase
     private Firebase fbRef;
@@ -56,6 +55,13 @@ public class LoginActivity extends AppCompatActivity {
         {
             prefs = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE);
             String role = prefs.getString(Constants.SHAREPREF_ROLE, null);
+            if(role.equals(Constants.ROLE_CUSTOMER))
+            {
+                String email = prefs.getString(Constants.SHAREPREF_EMAIL, null);
+                String phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
+                Customer custUser = new Customer(email, "", "", phoneNo);
+                getQremindApplication().setCustomerUser(custUser);
+            }
             if(role.equals(Constants.ROLE_CUSTOMER))
                 nextActivityAfterLogin(CustomerHomePageActivity.class);
             else if(role.equals(Constants.ROLE_VENDOR))
@@ -396,8 +402,15 @@ public class LoginActivity extends AppCompatActivity {
         if(role.equals(Constants.ROLE_VENDOR))
         {
             editor.putString(Constants.SHAREPREF_VENDOR_SHOP_KEY, shopKey[0]);
+
         }
         editor.commit();
+
+        if(role.equals(Constants.ROLE_CUSTOMER))
+        {
+            Customer custUser = new Customer(email, "", "", phoneNo);
+            getQremindApplication().setCustomerUser(custUser);
+        }
     }
 
     /**
