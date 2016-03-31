@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Map;
@@ -24,7 +25,6 @@ public class Customer implements CardWithList.ListObject{
     private Map<String,Object> current_queue;
     private String image;
     private Bitmap myImage;
-
 
     public Customer(){
 
@@ -58,6 +58,7 @@ public class Customer implements CardWithList.ListObject{
         return image;
     }
 
+    @JsonIgnore
     public Bitmap getMyImage() {
         return myImage;
     }
@@ -67,6 +68,7 @@ public class Customer implements CardWithList.ListObject{
         convertImage(image);
     }
 
+    @JsonIgnore
     public void setMyImage(Bitmap myImage) {
         this.myImage = myImage;
     }
@@ -100,6 +102,7 @@ public class Customer implements CardWithList.ListObject{
         byte[] imageAsBytes = Base64.decode(imageString.getBytes(), Base64.DEFAULT);
         setMyImage(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
     }
+
     @Override
     public String getObjectId() {
         return null;
