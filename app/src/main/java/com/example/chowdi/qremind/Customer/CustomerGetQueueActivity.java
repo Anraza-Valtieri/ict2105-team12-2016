@@ -129,11 +129,11 @@ public class CustomerGetQueueActivity extends AppCompatActivity {
 //        vendorRef.setValue(vendorMap); // insert into queues
 
         Intent intent = new Intent(CustomerGetQueueActivity.this, CustomerCurrentServing.class);
-        intent.putExtra(Constants.EX_MSG_SHOP_NAME, shop_name);
-        intent.putExtra(Constants.EX_MSG_SHOP_KEY, shop_key);
-        intent.putExtra(Constants.EX_MSG_CUSTOMER_ID, customer_id);
-        intent.putExtra(Constants.EX_MSG_QUEUE_KEY, queueKey);
-        intent.putExtra(Constants.EX_MSG_QUEUE_NO, queueNo);
+        intent.putExtra(Constants.SHAREPREF_SHOP_NAME, shop_name);
+        intent.putExtra(Constants.SHAREPREF_SHOP_KEY, shop_key);
+        intent.putExtra(Constants.SHAREPREF_CUSTOMER_ID, customer_id);
+        intent.putExtra(Constants.SHAREPREF_QUEUE_KEY, queueKey);
+        intent.putExtra(Constants.SHAREPREF_QUEUE_NO, queueNo);
         startActivity(intent);
         Commons.dismissProgressDialog(pd);
         CustomerGetQueueActivity.this.finish();
