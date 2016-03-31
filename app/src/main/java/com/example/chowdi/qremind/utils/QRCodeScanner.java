@@ -2,9 +2,7 @@ package com.example.chowdi.qremind.utils;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.example.chowdi.qremind.Customer.CustomerCurrentServing;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -53,13 +51,13 @@ public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView
     public void handleResult(Result rawResult) {
         // Do something with the result here
         // If you would like to resume scanning, call this method below:
-        if(!rawResult.getText().contains(Constants.QR_CLAIM_QUEUE))
+        if(!rawResult.getText().contains(Constants.CODE_QR_CLAIM_QUEUE))
         {
             Commons.showToastMessage("Invalid QR Code", this);
             mScannerView.resumeCameraPreview(this);
             return;
         }
-        result = rawResult.getText().replace(Constants.QR_CLAIM_QUEUE,"");
+        result = rawResult.getText().replace(Constants.CODE_QR_CLAIM_QUEUE,"");
         mScannerView.stopCamera();
         scanningFinished = true;
         scanningCancelled = false;
