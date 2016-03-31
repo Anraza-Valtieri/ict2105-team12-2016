@@ -43,7 +43,13 @@ public class LogoCoverPageActivity extends BaseActivity{
             prefs = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE);
             String role = prefs.getString(Constants.SHAREPREF_ROLE, null);
             String phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
-            retrieveAccountInfo(phoneNo, role);
+            if(phoneNo == null || role == null)
+            {
+                fbRef.unauth();
+                nextActivityAfterLogin(Login_RegisterActivity.class);
+            }
+            else
+                retrieveAccountInfo(phoneNo, role);
         }
         else {
             nextActivityAfterLogin(Login_RegisterActivity.class);
