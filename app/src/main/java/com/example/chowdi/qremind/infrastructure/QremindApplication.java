@@ -1,11 +1,9 @@
 package com.example.chowdi.qremind.infrastructure;
 
-import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -55,10 +53,10 @@ public class QremindApplication extends Application {
             if(customerUser.getCurrent_queue() != null)
             {
                 SharedPreferences.Editor editor = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE).edit();
-                editor.remove(Constants.EX_MSG_SHOP_KEY);
-                editor.remove(Constants.EX_MSG_QUEUE_NO);
-                editor.remove(Constants.EX_MSG_QUEUE_KEY);
-                editor.remove(Constants.EX_MSG_SHOP_NAME);
+                editor.remove(Constants.SHAREPREF_SHOP_KEY);
+                editor.remove(Constants.SHAREPREF_QUEUE_NO);
+                editor.remove(Constants.SHAREPREF_QUEUE_KEY);
+                editor.remove(Constants.SHAREPREF_SHOP_NAME);
                 editor.commit();
             }
         }
