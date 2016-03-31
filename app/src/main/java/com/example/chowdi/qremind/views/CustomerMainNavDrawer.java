@@ -12,10 +12,7 @@ import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 /**
  * Created by L on 3/27/2016.
@@ -23,7 +20,7 @@ import com.firebase.client.ValueEventListener;
 public class CustomerMainNavDrawer extends NavDrawer {
 
     private final TextView displayNameText;
-    private final ImageView avaatarImage;
+    private final ImageView avatarImage;
 
     public CustomerMainNavDrawer(final BaseActivity activity) {
         super(activity);
@@ -42,7 +39,7 @@ public class CustomerMainNavDrawer extends NavDrawer {
         });
 
         displayNameText = (TextView) navDrawerView.findViewById(R.id.include_main_nav_drawer_displayName);
-        avaatarImage = (ImageView)navDrawerView.findViewById(R.id.include_main_nav_drawer_avatar);
+        avatarImage = (ImageView)navDrawerView.findViewById(R.id.include_main_nav_drawer_avatar);
         UpdateNavbarView();
     }
 
@@ -50,7 +47,7 @@ public class CustomerMainNavDrawer extends NavDrawer {
     {
         if(activity.getQremindApplication().getCustomerUser() != null){
             displayNameText.setText(activity.getQremindApplication().getCustomerUser().getFirstname());
-            avaatarImage.setImageBitmap(activity.getQremindApplication().getCustomerUser().getMyImage());
+            avatarImage.setImageBitmap(activity.getQremindApplication().getCustomerUser().getMyImage());
         }
     }
 }
