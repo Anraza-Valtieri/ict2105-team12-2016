@@ -1,24 +1,14 @@
 package com.example.chowdi.qremind.Customer;
 
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
@@ -76,11 +66,11 @@ public class CustomerCurrentServing extends BaseActivity {
         pd = new ProgressDialog(this);
 
         // Get all strings passed from previous activity
-        queueNo = prefs.getString(Constants.EX_MSG_QUEUE_NO, null); //String.valueOf(getIntent().getExtras().getInt(Constants.EX_MSG_QUEUE_NO));
-        queueKey = prefs.getString(Constants.EX_MSG_QUEUE_KEY, null); //getIntent().getExtras().getString(Constants.EX_MSG_QUEUE_KEY);
-        shopName = prefs.getString(Constants.EX_MSG_SHOP_NAME, null); //getIntent().getExtras().getString(Constants.EX_MSG_SHOP_NAME);
-        shopKey = prefs.getString(Constants.EX_MSG_SHOP_KEY, null); //getIntent().getExtras().getString(Constants.EX_MSG_SHOP_KEY);
-        customerid = getQremindApplication().getCustomerUser().getPhoneno(); //getIntent().getExtras().getString(Constants.EX_MSG_CUSTOMER_ID);;
+        queueNo = prefs.getString(Constants.SHAREPREF_QUEUE_NO, null); //String.valueOf(getIntent().getExtras().getInt(Constants.SHAREPREF_QUEUE_NO));
+        queueKey = prefs.getString(Constants.SHAREPREF_QUEUE_KEY, null); //getIntent().getExtras().getString(Constants.SHAREPREF_QUEUE_KEY);
+        shopName = prefs.getString(Constants.SHAREPREF_SHOP_NAME, null); //getIntent().getExtras().getString(Constants.SHAREPREF_SHOP_NAME);
+        shopKey = prefs.getString(Constants.SHAREPREF_SHOP_KEY, null); //getIntent().getExtras().getString(Constants.SHAREPREF_SHOP_KEY);
+        customerid = getQremindApplication().getCustomerUser().getPhoneno(); //getIntent().getExtras().getString(Constants.SHAREPREF_CUSTOMER_ID);;
 
         loadQueueStats();
         getEstimatedWaitingTime();
@@ -107,17 +97,13 @@ public class CustomerCurrentServing extends BaseActivity {
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... params) {
-                        try {
-                            // Wait for the camera starts up
-                            SystemClock.sleep(1000);
-                            Log.d("RESULT", "Start Scanning");
-                            while (!QRCodeScanner.scanningFinished) ;
+                        // Wait for the camera starts up
+                        SystemClock.sleep(1000);
+                        Log.d("RESULT", "Start Scanning");
+                        while (!QRCodeScanner.scanningFinished) ;
 
-                            Log.d("RESULT", "Finish Scanning");
-                            Log.d("RESULT", QRCodeScanner.result);
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                        }
+                        Log.d("RESULT", "Finish Scanning");
+                        Log.d("RESULT", QRCodeScanner.result);
                         return null;
                     }
 
@@ -151,10 +137,10 @@ public class CustomerCurrentServing extends BaseActivity {
         fbref.removeValue();
 
         SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(Constants.EX_MSG_QUEUE_KEY);
-        editor.remove(Constants.EX_MSG_SHOP_KEY);
-        editor.remove(Constants.EX_MSG_SHOP_NAME);
-        editor.remove(Constants.EX_MSG_QUEUE_NO);
+        editor.remove(Constants.SHAREPREF_QUEUE_KEY);
+        editor.remove(Constants.SHAREPREF_SHOP_KEY);
+        editor.remove(Constants.SHAREPREF_SHOP_NAME);
+        editor.remove(Constants.SHAREPREF_QUEUE_NO);
         editor.commit();
         this.finish();
     }
