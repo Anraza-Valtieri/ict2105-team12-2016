@@ -147,7 +147,7 @@ public class CustomerHomePageActivity extends BaseActivity{
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Shop shop = new Shop();
-                    if (ds.child("category").getValue().toString().equals(userSelectCategory)) {
+                    if (ds.child("category").getValue().toString().equals(userSelectCategory.toLowerCase().replaceAll(" ","_"))) {
 
                         shop.setShop_name(ds.child("shop_name").getValue().toString());
                         shop.setEmail(ds.child("email").getValue().toString());
@@ -274,10 +274,10 @@ public class CustomerHomePageActivity extends BaseActivity{
         vendorRef.setValue(vendorMap); // insert into queues
 
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Constants.EX_MSG_SHOP_NAME, shop_name);
-        editor.putString(Constants.EX_MSG_SHOP_KEY, shop_key);
-        editor.putString(Constants.EX_MSG_QUEUE_KEY, queueKey);
-        editor.putString(Constants.EX_MSG_QUEUE_NO, queueNo + "");
+        editor.putString(Constants.SHAREPREF_SHOP_NAME, shop_name);
+        editor.putString(Constants.SHAREPREF_SHOP_KEY, shop_key);
+        editor.putString(Constants.SHAREPREF_QUEUE_KEY, queueKey);
+        editor.putString(Constants.SHAREPREF_QUEUE_NO, queueNo + "");
         editor.commit();
 
         Intent intent = new Intent(CustomerHomePageActivity.this, CustomerCurrentServing.class);
