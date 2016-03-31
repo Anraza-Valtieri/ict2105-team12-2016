@@ -99,11 +99,7 @@ public class CustomerCurrentServing extends BaseActivity {
                     protected Void doInBackground(Void... params) {
                         // Wait for the camera starts up
                         SystemClock.sleep(1000);
-                        Log.d("RESULT", "Start Scanning");
                         while (!QRCodeScanner.scanningFinished) ;
-
-                        Log.d("RESULT", "Finish Scanning");
-                        Log.d("RESULT", QRCodeScanner.result);
                         return null;
                     }
 
