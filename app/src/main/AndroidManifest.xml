@@ -30,7 +30,8 @@
         <!-- Testing activities -->
         <activity android:name=".Vendor.ClaimQRCodeActivity"
             android:label="Claim Queue"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Vendor.VendorDashBoardActivity">
         </activity>
         <activity
             android:name=".Vendor.VendorDashBoardActivity"
