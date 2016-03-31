@@ -131,6 +131,8 @@ public class CustomerCurrentServing extends BaseActivity {
         fbref.removeValue();
         fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
         fbref.removeValue();
+        fbref = new Firebase(Constants.FIREBASE_SHOPS).child(shopKey).child("queues").child(application.getCustomerUser().getPhoneno());
+        fbref.removeValue();
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(Constants.SHAREPREF_QUEUE_KEY);
@@ -138,6 +140,9 @@ public class CustomerCurrentServing extends BaseActivity {
         editor.remove(Constants.SHAREPREF_SHOP_NAME);
         editor.remove(Constants.SHAREPREF_QUEUE_NO);
         editor.commit();
+        Intent intent = new Intent(this, CustomerHomePageActivity.class);
+        startActivity(intent);
+        Commons.showToastMessage("Queue claimed successfully", getApplicationContext());
         this.finish();
     }
 
