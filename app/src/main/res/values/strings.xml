@@ -69,6 +69,7 @@
     <string name="text_manage_queue">Manage Queue</string>
     <string name="text_settings">Settings</string>
     <string name="text_create_shop">Create shop</string>
+    <string name="text_queue_no">Queue No</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="notification_title">QRemind Notification</string>
