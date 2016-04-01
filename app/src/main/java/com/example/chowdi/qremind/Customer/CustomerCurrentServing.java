@@ -26,6 +26,9 @@ import com.firebase.client.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -115,7 +118,7 @@ public class CustomerCurrentServing extends BaseActivity {
         });
     }
 
-    private void claimQueue(String queuekey)
+    private void claimQueue(final String queuekey)
     {
         if(!Commons.isNetworkAvailable(getApplicationContext()))
         {
@@ -130,10 +133,28 @@ public class CustomerCurrentServing extends BaseActivity {
         }
         Firebase fbref = new Firebase(Constants.FIREBASE_CUSTOMER).child(customerid).child("current_queue");
         fbref.removeValue();
-        fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
-        fbref.removeValue();
         fbref = new Firebase(Constants.FIREBASE_SHOPS).child(shopKey).child("queues").child(application.getCustomerUser().getPhoneno());
         fbref.removeValue();
+
+        Firebase newFbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
+        newFbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GregorianCalendar datetime = new GregorianCalendar();
+                String date = new SimpleDateFormat("yyyy/M/d").format(datetime.getTime());
+
+                Firebase fbref = new Firebase(Constants.FIREBASE_SERVED_QUEUES).child(shopKey).child(date).child(queueKey);
+                fbref.setValue(dataSnapshot.getValue());
+
+                fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
+                fbref.removeValue();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
 
         fbRefQueueTurn.removeEventListener(queueTurnListener);
 
