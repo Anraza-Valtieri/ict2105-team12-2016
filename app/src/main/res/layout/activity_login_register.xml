@@ -1,43 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#efefef">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
-    <Button
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/text_login"
-        android:id="@+id/loginbtn"
-        android:layout_gravity="center_horizontal"
-        android:clickable="true"
-        android:background="#02bbd2"
-        android:layout_marginBottom="10dp"
-        android:layout_above="@+id/createacctbtn"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_height="match_parent"
+        android:background="#efefef">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/text_create_account"
-        android:id="@+id/createacctbtn"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="36dp"
-        android:background="#02bbd2"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:clickable="true"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_login"
+            android:id="@+id/loginbtn"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:background="#02bbd2"
+            android:layout_marginBottom="10dp"
+            android:layout_above="@+id/createacctbtn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/login_register_logo"
-        android:src="@drawable/qremind_logo"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="84dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_create_account"
+            android:id="@+id/createacctbtn"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="36dp"
+            android:background="#02bbd2"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:clickable="true"/>
 
-</RelativeLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_register_logo"
+            android:src="@drawable/qremind_logo"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="84dp"/>
+
+    </RelativeLayout>
+    </LinearLayout>

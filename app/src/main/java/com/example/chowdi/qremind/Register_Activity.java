@@ -3,15 +3,16 @@ package com.example.chowdi.qremind;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
+import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
@@ -22,7 +23,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Register_Activity extends AppCompatActivity{
+public class Register_Activity extends BaseActivity{
 
     // Variable for Firebase
     private Firebase fbRef;
@@ -154,6 +155,19 @@ public class Register_Activity extends AppCompatActivity{
                 }
             }
         });
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

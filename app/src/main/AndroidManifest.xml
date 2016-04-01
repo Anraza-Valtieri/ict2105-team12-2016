@@ -21,10 +21,10 @@
         >
         <activity
             android:name=".LogoCoverPageActivity"
-            android:theme="@style/SplashTheme" >
+            android:theme="@style/SplashTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -61,7 +61,8 @@
             android:label="@string/title_activity_register"
             android:parentActivityName=".Login_RegisterActivity"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+        />
         <activity
             android:name=".Customer.CustomerProfilePageActivity"
             android:label="@string/title_activity_cust_prof"
@@ -70,14 +71,15 @@
         <activity
             android:name=".Vendor.BusinessProfileActivity"
             android:label="@string/title_activity_buss_prof"
-            android:parentActivityName=".ChooseTaskActivity"
+            android:parentActivityName=".Vendor.BusinessProfileActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".Customer.CustomerHomePageActivity"
             android:label="Customer Home Page"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
         </activity>
 
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
