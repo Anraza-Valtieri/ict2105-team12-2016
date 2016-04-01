@@ -1,13 +1,17 @@
 package com.example.chowdi.qremind.Vendor;
 
+import android.app.Application;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.infrastructure.QremindApplication;
+import com.example.chowdi.qremind.infrastructure.QueueInfo;
+import com.example.chowdi.qremind.infrastructure.Shop;
+import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -25,12 +29,13 @@ public class CardNextQueue extends Card {
      * @param context
      */
     protected TextView mTitle;
-    protected Button mBtnAllow;
-    protected Button mBtnDeny;
-    private String shopName ="Happy Bowling Centre";
 
-    public CardNextQueue(Context context) {
-        this(context, R.layout.time_extension_card_vendor_dash_board);
+    private QueueInfo queueInfo;
+    private QremindApplication application;
+
+    public CardNextQueue(Context context, QremindApplication application) {
+        this(context, R.layout.next_queue_card_vendor_dash_board);
+        this.application = application;
     }
 
     /**
@@ -61,38 +66,31 @@ public class CardNextQueue extends Card {
 
     @Override
     public void setupInnerViewElements(final ViewGroup parent, View view) {
-        //Firebase ref
-        Firebase ref = new Firebase(Constants.FIREBASE_SHOPS+"/"+shopName+"/queue");
-
         mTitle = (TextView) parent.findViewById(R.id.card_extension_title);
-        //nextCustBtn = (Button)parent.findViewById(R.id.button2);
 
-//        nextCustBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: Removing customer");
-//            }
-//        });
-
-        if (mTitle!=null)
-        {
-
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    mTitle.setText("" + snapshot.getChildrenCount());
-
-
+        final String shopKey = application.getVendorUser().getShops().values().toArray()[0].toString();
+        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey);
+        fbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() == null)
+                {
+                    mTitle.setText("No Queue");
+                    return;
                 }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
+                for(DataSnapshot ds : dataSnapshot.getChildren())
+                {
+                    QueueInfo queueInfo = ds.getValue(QueueInfo.class);
+                    if(queueInfo.getCalling() != null) continue;
+                    mTitle.setText(queueInfo.getQueue_no()+"");
                 }
-            });
+            }
 
-        }
-
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Commons.handleCommonFirebaseError(firebaseError,getContext());
+            }
+        });
 
     }
 
