@@ -40,10 +40,6 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".Customer.CustomerGetQueueActivity"
-            android:label="@string/title_activity_customer_get_queue"
-            android:screenOrientation="portrait">
-        </activity>
         <activity
             android:name=".Customer.CustomerCurrentServing"
             android:label="@string/title_activity_customer_home"
@@ -69,11 +65,6 @@
         <activity
             android:name=".Customer.CustomerProfilePageActivity"
             android:label="@string/title_activity_cust_prof"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ChooseTaskActivity"
-            android:label="@string/title_activity_choosetask"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
         <activity
