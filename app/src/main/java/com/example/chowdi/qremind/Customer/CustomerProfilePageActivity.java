@@ -22,7 +22,6 @@ import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
-import com.example.chowdi.qremind.utils.QRCodeScanner;
 import com.example.chowdi.qremind.views.CustomerMainNavDrawer;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -39,7 +38,7 @@ public class CustomerProfilePageActivity extends BaseActivity{
 
     // Variables for all UI elements
     private EditText fName_ET, lName_ET, email_ET, phoneNo_ET;
-    private Button updateBtn, logoutBtn;
+    private Button updateBtn;
     private ImageView profilePic;
 
     // Other variables
@@ -143,13 +142,6 @@ public class CustomerProfilePageActivity extends BaseActivity{
             }
         });
 
-        // For temporary only
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Commons.logout(fbRef, CustomerProfilePageActivity.this);
-            }
-        });
     }
 
     /**
@@ -163,7 +155,6 @@ public class CustomerProfilePageActivity extends BaseActivity{
         phoneNo_ET = (EditText) findViewById(R.id.custProfile_phone_no_ET);
         profilePic = (ImageView) findViewById(R.id.custProfile_picture);
         updateBtn = (Button) findViewById(R.id.custProfile_udpatebtn);
-        logoutBtn = (Button) findViewById(R.id.custProfile_logoutbtn);
         tempOutputFile = new File(getExternalCacheDir(), "temp-image.jpg");
     }
 
@@ -178,7 +169,6 @@ public class CustomerProfilePageActivity extends BaseActivity{
         email_ET.setEnabled(value);
         phoneNo_ET.setEnabled(value);
         updateBtn.setEnabled(value);
-        logoutBtn.setEnabled(value);
     }
 
     /**

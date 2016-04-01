@@ -139,16 +139,6 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:text="@string/text_update"/>
-
-                    <Button android:id="@+id/custProfile_logoutbtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#FF3232"
-                        android:layout_below="@+id/custProfile_udpatebtn"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:text="@string/text_logout"/>
                 </RelativeLayout>
             </ScrollView>
         </RelativeLayout>
