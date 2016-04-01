@@ -66,11 +66,11 @@ public class CustomerCurrentServing extends BaseActivity {
         pd = new ProgressDialog(this);
 
         // Get all strings passed from previous activity
-        queueNo = prefs.getString(Constants.SHAREPREF_QUEUE_NO, null); //String.valueOf(getIntent().getExtras().getInt(Constants.SHAREPREF_QUEUE_NO));
-        queueKey = prefs.getString(Constants.SHAREPREF_QUEUE_KEY, null); //getIntent().getExtras().getString(Constants.SHAREPREF_QUEUE_KEY);
-        shopName = prefs.getString(Constants.SHAREPREF_SHOP_NAME, null); //getIntent().getExtras().getString(Constants.SHAREPREF_SHOP_NAME);
-        shopKey = prefs.getString(Constants.SHAREPREF_SHOP_KEY, null); //getIntent().getExtras().getString(Constants.SHAREPREF_SHOP_KEY);
-        customerid = getQremindApplication().getCustomerUser().getPhoneno(); //getIntent().getExtras().getString(Constants.SHAREPREF_CUSTOMER_ID);;
+        queueNo = prefs.getString(Constants.SHAREPREF_QUEUE_NO, null);
+        queueKey = prefs.getString(Constants.SHAREPREF_QUEUE_KEY, null);
+        shopName = prefs.getString(Constants.SHAREPREF_SHOP_NAME, null);
+        shopKey = prefs.getString(Constants.SHAREPREF_SHOP_KEY, null);
+        customerid = getQremindApplication().getCustomerUser().getPhoneno();
 
         loadQueueStats();
         getEstimatedWaitingTime();
