@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +14,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
+import com.example.chowdi.qremind.infrastructure.QueueInfo;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.example.chowdi.qremind.views.NavDrawer;
@@ -129,20 +132,25 @@ public class BaseActivity extends AppCompatActivity {
         Object[] current_queue = application.getCustomerUser().getCurrent_queue().values().toArray();
         String queueKey = current_queue[1].toString();
         String shopKey = current_queue[0].toString();
-        fbRefQueueTurn = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey).child("calling");
+        fbRefQueueTurn = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
         queueTurnListener = fbRefQueueTurn.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null)
                 {
-                    if((boolean) dataSnapshot.getValue())
+                    QueueInfo queueInfo = dataSnapshot.getValue(QueueInfo.class);
+                    if(queueInfo.getCalling() != null)
                     {
-                        fbRefQueueTurn.removeEventListener(queueTurnListener);
                         if(!notificationPoppedOut)
                             popUpNotification(queueNo);
                         if(!application.notificationSend)
                             application.showNotification();
                     }
+                }
+                else
+                {
+                    fbRefQueueTurn.removeEventListener(queueTurnListener);
+                    Commons.showToastMessage("You have been removed from queue!", getApplicationContext());
                 }
             }
 

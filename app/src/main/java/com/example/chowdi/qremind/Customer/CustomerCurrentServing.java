@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.infrastructure.QueueInfo;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.example.chowdi.qremind.utils.QRCodeScanner;
@@ -133,6 +134,8 @@ public class CustomerCurrentServing extends BaseActivity {
         fbref.removeValue();
         fbref = new Firebase(Constants.FIREBASE_SHOPS).child(shopKey).child("queues").child(application.getCustomerUser().getPhoneno());
         fbref.removeValue();
+
+        fbRefQueueTurn.removeEventListener(queueTurnListener);
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(Constants.SHAREPREF_QUEUE_KEY);
@@ -305,17 +308,16 @@ public class CustomerCurrentServing extends BaseActivity {
         {
             fbRefQueueTurn.removeEventListener(queueTurnListener);
         }
-        fbRefQueueTurn = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey).child("calling");
+        fbRefQueueTurn = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
         queueTurnListener = fbRefQueueTurn.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null)
                 {
-                    if((boolean) dataSnapshot.getValue())
-                    {
+                    QueueInfo queueInfo = dataSnapshot.getValue(QueueInfo.class);
+                    if(queueInfo.getCalling() != null) {
                         Commons.dismissProgressDialog(pd);
                         fbRefWaitingTime.removeEventListener(waitingTimeListener);
-                        fbRefQueueTurn.removeEventListener(queueTurnListener);
                         waitingTime_TV.setText("Your turn's up!");
 
                         refresh_btn.setVisibility(View.INVISIBLE);
@@ -325,6 +327,15 @@ public class CustomerCurrentServing extends BaseActivity {
                         if(!application.notificationSend)
                             application.showNotification();
                     }
+                }
+                else
+                {
+                    fbRefWaitingTime.removeEventListener(waitingTimeListener);
+                    fbRefQueueTurn.removeEventListener(queueTurnListener);
+                    Intent intent = new Intent(CustomerCurrentServing.this, CustomerHomePageActivity.class);
+                    startActivity(intent);
+                    Commons.showToastMessage("You have been removed from queue!", getApplicationContext());
+                    CustomerCurrentServing.this.finish();
                 }
             }
 
