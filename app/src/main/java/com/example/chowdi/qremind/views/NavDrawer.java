@@ -79,6 +79,8 @@ public class NavDrawer  {
         }
     }
 
+    public void UpdateNavbarView(){}
+
     public static abstract class NavDrawerItem{
         protected  NavDrawer navDrawer;
 

@@ -38,6 +38,7 @@ public class VendorMainNavDrawer extends NavDrawer{
         UpdateNavbarView();
     }
 
+    @Override
     public void UpdateNavbarView()
     {
         if(activity.getQremindApplication().getVendorUser() != null){

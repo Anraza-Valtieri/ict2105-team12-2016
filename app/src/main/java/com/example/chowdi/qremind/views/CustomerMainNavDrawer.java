@@ -34,20 +34,8 @@ public class CustomerMainNavDrawer extends NavDrawer {
             public void onClick(View v) {
                 if(activity.getQremindApplication().getCustomerUser().getCurrent_queue() == null)
                 {
-                    Commons.showToastMessage("You are not in any queue", activity.getApplicationContext());
-                    return;
+                    Commons.showToastMessage("You are not in any queue", activity);
                 }
-
-                super.onClick(v);
-
-                //ANIMATIONS
-                activity.fadeOut(new BaseActivity.FadeOutListener() {
-                    @Override
-                    public void onFadeOutEnd() {
-                        activity.startActivity(new Intent(activity, CustomerCurrentServing.class));
-                        activity.finish();
-                    }
-                });
             }
         });
 
@@ -55,7 +43,7 @@ public class CustomerMainNavDrawer extends NavDrawer {
             @Override
             public void onClick(View v) {
                 Commons.logout(new Firebase(Constants.FIREBASE_MAIN), activity);
-                Commons.showToastMessage("Logged out", activity.getApplicationContext());
+                Toast.makeText(activity, "Logout", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -64,6 +52,7 @@ public class CustomerMainNavDrawer extends NavDrawer {
         UpdateNavbarView();
     }
 
+    @Override
     public void UpdateNavbarView()
     {
         if(activity.getQremindApplication().getCustomerUser() != null){
