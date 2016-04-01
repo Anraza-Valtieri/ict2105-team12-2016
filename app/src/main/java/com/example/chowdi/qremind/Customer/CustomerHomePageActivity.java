@@ -247,9 +247,7 @@ public class CustomerHomePageActivity extends BaseActivity{
         custRef.setValue(custMap); // insert into queues
 
         // map for customer current queue
-        Map<String, Object> vendorMap = new HashMap<String, Object>();
-        vendorMap.put(customer_id, true);
-        vendorRef.setValue(vendorMap); // insert into queues
+        vendorRef.child(customer_id).setValue(true); // insert into queues
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.SHAREPREF_SHOP_NAME, shop_name);
