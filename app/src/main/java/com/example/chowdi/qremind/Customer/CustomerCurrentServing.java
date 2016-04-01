@@ -215,6 +215,7 @@ public class CustomerCurrentServing extends BaseActivity {
                     }
                     estimateWaitingTime(Integer.parseInt(inQueuetime.split(":")[0]), Integer.parseInt(inQueuetime.split(":")[1]));
                 } else {
+                    if(queueInfo.getCalling() != null) return;
                     String inQueuetime = dataSnapshot.child(queueInfo.getQueue_key()).child("in_queue_time").getValue().toString();
                     int hours = Integer.parseInt(inQueuetime.split(":")[0]);
                     int minutes = Integer.parseInt(inQueuetime.split(":")[1]);

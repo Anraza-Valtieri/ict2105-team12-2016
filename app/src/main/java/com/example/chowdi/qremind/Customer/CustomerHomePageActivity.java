@@ -3,7 +3,9 @@ package com.example.chowdi.qremind.Customer;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -50,6 +52,7 @@ public class CustomerHomePageActivity extends BaseActivity{
     private ArrayList<String> categories = new ArrayList<String>();
     private String[] ratings = {"1","2","3","4","5"};
     private ProgressDialog pd;
+    private Boolean categoryInitialised = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +67,13 @@ public class CustomerHomePageActivity extends BaseActivity{
 
         // Initialise all UI elements
         spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
-        //spinnerRatings = (Spinner) findViewById((R.id.spinner_ratings));
         rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ShopListAdapter();
         rv.setAdapter(adapter);
 
-        //init spinner data
-        initializeCategory();
-        //initializeRating();
-
-        /* Setting the Listener for the category spinner */
+        Commons.showProgressDialog(pd, "Shop lists", "Loading shops info");
+                /* Setting the Listener for the category spinner */
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 userSelectCategory = String.valueOf(parent.getItemAtPosition(pos));
@@ -88,6 +87,28 @@ public class CustomerHomePageActivity extends BaseActivity{
                 //Another Interface callback
             }
         });
+
+        //init spinner data
+        initializeCategory();
+
+//        new AsyncTask<Void, Void, Void>(){
+//            @Override
+//            protected Void doInBackground(Void... params)
+//            {
+//                while(!categoryInitialised)
+//                {
+//                    SystemClock.sleep(1000);
+//                }
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void result)
+//            {
+//
+//            }
+//        };
+
 
     }
     /* Initializing the */
@@ -103,18 +124,20 @@ public class CustomerHomePageActivity extends BaseActivity{
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(CustomerHomePageActivity.this, android.R.layout.simple_spinner_item, categories);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerCategory.setAdapter(adapter);
+                categoryInitialised = true;
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
+                Commons.dismissProgressDialog(pd);
+                categoryInitialised = true;
             }
         });
 
     }
 
     private void populateShopListByCategory() {
-        //firebase = new Firebase(Constants.FIREBASE_SHOPS);
         firebase = new Firebase(Constants.FIREBASE_SHOPS);
         fireBaseQueues = new Firebase(Constants.FIREBASE_QUEUES);
 
@@ -133,20 +156,19 @@ public class CustomerHomePageActivity extends BaseActivity{
                         shop.setShop_key(ds.getKey());
                         adapter.addShop(shop);
                     }
-                    // Log.d("pass short_test_1", "if loop failed/");
                 }
+                Commons.dismissProgressDialog(pd);
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
+                Commons.dismissProgressDialog(pd);
             }
         });
     }
 
     private class ShopListAdapter extends RecyclerView.Adapter<ShopViewHolder> {
-
-
         public ShopListAdapter(){
 
         }
