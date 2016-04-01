@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,9 +27,6 @@ import com.firebase.client.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -162,10 +158,10 @@ public class CustomerCurrentServing extends BaseActivity {
     private void initialiseUIElements()
     {
         vendorName_TV = (TextView)findViewById(R.id.vendorname_TV);
-        currentlyServing_TV = (TextView)findViewById(R.id.currentServing_TV);
+        currentlyServing_TV = (TextView)findViewById(R.id.remainingQueue_TV);
         myQueueNo_TV = (TextView)findViewById(R.id.queue_number_TV);
         waitingTime_TV = (TextView)findViewById(R.id.waiting_time_TV);
-        time_ext_req_btn = (Button) findViewById(R.id.time_ext_req_btn);
+        time_ext_req_btn = (Button) findViewById(R.id.leave_queue_btn);
         claim_btn = (Button) findViewById(R.id.claim_btn);
         refresh_btn = (Button) findViewById(R.id.refresh_btn);
     }
@@ -337,7 +333,9 @@ public class CustomerCurrentServing extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null)
                 {
-                    QueueInfo queueInfo = dataSnapshot.getValue(QueueInfo.class);
+                    String queuekey = user.getCurrent_queue().get("queue_key").toString();
+                    queueInfo = dataSnapshot.getValue(QueueInfo.class);
+                    queueInfo.setQueue_key(queuekey);
                     if(queueInfo.getCalling() != null) {
                         Commons.dismissProgressDialog(pd);
                         if(fbRefWaitingTime!=null)

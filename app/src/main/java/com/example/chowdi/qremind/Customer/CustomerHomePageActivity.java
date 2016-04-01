@@ -37,22 +37,19 @@ import java.util.Map;
 public class CustomerHomePageActivity extends BaseActivity{
     //Variable for Firebase
     private Firebase firebase;
-    private Firebase fireBaseQueues;
     private SharedPreferences prefs;
 
     // Variable for UI Elements
     //public static ArrayList categories;
-    private Spinner spinnerCategory, spinnerRatings;
-    private String userSelectCategory,userSelectRatings, shopName,phoneNumber,email,ratingsOfShop,categoryOfShop;
+    private Spinner spinnerCategory;
+    private String userSelectCategory;
     private RecyclerView rv;
 
     // Other variables
     private ArrayList<Shop> shops;
     private ShopListAdapter adapter;
     private ArrayList<String> categories = new ArrayList<String>();
-    private String[] ratings = {"1","2","3","4","5"};
     private ProgressDialog pd;
-    private Boolean categoryInitialised = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +68,7 @@ public class CustomerHomePageActivity extends BaseActivity{
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ShopListAdapter();
         rv.setAdapter(adapter);
+
 
         Commons.showProgressDialog(pd, "Shop lists", "Loading shops info");
                 /* Setting the Listener for the category spinner */
@@ -91,25 +89,6 @@ public class CustomerHomePageActivity extends BaseActivity{
         //init spinner data
         initializeCategory();
 
-//        new AsyncTask<Void, Void, Void>(){
-//            @Override
-//            protected Void doInBackground(Void... params)
-//            {
-//                while(!categoryInitialised)
-//                {
-//                    SystemClock.sleep(1000);
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void result)
-//            {
-//
-//            }
-//        };
-
-
     }
     /* Initializing the */
     private void initializeCategory() {
@@ -124,14 +103,12 @@ public class CustomerHomePageActivity extends BaseActivity{
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(CustomerHomePageActivity.this, android.R.layout.simple_spinner_item, categories);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerCategory.setAdapter(adapter);
-                categoryInitialised = true;
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
                 Commons.dismissProgressDialog(pd);
-                categoryInitialised = true;
             }
         });
 
@@ -139,7 +116,6 @@ public class CustomerHomePageActivity extends BaseActivity{
 
     private void populateShopListByCategory() {
         firebase = new Firebase(Constants.FIREBASE_SHOPS);
-        fireBaseQueues = new Firebase(Constants.FIREBASE_QUEUES);
 
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
