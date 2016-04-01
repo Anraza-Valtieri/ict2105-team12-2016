@@ -30,10 +30,6 @@ public class LogoCoverPageActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        // Sleep for 2 seconds
-        SystemClock.sleep(2000);
-
-
         // Check if there is already an authorisation for firebase which the user application have logged in previously
         Firebase fbRef = new Firebase(Constants.FIREBASE_MAIN);
         SharedPreferences prefs;
