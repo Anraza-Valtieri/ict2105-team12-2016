@@ -11,6 +11,9 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:background="#efefef">
 
         <Button
@@ -20,10 +23,10 @@
             android:id="@+id/loginbtn"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
-            android:background="#02bbd2"
+            android:background="@color/colorAccent"
             android:layout_marginBottom="10dp"
+            android:textColor="@color/white"
             android:layout_above="@+id/createacctbtn"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
 
         <Button
@@ -33,9 +36,9 @@
             android:id="@+id/createacctbtn"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="36dp"
-            android:background="#02bbd2"
+            android:textColor="@color/white"
+            android:background="@color/colorAccent"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:clickable="true"/>
 
@@ -46,7 +49,7 @@
             android:src="@drawable/qremind_logo"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="84dp"/>
+            android:layout_marginTop="120dp"/>
 
     </RelativeLayout>
     </LinearLayout>
