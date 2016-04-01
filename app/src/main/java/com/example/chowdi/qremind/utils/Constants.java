@@ -19,9 +19,7 @@ public final class Constants {
     public static final String FIREBASE_CATEGORY = "https://qremind1.firebaseio.com/category";
     public static final String FIREBASE_SHOPS = "https://qremind1.firebaseio.com/shops";
     public static final String FIREBASE_QUEUES = "https://qremind1.firebaseio.com/queues";
-
-    //Vendor test
-    public static final String VENDOR_QUEUES = "https://qremind1.firebaseio.com/Shops/Entertainment/Happy%20Bowling%20Center";
+    public static final String FIREBASE_SERVED_QUEUES = "https://qremind1.firebaseio.com/served_queues";
 
     // For shared preferences
     public static final String SHARE_PREF_LINK = "QREMIND_SP";
