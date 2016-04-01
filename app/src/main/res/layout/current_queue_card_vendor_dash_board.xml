@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/card_extension_title"
         android:text="Next Customer"
+        android:background="@color/colorAccent"
         android:id="@+id/nextCustomerBtn"
         android:layout_centerHorizontal="true"
         android:visibility="visible"

@@ -70,7 +70,7 @@
         android:text="@string/text_next"
         android:id="@+id/nxtcustomerbtn"
         android:layout_gravity="center_horizontal"
-        android:background="#02bbd2"
+        android:background="@color/colorAccent"
         android:layout_below="@+id/currentqueue_editText"
         android:layout_alignLeft="@+id/allowextensionbtn"
         android:layout_alignStart="@+id/allowextensionbtn"/>
@@ -102,7 +102,7 @@
         android:text="@string/text_allow"
         android:id="@+id/allowextensionbtn"
         android:layout_gravity="center_horizontal"
-        android:background="#02bbd2"
+        android:background="@color/colorAccent"
         android:layout_marginBottom="10dp"
         android:layout_below="@+id/queuerequestextension_editText"
         android:layout_centerHorizontal="true"/>
@@ -112,7 +112,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/managequeue_logoutbtn"
         android:text="@string/text_logout"
-        android:background="#FF3232"
+        android:background="@color/colorAccent"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
