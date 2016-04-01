@@ -108,6 +108,7 @@ public class CardCurrentQueue extends Card{
                             return;
                         else
                         {
+                            mTitle.setText("0");
                             nextCustBtn.setVisibility(View.VISIBLE);
                             claimBtn.setVisibility(View.INVISIBLE);
                             removeBtn.setVisibility(View.INVISIBLE);
@@ -210,7 +211,7 @@ public class CardCurrentQueue extends Card{
                         return;
                     }
                 }
-                mTitle.setText("No Queue");
+                mTitle.setText("0");
                 nextCustBtn.setVisibility(View.VISIBLE);
                 claimBtn.setVisibility(View.INVISIBLE);
                 removeBtn.setVisibility(View.INVISIBLE);
