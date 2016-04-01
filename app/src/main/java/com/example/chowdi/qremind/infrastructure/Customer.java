@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import com.example.chowdi.qremind.utils.Commons;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -65,7 +66,7 @@ public class Customer implements CardWithList.ListObject{
 
     public void setImage(String image) {
         this.image = image;
-        convertImage(image);
+        setMyImage(Commons.convertBase64ToBitmap(image));
     }
 
     @JsonIgnore
@@ -95,12 +96,6 @@ public class Customer implements CardWithList.ListObject{
 
     public String getPhoneno() {
         return phoneno;
-    }
-
-    public void convertImage(String imageString)
-    {
-        byte[] imageAsBytes = Base64.decode(imageString.getBytes(), Base64.DEFAULT);
-        setMyImage(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
     }
 
     @Override
