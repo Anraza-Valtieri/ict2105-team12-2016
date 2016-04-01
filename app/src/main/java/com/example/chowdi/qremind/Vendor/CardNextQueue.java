@@ -19,7 +19,7 @@ import it.gmariotti.cardslib.library.internal.Card;
 /**
  * Created by L on 3/14/2016.
  */
-public class CardTimeExtension extends Card {
+public class CardNextQueue extends Card {
     /**
      * Constructor with a custom inner layout
      * @param context
@@ -29,7 +29,7 @@ public class CardTimeExtension extends Card {
     protected Button mBtnDeny;
     private String shopName ="Happy Bowling Centre";
 
-    public CardTimeExtension(Context context) {
+    public CardNextQueue(Context context) {
         this(context, R.layout.time_extension_card_vendor_dash_board);
     }
 
@@ -38,7 +38,7 @@ public class CardTimeExtension extends Card {
      * @param context
      * @param innerLayout
      */
-    public CardTimeExtension(Context context, int innerLayout) {
+    public CardNextQueue(Context context, int innerLayout) {
         super(context, innerLayout);
         init();
     }
@@ -65,9 +65,9 @@ public class CardTimeExtension extends Card {
         Firebase ref = new Firebase(Constants.FIREBASE_SHOPS+"/"+shopName+"/queue");
 
         mTitle = (TextView) parent.findViewById(R.id.card_extension_title);
-        //mBtnAllow = (Button)parent.findViewById(R.id.button2);
+        //nextCustBtn = (Button)parent.findViewById(R.id.button2);
 
-//        mBtnAllow.setOnClickListener(new View.OnClickListener() {
+//        nextCustBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                Log.d(TAG, "onClick: Removing customer");
