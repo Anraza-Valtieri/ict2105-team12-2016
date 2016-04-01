@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind.views;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,15 +28,35 @@ public class CustomerMainNavDrawer extends NavDrawer {
 
         addItem(new ActivityDrawerItem(CustomerHomePageActivity.class, "Home", null, R.drawable.ic_action_person, R.id.include_main_nav_drawer_topItems));
         addItem(new ActivityDrawerItem(CustomerProfilePageActivity.class, "Profile", null, R.drawable.ic_action_group, R.id.include_main_nav_drawer_topItems));
-        addItem(new ActivityDrawerItem(CustomerCurrentServing.class, "MY Queue", null, R.drawable.ic_action_unread, R.id.include_main_nav_drawer_topItems));
+
+        addItem(new ActivityDrawerItem(CustomerCurrentServing.class, "MY Queue", null, R.drawable.ic_action_unread, R.id.include_main_nav_drawer_topItems){
+            @Override
+            public void onClick(View v) {
+                if(activity.getQremindApplication().getCustomerUser().getCurrent_queue() == null)
+                {
+                    Commons.showToastMessage("You are not in any queue", activity.getApplicationContext());
+                    return;
+                }
+
+                super.onClick(v);
+
+                //ANIMATIONS
+                activity.fadeOut(new BaseActivity.FadeOutListener() {
+                    @Override
+                    public void onFadeOutEnd() {
+                        activity.startActivity(new Intent(activity, CustomerCurrentServing.class));
+                        activity.finish();
+                    }
+                });
+            }
+        });
 
         addItem(new BasicNavDrawerItem("Logout", null, R.drawable.ic_action_backspace, R.id.include_main_nav_drawer_bottomItems) {
             @Override
             public void onClick(View v) {
                 Commons.logout(new Firebase(Constants.FIREBASE_MAIN), activity);
-                Toast.makeText(activity, "Logout", Toast.LENGTH_SHORT).show();
+                Commons.showToastMessage("Logged out", activity.getApplicationContext());
             }
-
         });
 
         displayNameText = (TextView) navDrawerView.findViewById(R.id.include_main_nav_drawer_displayName);
