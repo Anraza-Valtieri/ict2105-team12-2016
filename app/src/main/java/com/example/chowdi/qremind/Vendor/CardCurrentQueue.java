@@ -96,8 +96,8 @@ public class CardCurrentQueue extends Card{
                         intent.putExtra(Constants.EX_MSG_SHOP_INFO, shop);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         getContext().startActivity(intent);
-                        SystemClock.sleep(1000);
-                        while (!ClaimQRCodeActivity.claimFinished) ;
+                        SystemClock.sleep(3000);
+                        while (!ClaimQRCodeActivity.claimFinished) {SystemClock.sleep(1500);};
 
                         return null;
                     }

@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind.Vendor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 
@@ -26,6 +27,14 @@ public class VendorDashBoardActivity extends BaseActivity {
         setNavDrawer(new VendorMainNavDrawer(this));
         //Firebase stuff
         Firebase.setAndroidContext(this);
+
+        if(application.getVendorUser().getShops() == null)
+        {
+            startActivity(new Intent(this, BusinessProfileActivity.class));
+            this.finish();
+            return;
+        }
+
         //instantiate dashboardCards AL
         dashboardCards = new ArrayList<Card>();
 
