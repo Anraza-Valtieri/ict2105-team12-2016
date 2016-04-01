@@ -40,7 +40,7 @@ public class CustomerMainNavDrawer extends NavDrawer {
             }
         });
 
-        addItem(new BasicNavDrawerItem("Logout", null, R.drawable.ic_action_backspace, R.id.include_main_nav_drawer_bottomItems) {
+        addItem(new BasicNavDrawerItem("Logout", null, R.drawable.ic_backspace_black_24dp, R.id.include_main_nav_drawer_bottomItems) {
             @Override
             public void onClick(View v) {
                 Commons.logout(new Firebase(Constants.FIREBASE_MAIN), activity);

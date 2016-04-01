@@ -20,10 +20,10 @@ public class VendorMainNavDrawer extends NavDrawer{
     public VendorMainNavDrawer(final BaseActivity activity) {
         super(activity);
 
-        addItem(new NavDrawer.ActivityDrawerItem(VendorDashBoardActivity.class, "Home", null, R.drawable.ic_action_person, R.id.include_main_nav_drawer_topItems));
-        addItem(new NavDrawer.ActivityDrawerItem(BusinessProfileActivity.class, "Profile", null, R.drawable.ic_action_person, R.id.include_main_nav_drawer_topItems));
+        addItem(new NavDrawer.ActivityDrawerItem(VendorDashBoardActivity.class, "Home", null, R.drawable.ic_home_black_24dp, R.id.include_main_nav_drawer_topItems));
+        addItem(new NavDrawer.ActivityDrawerItem(BusinessProfileActivity.class, "Profile", null, R.drawable.ic_account_box_black_24dp, R.id.include_main_nav_drawer_topItems));
 
-        addItem(new NavDrawer.BasicNavDrawerItem("Logout",null, R.drawable.ic_action_backspace,R.id.include_main_nav_drawer_bottomItems) {
+        addItem(new NavDrawer.BasicNavDrawerItem("Logout",null, R.drawable.ic_backspace_black_24dp,R.id.include_main_nav_drawer_bottomItems) {
             @Override
             public void onClick(View v) {
                 Toast.makeText(activity, "Logout", Toast.LENGTH_SHORT).show();
