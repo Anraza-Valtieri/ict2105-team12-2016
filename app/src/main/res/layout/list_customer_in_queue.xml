@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="0dp"
+    app:cardUseCompatPadding="true"
+    android:layout_margin="3dp">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="3dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:id="@+id/list_item_message_background">
+
+        <TextView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:text="Queue Number"
+            android:id="@+id/queue_no_text"
+            android:layout_marginEnd="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1234"
+            android:layout_centerHorizontal="true"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#de000000"
+            android:id="@+id/list_item_customer_queueNo"
+            android:layout_marginBottom="3dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/list_item_customer_queueNo"
+            android:layout_below="@id/list_item_customer_queueNo"
+            android:text="01/21/1992"
+            android:textColor="#444"
+            android:textSize="12sp"
+            android:id="@+id/list_item_customer_in_queue_date"
+            android:layout_marginBottom="3dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/list_item_customer_queueNo"
+            android:layout_below="@id/list_item_customer_queueNo"
+            android:text="07:25"
+            android:textSize="12sp"
+            android:id="@+id/list_item_customer_in_queue_time"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
