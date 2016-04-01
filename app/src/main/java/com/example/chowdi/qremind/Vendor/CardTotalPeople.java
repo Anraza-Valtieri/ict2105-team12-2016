@@ -7,6 +7,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.infrastructure.QremindApplication;
+import com.example.chowdi.qremind.infrastructure.QueueInfo;
+import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -25,9 +28,12 @@ public class CardTotalPeople extends Card {
      * @param context
      */
     protected TextView mTitle;
-    private String shopName ="Happy Bowling Centre";
-    public CardTotalPeople(Context context) {
-        this(context, R.layout.card_vendor_dash_board);
+
+    private QremindApplication application;
+
+    public CardTotalPeople(Context context, QremindApplication application) {
+        this(context, R.layout.next_queue_card_vendor_dash_board);
+        this.application = application;
     }
 
     /**
@@ -58,29 +64,21 @@ public class CardTotalPeople extends Card {
 
     @Override
     public void setupInnerViewElements(final ViewGroup parent, View view) {
-        //Firebase ref
-        Firebase ref = new Firebase(Constants.FIREBASE_SHOPS+"/"+shopName+"/queue");
+        mTitle = (TextView) parent.findViewById(R.id.card_extension_title);
 
-        mTitle = (TextView) parent.findViewById(R.id.card_main_inner_simple_title);
+        final String shopKey = application.getVendorUser().getShops().values().toArray()[0].toString();
+        Firebase fbRef = new Firebase(Constants.FIREBASE_SHOPS).child(shopKey).child("queues");
+        fbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mTitle.setText(dataSnapshot.getChildrenCount()+"");
+            }
 
-        if (mTitle!=null)
-        {
-
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    mTitle.setText("" + snapshot.getChildrenCount());
-
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
-                }
-            });
-
-        }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Commons.handleCommonFirebaseError(firebaseError, getContext());
+            }
+        });
 
     }
 
