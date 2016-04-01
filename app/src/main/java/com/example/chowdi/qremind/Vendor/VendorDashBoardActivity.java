@@ -49,12 +49,12 @@ public class VendorDashBoardActivity extends BaseActivity {
         CardHeader cardCustH,cardServedH,cardCurrentH,cardNextH;
 
 
-        cardCust = new CardTotalPeople(getApplicationContext());
+        cardCust = new CardTotalPeople(getApplicationContext(), application);
         cardCustH = new CardHeader(getApplicationContext());
         cardCustH.setTitle("No. of people in Queue");
         cardCust.addCardHeader(cardCustH);
 
-        cardServed = new CardPeopleServed(getApplicationContext());
+        cardServed = new CardPeopleServed(getApplicationContext(), application);
         cardServedH = new CardHeader(getApplicationContext());
         cardServedH.setTitle("No. of people served");
         cardServed.addCardHeader(cardServedH);
