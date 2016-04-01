@@ -3,8 +3,15 @@ package com.example.chowdi.qremind.Vendor;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.Editable;
@@ -13,6 +20,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -25,9 +33,12 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.soundcloud.android.crop.Crop;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BusinessProfileActivity extends BaseActivity{
@@ -43,6 +54,7 @@ public class BusinessProfileActivity extends BaseActivity{
     private Button createBtn;
     private Button updateBtn;
     private Button logoutBtn;
+    private ImageView profilePic;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -52,6 +64,12 @@ public class BusinessProfileActivity extends BaseActivity{
     private String phoneNo;
     private ArrayAdapter<String> adapter;
     private ProgressDialog pd;
+
+    // Variables for Camera
+    private static final int REQUEST_SELECT_IMAGE = 100;
+    private File tempOutputFile;
+    private Bitmap tempPicture;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,10 +158,20 @@ public class BusinessProfileActivity extends BaseActivity{
                 updateShopInfo();
             }
         });
+
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Commons.logout(fbRef, BusinessProfileActivity.this);
+            }
+        });
+
+        // Call changeAvatar() function which will open a small window allowing user to choose
+        // which application to use to update his profile picture
+        profilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeAvatar();
             }
         });
 
@@ -165,8 +193,11 @@ public class BusinessProfileActivity extends BaseActivity{
         createBtn = (Button) findViewById(R.id.businessProf_createbtn);
         updateBtn = (Button) findViewById(R.id.businessProf_updatebtn);
         logoutBtn = (Button) findViewById(R.id.businessProf_logoutbtn);
+        profilePic = (ImageView) findViewById(R.id.businessProf_picture);
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        tempOutputFile = new File(getExternalCacheDir(), "temp-image.jpg");
+
     }
 
     /**
@@ -389,6 +420,72 @@ public class BusinessProfileActivity extends BaseActivity{
         }
         setEnableAllElements(true);
         Commons.dismissProgressDialog(pd);
+    }
+
+    /**
+     * Allow user to choose different options to change his/her profile picture:
+     * 1) Change profile picture through android default camera app
+     * 2) Change profile picture from existing pictures in gallery
+     * @param
+     */
+    private void changeAvatar() {
+        List<Intent> otherImageCaptureIntents = new ArrayList<>();
+        List<ResolveInfo> otherImageCaptureActivities = getPackageManager()
+                .queryIntentActivities(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 0);
+
+        for (ResolveInfo info : otherImageCaptureActivities) {
+            Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            captureIntent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempOutputFile));
+            otherImageCaptureIntents.add(captureIntent);
+        }
+
+        Intent selectImageIntent = new Intent(Intent.ACTION_PICK);
+        selectImageIntent.setType("image/*");
+
+        Intent chooser = Intent.createChooser(selectImageIntent, "Chooser Avatar");
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, otherImageCaptureIntents.toArray(new Parcelable[otherImageCaptureActivities.size()]));
+
+        startActivityForResult(chooser, REQUEST_SELECT_IMAGE);
+    }
+
+    /**
+     * To set customer's profile image based on the requestCode passed to startActivityForResult(),
+     * resultCode whether it passed or failed and the result data the intent is carrying
+     * @param requestCode - Helps you to identify from which Intent you came back
+     * @param resultCode - This is either RESULT_OK if the operation was successful or
+     *                     RESULT_CANCELED if the user backed out or the operation
+     *                     failed for some reason.
+     * @param data - Result data Intent is carrying
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (resultCode != RESULT_OK) {
+            tempOutputFile.delete();
+            return;
+        }
+
+        // Retrieve image file path
+        // Crop image
+        // Convert image to tempPicture
+        // Set tempPicture to Customer's profile picture
+        if (requestCode == REQUEST_SELECT_IMAGE) {
+            Uri outputFile;
+            Uri tempFileUri = Uri.fromFile(tempOutputFile);
+
+            if (data != null && (data.getAction() == null || !data.getAction().equals(MediaStore.ACTION_IMAGE_CAPTURE)))
+                outputFile = data.getData();
+            else
+                outputFile = tempFileUri;
+
+            new Crop(outputFile)
+                    .asSquare()
+                    .output(tempFileUri)
+                    .start(this);
+        } else if (requestCode == Crop.REQUEST_CROP) {
+            tempPicture = BitmapFactory.decodeFile(tempOutputFile.getPath());
+            profilePic.setImageBitmap(tempPicture);
+        }
     }
 
     @Override
