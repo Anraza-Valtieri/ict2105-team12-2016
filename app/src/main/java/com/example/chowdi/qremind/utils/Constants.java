@@ -29,16 +29,18 @@ public final class Constants {
     public static final String SHAREPREF_PHONE_NO = "PHONE_NO";
     public static final String SHAREPREF_ROLE = "ROLE";
     public static final String SHAREPREF_VENDOR_SHOP_KEY = "SHOP_KEY";
+    public static final String SHAREPREF_QUEUE_KEY = "QUEUE_KEY";
+    public static final String SHAREPREF_QUEUE_NO = "QUEUE_NO";
+    public static final String SHAREPREF_CUSTOMER_ID = "CUSTOMER_ID";
+    public static final String SHAREPREF_SHOP_NAME = "SHOP_NAME";
+    public static final String SHAREPREF_SHOP_KEY = "SHOP_KEY";
 
     // For extra messages
-    public static final String EX_MSG_QUEUE_KEY = "QUEUE_KEY";
-    public static final String EX_MSG_QUEUE_NO = "QUEUE_NO";
-    public static final String EX_MSG_CUSTOMER_ID = "CUSTOMER_ID";
-    public static final String EX_MSG_SHOP_NAME = "SHOP_NAME";
-    public static final String EX_MSG_SHOP_KEY = "SHOP_KEY";
+    public static final String EX_MSG_QUEUE_INFO = "QUEUE_INFO";
+    public static final String EX_MSG_SHOP_INFO = "SHOP_INFO";
 
     // For QR code content
-    public static final String QR_CLAIM_QUEUE = "QRemind_Claim_Queue:";
+    public static final String CODE_QR_CLAIM_QUEUE = "QRemind_Claim_Queue:";
 
     // For others
     public static final String ROLE_VENDOR = "VENDOR";
