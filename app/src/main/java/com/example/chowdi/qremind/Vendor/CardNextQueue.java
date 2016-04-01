@@ -1,6 +1,5 @@
 package com.example.chowdi.qremind.Vendor;
 
-import android.app.Application;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.Toast;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
 import com.example.chowdi.qremind.infrastructure.QueueInfo;
-import com.example.chowdi.qremind.infrastructure.Shop;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
