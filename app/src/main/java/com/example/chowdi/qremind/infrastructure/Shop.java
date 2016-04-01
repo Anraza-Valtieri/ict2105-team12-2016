@@ -131,7 +131,6 @@ public class Shop implements Parcelable {
         ratings = in.readLong();
         shop_name = in.readString();
         vendor_id = in.readString();
-        image = in.readString();
         queueCount = in.readLong();
         shop_key = in.readString();
     }
@@ -150,7 +149,6 @@ public class Shop implements Parcelable {
         dest.writeLong(ratings);
         dest.writeString(shop_name);
         dest.writeString(vendor_id);
-        dest.writeString(image);
         dest.writeLong(queueCount);
         dest.writeString(shop_key);
     }

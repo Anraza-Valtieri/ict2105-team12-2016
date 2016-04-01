@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.infrastructure.QueueInfo;
+import com.example.chowdi.qremind.infrastructure.Shop;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.example.chowdi.qremind.utils.QRCodeScanner;
@@ -47,7 +49,10 @@ public class CustomerCurrentServing extends BaseActivity {
     // Others variables
     private SharedPreferences prefs;
     private ProgressDialog pd;
-    private String queueNo, queueKey, shopName, shopKey, customerid;
+    private Customer user;
+    private Shop shop;
+    private QueueInfo queueInfo;
+    private Boolean shopRetrieved, queueRetrieved;
 
     // For QR Code camera
     private ZXingScannerView mScannerView;
@@ -63,22 +68,46 @@ public class CustomerCurrentServing extends BaseActivity {
         Firebase.setAndroidContext(getApplicationContext());
 
         // Initialise getSharedPreferences for this app
-        prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE);
 
         // Initialise all UI elements first and progress dialog
         initialiseUIElements();
         pd = new ProgressDialog(this);
 
-        // Get all strings passed from previous activity
-        queueNo = prefs.getString(Constants.SHAREPREF_QUEUE_NO, null);
-        queueKey = prefs.getString(Constants.SHAREPREF_QUEUE_KEY, null);
-        shopName = prefs.getString(Constants.SHAREPREF_SHOP_NAME, null);
-        shopKey = prefs.getString(Constants.SHAREPREF_SHOP_KEY, null);
-        customerid = getQremindApplication().getCustomerUser().getPhoneno();
+        // Get all strings
+        user = application.getCustomerUser();
 
-        loadQueueStats();
-        getEstimatedWaitingTime();
-        waitForTurn();
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPreExecute()
+            {
+                setEnableAllElements(false);
+            }
+
+            @Override
+            protected Void doInBackground(Void... params)
+            {
+                shopRetrieved = false;
+                queueRetrieved = false;
+
+                getShopInfo();
+                getQueueInfo();
+
+                while(!shopRetrieved || !queueRetrieved)
+                {
+                    SystemClock.sleep(1000);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result)
+            {
+                loadQueueStats();
+                waitForTurn();
+                setEnableAllElements(true);
+            }
+        }.execute();
 
         // set listener to refresh button
         refresh_btn.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +126,7 @@ public class CustomerCurrentServing extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CustomerCurrentServing.this, QRCodeScanner.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 new AsyncTask<Void, Void, Void>() {
                     @Override
@@ -118,63 +148,12 @@ public class CustomerCurrentServing extends BaseActivity {
         });
     }
 
-    private void claimQueue(final String queuekey)
-    {
-        if(!Commons.isNetworkAvailable(getApplicationContext()))
-        {
-            Commons.showToastMessage("No internet connection", getApplicationContext());
-            return;
-        }
-
-        if(!queuekey.equals(queueKey))
-        {
-            Commons.showToastMessage("Claim queue failed", getApplicationContext());
-            return;
-        }
-        Firebase fbref = new Firebase(Constants.FIREBASE_CUSTOMER).child(customerid).child("current_queue");
-        fbref.removeValue();
-        fbref = new Firebase(Constants.FIREBASE_SHOPS).child(shopKey).child("queues").child(application.getCustomerUser().getPhoneno());
-        fbref.removeValue();
-
-        Firebase newFbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
-        newFbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GregorianCalendar datetime = new GregorianCalendar();
-                String date = new SimpleDateFormat("yyyy/M/d").format(datetime.getTime());
-
-                Firebase fbref = new Firebase(Constants.FIREBASE_SERVED_QUEUES).child(shopKey).child(date).child(queueKey);
-                fbref.setValue(dataSnapshot.getValue());
-
-                fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
-                fbref.removeValue();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        fbRefQueueTurn.removeEventListener(queueTurnListener);
-
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(Constants.SHAREPREF_QUEUE_KEY);
-        editor.remove(Constants.SHAREPREF_SHOP_KEY);
-        editor.remove(Constants.SHAREPREF_SHOP_NAME);
-        editor.remove(Constants.SHAREPREF_QUEUE_NO);
-        editor.commit();
-        Intent intent = new Intent(this, CustomerHomePageActivity.class);
-        startActivity(intent);
-        Commons.showToastMessage("Queue claimed successfully", getApplicationContext());
-        this.finish();
-    }
-
     @Override
     protected void onDestroy()
     {
         super.onDestroy();
-        fbRefWaitingTime.removeEventListener(waitingTimeListener);
+        if(fbRefWaitingTime != null)
+            fbRefWaitingTime.removeEventListener(waitingTimeListener);
     }
 
     /**
@@ -192,11 +171,26 @@ public class CustomerCurrentServing extends BaseActivity {
     }
 
     /**
+     * To set all UI elements in the view to be enabled or disabled
+     * @param value true or false to enable or disable respectively
+     */
+    private void setEnableAllElements(boolean value)
+    {
+        vendorName_TV.setEnabled(value);
+        currentlyServing_TV.setEnabled(value);
+        myQueueNo_TV.setEnabled(value);
+        waitingTime_TV.setEnabled(value);
+        time_ext_req_btn.setEnabled(value);
+        claim_btn.setEnabled(value);
+        refresh_btn.setEnabled(value);
+    }
+
+    /**
      * To display the relevant information to UI
      */
     private void loadQueueStats(){
-        vendorName_TV.setText(shopName);
-        myQueueNo_TV.setText(queueNo);
+        vendorName_TV.setText(shop.getShop_name());
+        myQueueNo_TV.setText(queueInfo.getQueue_no()+"");
     }
 
     /**
@@ -206,18 +200,25 @@ public class CustomerCurrentServing extends BaseActivity {
     private void getEstimatedWaitingTime()
     {
         Commons.showProgressDialog(pd, "Loading", "Calculating estimated waiting time.");
-        fbRefWaitingTime = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey);
+        fbRefWaitingTime = new Firebase(Constants.FIREBASE_QUEUES +"/"+ shop.getShop_key());
         waitingTimeListener = fbRefWaitingTime.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(queueKey).child("waiting_time").getValue() == null) {
-                    String inQueuetime = dataSnapshot.child(queueKey).child("in_queue_time").getValue().toString();
+                if (dataSnapshot.child(queueInfo.getQueue_key()).child("waiting_time").getValue() == null) {
+                    String inQueuetime = "";
+                    try {
+                        inQueuetime = dataSnapshot.child(queueInfo.getQueue_key()).child("in_queue_time").getValue().toString();
+                    }catch(Exception ex)
+                    {
+                        ex.printStackTrace();
+                        return;
+                    }
                     estimateWaitingTime(Integer.parseInt(inQueuetime.split(":")[0]), Integer.parseInt(inQueuetime.split(":")[1]));
                 } else {
-                    String inQueuetime = dataSnapshot.child(queueKey).child("in_queue_time").getValue().toString();
+                    String inQueuetime = dataSnapshot.child(queueInfo.getQueue_key()).child("in_queue_time").getValue().toString();
                     int hours = Integer.parseInt(inQueuetime.split(":")[0]);
                     int minutes = Integer.parseInt(inQueuetime.split(":")[1]);
-                    int waitingTime = Integer.parseInt(dataSnapshot.child(queueKey).child("waiting_time").getValue().toString());
+                    int waitingTime = Integer.parseInt(dataSnapshot.child(queueInfo.getQueue_key()).child("waiting_time").getValue().toString());
                     if(waitingTime > 0) {
                         GregorianCalendar time = calcRemainingWaitingTime(waitingTime, hours, minutes);
                         dispRemainingTime(time);
@@ -243,7 +244,7 @@ public class CustomerCurrentServing extends BaseActivity {
      * @param minutes the minute that the queue number is enqueued
      */
     private void estimateWaitingTime(final int hours, final int minutes) {
-        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey);
+        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shop.getShop_key());
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -254,14 +255,14 @@ public class CustomerCurrentServing extends BaseActivity {
                             continue; // if this queue is already being called
                         int r = new Random().nextInt(13) + 5;
                         total += (r > 13) ? 13 : r; // for each queue add at least 5 minutes and at most 13 mins
-                        if (ds.getKey().equals(queueKey)) {
+                        if (ds.getKey().equals(queueInfo.getQueue_key())) {
                             break;
                         }
                     }
                 }
                 GregorianCalendar time = calcRemainingWaitingTime(total, hours, minutes);
                 dispRemainingTime(time);
-                new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey).child("waiting_time").setValue(
+                new Firebase(Constants.FIREBASE_QUEUES).child(shop.getShop_key()).child(queueInfo.getQueue_key()).child("waiting_time").setValue(
                         (time.get(Calendar.HOUR) * 60) + time.get(Calendar.MINUTE));
                 Commons.dismissProgressDialog(pd);
             }
@@ -329,7 +330,7 @@ public class CustomerCurrentServing extends BaseActivity {
         {
             fbRefQueueTurn.removeEventListener(queueTurnListener);
         }
-        fbRefQueueTurn = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey).child(queueKey);
+        fbRefQueueTurn = new Firebase(Constants.FIREBASE_QUEUES).child(shop.getShop_key()).child(queueInfo.getQueue_key());
         queueTurnListener = fbRefQueueTurn.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -338,20 +339,24 @@ public class CustomerCurrentServing extends BaseActivity {
                     QueueInfo queueInfo = dataSnapshot.getValue(QueueInfo.class);
                     if(queueInfo.getCalling() != null) {
                         Commons.dismissProgressDialog(pd);
-                        fbRefWaitingTime.removeEventListener(waitingTimeListener);
+                        if(fbRefWaitingTime!=null)
+                            fbRefWaitingTime.removeEventListener(waitingTimeListener);
                         waitingTime_TV.setText("Your turn's up!");
 
                         refresh_btn.setVisibility(View.INVISIBLE);
                         claim_btn.setVisibility(View.VISIBLE);
                         if(!notificationPoppedOut)
-                            popUpNotification(queueNo);
+                            popUpNotification(queueInfo.getQueue_no()+"");
                         if(!application.notificationSend)
                             application.showNotification();
+                        return;
                     }
+                    getEstimatedWaitingTime();
                 }
                 else
                 {
-                    fbRefWaitingTime.removeEventListener(waitingTimeListener);
+                    if(fbRefWaitingTime!=null)
+                        fbRefWaitingTime.removeEventListener(waitingTimeListener);
                     fbRefQueueTurn.removeEventListener(queueTurnListener);
                     Intent intent = new Intent(CustomerCurrentServing.this, CustomerHomePageActivity.class);
                     startActivity(intent);
@@ -363,6 +368,113 @@ public class CustomerCurrentServing extends BaseActivity {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 handleFirebaseError(firebaseError);
+            }
+        });
+    }
+
+    /**
+     * To claim the queue after scanning QR code
+     * @param queuekey queue key retrieved from QR code
+     */
+    private void claimQueue(final String queuekey)
+    {
+        if(!Commons.isNetworkAvailable(getApplicationContext()))
+        {
+            Commons.showToastMessage("No internet connection", getApplicationContext());
+            return;
+        }
+
+        if(!queuekey.equals(queueInfo.getQueue_key()))
+        {
+            Commons.showToastMessage("Claim queue failed", getApplicationContext());
+            return;
+        }
+        Firebase fbref = new Firebase(Constants.FIREBASE_CUSTOMER).child(user.getPhoneno()).child("current_queue");
+        fbref.removeValue();
+        fbref = new Firebase(Constants.FIREBASE_SHOPS).child(shop.getShop_key()).child("queues").child(application.getCustomerUser().getPhoneno());
+        fbref.removeValue();
+
+        Firebase newFbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shop.getShop_key()).child(queueInfo.getQueue_key());
+        newFbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GregorianCalendar datetime = new GregorianCalendar();
+                String date = new SimpleDateFormat("yyyy/M/d").format(datetime.getTime());
+
+                Firebase fbref = new Firebase(Constants.FIREBASE_SERVED_QUEUES).child(shop.getShop_key()).child(date).child(queueInfo.getQueue_key());
+                fbref.setValue(dataSnapshot.getValue());
+
+                fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shop.getShop_key()).child(queueInfo.getQueue_key());
+                fbref.removeValue();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        fbRefQueueTurn.removeEventListener(queueTurnListener);
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(Constants.SHAREPREF_QUEUE_KEY);
+        editor.remove(Constants.SHAREPREF_SHOP_KEY);
+        editor.remove(Constants.SHAREPREF_SHOP_NAME);
+        editor.remove(Constants.SHAREPREF_QUEUE_NO);
+        editor.commit();
+        Intent intent = new Intent(this, CustomerHomePageActivity.class);
+        startActivity(intent);
+        Commons.showToastMessage("Queue claimed successfully", getApplicationContext());
+        this.finish();
+    }
+
+    /**
+     * To get shop info from firebase
+     */
+    private void getShopInfo()
+    {
+        final String shopkey = user.getCurrent_queue().get("shop").toString();
+        Firebase fbRef = new Firebase(Constants.FIREBASE_SHOPS).child(shopkey);
+        fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null)
+                {
+                    shop = dataSnapshot.getValue(Shop.class);
+                    shop.setShop_key(shopkey);
+                }
+                shopRetrieved = true;
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
+            }
+        });
+    }
+
+    /**
+     * To get current queue info from firebase
+     */
+    private void getQueueInfo()
+    {
+        final String queuekey = user.getCurrent_queue().get("queue_key").toString();
+        String shopkey = user.getCurrent_queue().get("shop").toString();
+        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopkey).child(queuekey);
+        fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null)
+                {
+                    queueInfo = dataSnapshot.getValue(QueueInfo.class);
+                    queueInfo.setQueue_key(queuekey);
+                }
+                queueRetrieved = true;
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
             }
         });
     }

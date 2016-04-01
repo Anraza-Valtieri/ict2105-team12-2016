@@ -42,6 +42,10 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedState){
         super.onCreate(savedState);
         application = (QremindApplication)getApplication();//get application manifested in AndroidManifest.xml
+        if(fbRefQueueTurn != null)
+        {
+            fbRefQueueTurn.removeEventListener(queueTurnListener);
+        }
         if(application.getCustomerUser() != null && application.getCustomerUser().getCurrent_queue() != null) {
             Object[] current_queue = application.getCustomerUser().getCurrent_queue().values().toArray();
             waitForTurn(Commons.keyToNoConverter((String)current_queue[1]) + "");
