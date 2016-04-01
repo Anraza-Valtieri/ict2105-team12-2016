@@ -7,12 +7,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +31,8 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by anton on 9/3/2016.
@@ -231,4 +235,21 @@ public class Commons {
         return bitmap;
     }
 
+    /**
+     * Convert Base64 back to Bitmap
+     * @param imageString base64 string
+     */
+    public static Bitmap convertBase64ToBitmap(String imageString)
+    {
+        byte[] imageAsBytes = Base64.decode(imageString.getBytes(), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+    }
+
+    public static String convertBitmapToBase64(Bitmap image)
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] imageBytes = stream.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
 }
