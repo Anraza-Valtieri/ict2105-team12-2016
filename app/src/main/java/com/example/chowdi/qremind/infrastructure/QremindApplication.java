@@ -71,6 +71,18 @@ public class QremindApplication extends Application {
         return (customerUser==null)?null:customerUser;
     }
 
+    /* To be called by logout */
+    public void releaseCustomerUser()
+    {
+        this.customerUser = null;
+    }
+
+    /* To be called by logout */
+    public void releaseVendorUser()
+    {
+        this.vendorUser = null;
+    }
+
     public void setCustomerUser(Customer customerUser) {
         if(this.customerUser == null) {
             this.customerUser = customerUser;

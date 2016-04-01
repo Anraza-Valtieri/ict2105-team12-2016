@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.example.chowdi.qremind.Customer.CustomerProfilePageActivity;
 import com.example.chowdi.qremind.Login_RegisterActivity;
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.activities.BaseActivity;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.zxing.BarcodeFormat;
@@ -138,9 +140,20 @@ public class Commons {
     /**
      * To logout to main activity (Login_RegisterActivity)
      */
-    public static void logout(Firebase fbRef, Activity currActivity)
+    public static void logout(Firebase fbRef, BaseActivity currActivity)
     {
         fbRef.unauth();
+        SharedPreferences prefs = currActivity.getSharedPreferences(Constants.SHARE_PREF_LINK, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(Constants.SHAREPREF_EMAIL);
+        editor.remove(Constants.SHAREPREF_PHONE_NO);
+        editor.remove(Constants.SHAREPREF_ROLE);
+        editor.remove(Constants.SHAREPREF_VENDOR_SHOP_KEY);
+        editor.commit();
+        currActivity.getQremindApplication().releaseCustomerUser();
+        currActivity.getQremindApplication().releaseVendorUser();
+        Intent intent = new Intent(currActivity, Login_RegisterActivity.class);
+        currActivity.startActivity(intent);
         currActivity.finish();
     }
 
