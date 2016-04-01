@@ -59,11 +59,11 @@
     <string name="text_new_queue">New Queue</string>
     <string name="text_please_rate_service">Wait before you go, please rate the service</string>
     <string name="text_claim">Claim</string>
-    <string name="text_currently_serving">Currently Serving</string>
+    <string name="text_remaining_queue">Remaining Queues</string>
     <string name="text_your_queue_no">Your Queue No</string>
     <string name="text_estimated_waiting_time">Estimated Waiting Time</string>
     <string name="text_refresh">Refresh</string>
-    <string name="text_10_mins_time_extension">10 mins time extension</string>
+    <string name="text_leave_queue">Leave Queue</string>
     <string name="text_get_queue">Get Queue</string>
     <string name="text_ratings">Ratings</string>
     <string name="text_manage_queue">Manage Queue</string>
