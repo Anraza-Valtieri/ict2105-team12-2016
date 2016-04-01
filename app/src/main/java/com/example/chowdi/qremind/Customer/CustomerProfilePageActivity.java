@@ -1,47 +1,34 @@
 package com.example.chowdi.qremind.Customer;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.opengl.Matrix;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcelable;
+import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
+import com.example.chowdi.qremind.utils.QRCodeScanner;
 import com.example.chowdi.qremind.views.CustomerMainNavDrawer;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.soundcloud.android.crop.Crop;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,38 +41,31 @@ public class CustomerProfilePageActivity extends BaseActivity{
     private EditText fName_ET, lName_ET, email_ET, phoneNo_ET;
     private Button updateBtn, logoutBtn;
     private ImageView profilePic;
-    private ListView mDrawerList;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
 
     // Other variables
-    private SharedPreferences prefs;
-    private String phoneNo;
     private ProgressDialog pd;
+    private Customer customer;
 
     // Variables for Camera
     private static final int REQUEST_SELECT_IMAGE = 100;
     private File tempOutputFile;
+    private Bitmap tempPicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customerprofilepage);
         setNavDrawer(new CustomerMainNavDrawer(this));
-        // Initialise Firebase library with android context once before any Firebase reference is created or used
-        Firebase.setAndroidContext(getApplicationContext());
 
         // Initialise all UI elements first and progress dialog
         initialiseUIElements();
         pd = new ProgressDialog(this);
 
-        // Initialise getSharedPreferences for this app and Firebase setup
-        prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
+        // Initialise Firebase setup
         fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
 
-
-        // Retrieve phone no from share preference to retrieve user information and display on the view
-        phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, null);
+        // Get customer object from application
+        customer = application.getCustomerUser();
 
         // Check network connection
         if(!Commons.isNetworkAvailable(getApplicationContext()))
@@ -95,22 +75,19 @@ public class CustomerProfilePageActivity extends BaseActivity{
         }
         else
         {
-            Commons.showProgressDialog(pd, "Profile info", "Loading profile information");
-            fbRef.child(phoneNo).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    fName_ET.setText(dataSnapshot.child("firstname").getValue().toString());
-                    lName_ET.setText(dataSnapshot.child("lastname").getValue().toString());
-                    email_ET.setText(dataSnapshot.child("email").getValue().toString());
-                    phoneNo_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
-                    Commons.dismissProgressDialog(pd);
-                }
+            fName_ET.setText(customer.getFirstname());
+            lName_ET.setText(customer.getLastname());
+            email_ET.setText(customer.getEmail());
+            phoneNo_ET.setText(customer.getPhoneno());
+            if(customer.getMyImage() == null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+                    profilePic.setImageDrawable(getDrawable(R.drawable.unknown_person));
+                else
+                    profilePic.setImageDrawable(getResources().getDrawable(R.drawable.unknown_person));
+            }
+            else
+                profilePic.setImageBitmap(customer.getMyImage());
 
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    handleFirebaseError(firebaseError);
-                }
-            });
         }
 
         // Set and implement listener to update button
@@ -134,11 +111,26 @@ public class CustomerProfilePageActivity extends BaseActivity{
                 }
 
                 Commons.showProgressDialog(pd, "Profile info", "Loading profile information");
-                fbRef.child(phoneNo).child("firstname").setValue(fName_ET.getText().toString());
-                fbRef.child(phoneNo).child("lastname").setValue(lName_ET.getText().toString());
-                Commons.showToastMessage("Profile updated!", getApplicationContext());
-                setEnableAllElements(true);
-                Commons.dismissProgressDialog(pd);
+                new AsyncTask<String, Void, Void>(){
+                    @Override
+                    protected Void doInBackground(String... params) {
+                        // Wait for the camera starts up
+                        fbRef.child(customer.getPhoneno()).child("firstname").setValue(params[0]);
+                        fbRef.child(customer.getPhoneno()).child("lastname").setValue(params[1]);
+                        if(tempPicture != null)
+                            fbRef.child(customer.getPhoneno()).child("image").setValue(Commons.convertBitmapToBase64(tempPicture));
+                        SystemClock.sleep(1000);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void result) {
+                        Commons.dismissProgressDialog(pd);
+                        Commons.showToastMessage("Profile updated!", getApplicationContext());
+                        setEnableAllElements(true);
+                        navDrawer.UpdateNavbarView();
+                    }
+                }.execute(fName_ET.getText().toString(), lName_ET.getText().toString());
             }
         });
 
@@ -172,8 +164,6 @@ public class CustomerProfilePageActivity extends BaseActivity{
         profilePic = (ImageView) findViewById(R.id.custProfile_picture);
         updateBtn = (Button) findViewById(R.id.custProfile_udpatebtn);
         logoutBtn = (Button) findViewById(R.id.custProfile_logoutbtn);
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         tempOutputFile = new File(getExternalCacheDir(), "temp-image.jpg");
     }
 
@@ -189,8 +179,6 @@ public class CustomerProfilePageActivity extends BaseActivity{
         phoneNo_ET.setEnabled(value);
         updateBtn.setEnabled(value);
         logoutBtn.setEnabled(value);
-        mDrawerList.setEnabled(value);
-        mDrawerLayout.setEnabled(value);
     }
 
     /**
@@ -255,8 +243,8 @@ public class CustomerProfilePageActivity extends BaseActivity{
 
         // Retrieve image file path
         // Crop image
-        // Convert image to bitmap
-        // Set bitmap to Customer's profile picture
+        // Convert image to tempPicture
+        // Set tempPicture to Customer's profile picture
         if (requestCode == REQUEST_SELECT_IMAGE) {
             Uri outputFile;
             Uri tempFileUri = Uri.fromFile(tempOutputFile);
@@ -271,8 +259,8 @@ public class CustomerProfilePageActivity extends BaseActivity{
                     .output(tempFileUri)
                     .start(this);
         } else if (requestCode == Crop.REQUEST_CROP) {
-            Bitmap bitmap = BitmapFactory.decodeFile(tempOutputFile.getPath());
-            profilePic.setImageBitmap(bitmap);
+            tempPicture = BitmapFactory.decodeFile(tempOutputFile.getPath());
+            profilePic.setImageBitmap(tempPicture);
         }
     }
 
