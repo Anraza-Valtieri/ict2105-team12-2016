@@ -7,10 +7,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.infrastructure.QremindApplication;
+import com.example.chowdi.qremind.utils.Commons;
+import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 
 import it.gmariotti.cardslib.library.internal.Card;
 
@@ -23,10 +29,12 @@ public class CardPeopleServed extends Card {
      * @param context
      */
     protected TextView mTitle;
-    private String shopName ="Happy Bowling Centre";
-    public CardPeopleServed(Context context) {
-        this(context, R.layout.card_vendor_dash_board);
 
+    private QremindApplication application;
+
+    public CardPeopleServed(Context context, QremindApplication application) {
+        this(context, R.layout.card_vendor_dash_board);
+        this.application = application;
     }
 
     /**
@@ -57,28 +65,25 @@ public class CardPeopleServed extends Card {
 
     @Override
     public void setupInnerViewElements(final ViewGroup parent, View view) {
-        //Firebase ref
-        Firebase ref = new Firebase("https://vivid-heat-954.firebaseio.com/queues/happy bowling centre/current_queue_number");
-
         mTitle = (TextView) parent.findViewById(R.id.card_main_inner_simple_title);
 
-        if (mTitle!=null)
-        {
+        final String shopKey = application.getVendorUser().getShops().values().toArray()[0].toString();
+        GregorianCalendar datetime = new GregorianCalendar();
+        String date = new SimpleDateFormat("yyyy/M/d").format(datetime.getTime());
+        Firebase fbRef = new Firebase(Constants.FIREBASE_SERVED_QUEUES).child(shopKey).child(date);
+        fbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null)
+                    mTitle.setText(dataSnapshot.getChildrenCount()+"");
+                else
+                    mTitle.setText("0");
+            }
 
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    mTitle.setText("" + snapshot.getValue());
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
-                }
-            });
-
-        }
-
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Commons.handleCommonFirebaseError(firebaseError, getContext());
+            }
+        });
     }
 }
