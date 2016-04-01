@@ -70,11 +70,12 @@ public class Vendor {
 
     public void setImage(String image) {
         this.image = image;
-        setMyImage(Commons.convertBase64ToBitmap(image));
     }
 
     @JsonIgnore
     public Bitmap getMyImage() {
+        if(myImage == null)
+            setMyImage(Commons.convertBase64ToBitmap(image));
         return myImage;
     }
 

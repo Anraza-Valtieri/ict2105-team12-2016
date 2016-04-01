@@ -66,11 +66,12 @@ public class Customer implements CardWithList.ListObject{
 
     public void setImage(String image) {
         this.image = image;
-        setMyImage(Commons.convertBase64ToBitmap(image));
     }
 
     @JsonIgnore
     public void setMyImage(Bitmap myImage) {
+        if(myImage == null)
+            setMyImage(Commons.convertBase64ToBitmap(image));
         this.myImage = myImage;
     }
 

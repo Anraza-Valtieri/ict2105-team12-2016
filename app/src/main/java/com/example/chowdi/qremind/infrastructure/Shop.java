@@ -90,7 +90,6 @@ public class Shop implements Parcelable {
 
     public void setImage(String image) {
         this.image = image;
-        setMyImage(Commons.convertBase64ToBitmap(image));
     }
 
     public String getImage() {
@@ -115,6 +114,8 @@ public class Shop implements Parcelable {
 
     @JsonIgnore
     public Bitmap getMyImage() {
+        if(myImage == null)
+            setMyImage(Commons.convertBase64ToBitmap(image));
         return myImage;
     }
 
