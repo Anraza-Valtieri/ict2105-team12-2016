@@ -3,6 +3,7 @@ package com.example.chowdi.qremind.Vendor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
@@ -62,21 +63,30 @@ public class VendorDashBoardActivity extends BaseActivity {
         cardCustH = new CardHeader(getApplicationContext());
         cardCustH.setTitle("No. of people in Queue");
         cardCust.addCardHeader(cardCustH);
-
+        cardCust.setCardElevation(25);
+        cardCust.setOnClickListener(new Card.OnCardClickListener() {
+            @Override
+            public void onClick(Card card, View view) {
+                startActivity(new Intent(VendorDashBoardActivity.this, ListOfCustomersInQueueActivity.class));
+            }
+        });
         cardServed = new CardPeopleServed(getApplicationContext(), application);
         cardServedH = new CardHeader(getApplicationContext());
         cardServedH.setTitle("No. of people served");
         cardServed.addCardHeader(cardServedH);
+        cardServed.setCardElevation(0);
 
         cardNext = new CardNextQueue(getApplicationContext(), application);
         cardNextH = new CardHeader(getApplicationContext());
         cardNextH.setTitle("Next Queue No");
         cardNext.addCardHeader(cardNextH);
+        cardNext.setCardElevation(0);
 
         cardCurrent = new CardCurrentQueue(getApplicationContext(), application);
         cardCurrentH = new CardHeader(getApplicationContext());
         cardCurrentH.setTitle("Current Queue No");
         cardCurrent.addCardHeader(cardCurrentH);
+        cardCurrent.setCardElevation(0);
 
         dashboardCards.add(cardNext);
         dashboardCards.add(cardCurrent);

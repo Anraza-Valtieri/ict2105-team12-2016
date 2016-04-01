@@ -86,6 +86,11 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".Customer.CustomerHomePageActivity"/>
 
+        <activity android:name=".Vendor.ListOfCustomersInQueueActivity"
+            android:label="Customers in queue"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Vendor.VendorDashBoardActivity"/>
+
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
         <activity android:name=".utils.QRCodeScanner"

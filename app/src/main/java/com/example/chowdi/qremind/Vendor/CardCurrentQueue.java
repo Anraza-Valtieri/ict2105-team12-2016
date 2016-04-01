@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
@@ -63,13 +62,13 @@ public class CardCurrentQueue extends Card{
 
         //No Header
 
-        //Set a OnClickListener listener
-        setOnClickListener(new Card.OnCardClickListener() {
-            @Override
-            public void onClick(Card card, View view) {
-                Toast.makeText(getContext(), "Click Listener card=", Toast.LENGTH_LONG).show();
-            }
-        });
+//        //Set a OnClickListener listener
+//        setOnClickListener(new Card.OnCardClickListener() {
+//            @Override
+//            public void onClick(Card card, View view) {
+//                Toast.makeText(getContext(), "Click Listener card=", Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 
     @Override

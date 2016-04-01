@@ -4,11 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
-import com.example.chowdi.qremind.infrastructure.QueueInfo;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
@@ -32,34 +30,8 @@ public class CardTotalPeople extends Card {
     private QremindApplication application;
 
     public CardTotalPeople(Context context, QremindApplication application) {
-        this(context, R.layout.next_queue_card_vendor_dash_board);
+        super(context, R.layout.next_queue_card_vendor_dash_board);
         this.application = application;
-    }
-
-    /**
-     *
-     * @param context
-     * @param innerLayout
-     */
-    public CardTotalPeople(Context context, int innerLayout) {
-        super(context, innerLayout);
-        init();
-    }
-
-    /**
-     * Init
-     */
-    private void init(){
-
-        //No Header
-
-        //Set a OnClickListener listener
-        setOnClickListener(new OnCardClickListener() {
-            @Override
-            public void onClick(Card card, View view) {
-                Toast.makeText(getContext(), "Click Listener card=", Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     @Override
@@ -79,10 +51,5 @@ public class CardTotalPeople extends Card {
                 Commons.handleCommonFirebaseError(firebaseError, getContext());
             }
         });
-
-    }
-
-    protected void finishLoading(){
-
     }
 }
