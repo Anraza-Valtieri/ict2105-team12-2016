@@ -9,8 +9,10 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -55,13 +57,9 @@ public class BusinessProfileActivity extends BaseActivity{
     private Button updateBtn;
     private Button logoutBtn;
     private ImageView profilePic;
-    private ListView mDrawerList;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
 
     // Other variables
     private SharedPreferences prefs;
-    private String phoneNo;
     private ArrayAdapter<String> adapter;
     private ProgressDialog pd;
 
@@ -76,8 +74,6 @@ public class BusinessProfileActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_businessprofilepage);
         setNavDrawer(new VendorMainNavDrawer(this));
-        // Initialise Firebase library with android context once before any Firebase reference is created or used
-        Firebase.setAndroidContext(getApplicationContext());
 
         // Initialise all UI elements first
         initialiseUIElements();
@@ -194,8 +190,6 @@ public class BusinessProfileActivity extends BaseActivity{
         updateBtn = (Button) findViewById(R.id.businessProf_updatebtn);
         logoutBtn = (Button) findViewById(R.id.businessProf_logoutbtn);
         profilePic = (ImageView) findViewById(R.id.businessProf_picture);
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         tempOutputFile = new File(getExternalCacheDir(), "temp-image.jpg");
 
     }
@@ -227,24 +221,21 @@ public class BusinessProfileActivity extends BaseActivity{
         final String email = email_ET.getText().toString();
         final String phoneno = telephone_ET.getText().toString();
         final String category = category_Spinner.getSelectedItem().toString().toLowerCase();
-        phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, "");
 
         fbRef = new Firebase(Constants.FIREBASE_SHOPS);
         fbRef.child(shopname).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Commons.dismissProgressDialog(pd);
-                if(dataSnapshot.getValue() != null)
-                {
+                if (dataSnapshot.getValue() != null) {
                     Commons.showToastMessage("Shop name is already taken!", getApplicationContext());
                     shopName_ET.setError("Shop name is already taken!");
                     setEnableAllElements(true);
-                }
-                else
-                {
+                } else {
                     fbRef = new Firebase(Constants.FIREBASE_VENDOR);
                     String shopkey = shopname.replaceAll(" ", "_").toLowerCase();
-                    fbRef.child(phoneNo).child("shops").child(shopkey).setValue(shopkey);
+                    String vendorkey = application.getVendorUser().getPhoneno();
+                    fbRef.child(application.getVendorUser().getPhoneno()).child("shops").child(shopkey).setValue(shopkey);
 
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("address", location);
@@ -252,7 +243,12 @@ public class BusinessProfileActivity extends BaseActivity{
                     map.put("shop_name", shopname);
                     map.put("phoneno", phoneno);
                     map.put("email", email);
-                    map.put("vendorid", phoneNo);
+                    map.put("vendorid", application.getVendorUser().getPhoneno());
+                    if(tempPicture != null) {
+                        map.put("image", Commons.convertBitmapToBase64(tempPicture));
+                        fbRef = new Firebase(Constants.FIREBASE_VENDOR).child(vendorkey).child("image");
+                        fbRef.setValue(Commons.convertBitmapToBase64(tempPicture));
+                    }
 
                     fbRef = new Firebase(Constants.FIREBASE_SHOPS);
                     fbRef.child(shopkey).setValue(map);
@@ -270,23 +266,44 @@ public class BusinessProfileActivity extends BaseActivity{
 
     private void updateShopInfo()
     {
-        String shopnamekey = prefs.getString(Constants.SHAREPREF_VENDOR_SHOP_KEY, "");
+        String shopnamekey = application.getVendorUser().getShops().values().toArray()[0].toString();
+        String vendorkey = application.getVendorUser().getPhoneno();
         String location = location_ET.getText().toString();
         String email = email_ET.getText().toString();
         String phoneno = telephone_ET.getText().toString();
         String category = category_Spinner.getSelectedItem().toString().toLowerCase();
-        phoneNo = prefs.getString(Constants.SHAREPREF_PHONE_NO, "");
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("address", location);
-        map.put("category", category);
-        map.put("phoneno", phoneno);
-        map.put("email", email);
+        Commons.showProgressDialog(pd, "Shop profile", "Updating profile");
 
-        fbRef = new Firebase(Constants.FIREBASE_SHOPS);
-        fbRef.child(shopnamekey).updateChildren(map);
-        getShopInfo();
-        Commons.showToastMessage("Shops info udpated", getApplicationContext());
+        new AsyncTask<String, Void, Void>(){
+            @Override
+            protected Void doInBackground(String... params) {
+                // Wait for the camera starts up
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("address", params[0]);
+                map.put("category", params[1]);
+                map.put("phoneno", params[2]);
+                map.put("email", params[3]);
+                if(tempPicture != null) {
+                    map.put("image", Commons.convertBitmapToBase64(tempPicture));
+                    fbRef = new Firebase(Constants.FIREBASE_VENDOR).child(params[4]).child("image");
+                    fbRef.setValue(Commons.convertBitmapToBase64(tempPicture));
+                }
+
+                fbRef = new Firebase(Constants.FIREBASE_SHOPS);
+                fbRef.child(params[5]).updateChildren(map);
+                SystemClock.sleep(1500);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                navDrawer.UpdateNavbarView();
+                Commons.dismissProgressDialog(pd);
+                getShopInfo();
+                Commons.showToastMessage("Shops info udpated", getApplicationContext());
+            }
+        }.execute(location, category, phoneno, email, vendorkey, shopnamekey);
     }
 
     /**
@@ -395,6 +412,11 @@ public class BusinessProfileActivity extends BaseActivity{
                 telephone_ET.setText(dataSnapshot.child("phoneno").getValue().toString());
                 String cat = dataSnapshot.child("category").getValue().toString();
                 category_Spinner.setSelection(adapter.getPosition(Commons.firstLetterToUpper(cat)));
+                if(dataSnapshot.child("image").getValue() != null)
+                {
+                    Bitmap image = Commons.convertBase64ToBitmap(dataSnapshot.child("image").getValue().toString());
+                    profilePic.setImageBitmap(image);
+                }
                 Commons.dismissProgressDialog(pd);
             }
 
