@@ -1,8 +1,11 @@
 package com.example.chowdi.qremind.infrastructure;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.chowdi.qremind.utils.Commons;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -18,6 +21,7 @@ public class Shop implements Parcelable {
     private String shop_name;
     private String vendor_id;
     private String image;
+    private Bitmap myImage;
     private long queueCount;
     private String shop_key;
     public Shop() {
@@ -86,6 +90,7 @@ public class Shop implements Parcelable {
 
     public void setImage(String image) {
         this.image = image;
+        setMyImage(Commons.convertBase64ToBitmap(image));
     }
 
     public String getImage() {
@@ -106,6 +111,16 @@ public class Shop implements Parcelable {
 
     public void setShop_key(String shop_key) {
         this.shop_key = shop_key;
+    }
+
+    @JsonIgnore
+    public Bitmap getMyImage() {
+        return myImage;
+    }
+
+    @JsonIgnore
+    public void setMyImage(Bitmap myImage) {
+        this.myImage = myImage;
     }
 
     protected Shop(Parcel in) {

@@ -2,6 +2,7 @@ package com.example.chowdi.qremind.infrastructure;
 
 import android.graphics.Bitmap;
 
+import com.example.chowdi.qremind.utils.Commons;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -69,6 +70,7 @@ public class Vendor {
 
     public void setImage(String image) {
         this.image = image;
+        setMyImage(Commons.convertBase64ToBitmap(image));
     }
 
     @JsonIgnore
