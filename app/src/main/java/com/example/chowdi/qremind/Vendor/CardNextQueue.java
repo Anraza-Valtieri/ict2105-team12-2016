@@ -30,7 +30,6 @@ public class CardNextQueue extends Card {
      */
     protected TextView mTitle;
 
-    private QueueInfo queueInfo;
     private QremindApplication application;
 
     public CardNextQueue(Context context, QremindApplication application) {
