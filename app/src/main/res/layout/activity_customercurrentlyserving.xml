@@ -41,10 +41,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10sp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_currently_serving"/>
+                android:text="@string/text_remaining_queue"/>
 
             <TextView
-                android:id="@+id/currentServing_TV"
+                android:id="@+id/remainingQueue_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/TV_1"
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_below="@+id/currentServing_TV"
+                android:layout_below="@+id/remainingQueue_TV"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10sp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -119,13 +119,13 @@
                 android:background="@color/colorAccent" />
 
             <Button
-                android:id="@+id/time_ext_req_btn"
+                android:id="@+id/leave_queue_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/claim_btn"
                 android:background="@color/colorAccent"
-                android:text="@string/text_10_mins_time_extension"/>
+                android:text="@string/text_leave_queue"/>
         </RelativeLayout>
         </LinearLayout>
 
