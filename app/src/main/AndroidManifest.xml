@@ -81,6 +81,10 @@
             android:screenOrientation="portrait"
             android:exported="true">
         </activity>
+        <activity android:name=".Customer.ViewVendorActivity"
+            android:label="Shop Information"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Customer.CustomerHomePageActivity"/>
 
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 

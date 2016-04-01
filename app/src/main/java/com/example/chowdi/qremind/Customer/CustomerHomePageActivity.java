@@ -48,7 +48,7 @@ public class CustomerHomePageActivity extends BaseActivity{
     private ArrayList<Shop> shops;
     private ShopListAdapter adapter;
     private ArrayList<String> categories = new ArrayList<String>();
-    private String[] ratings = {"1","2", "3","4","5"};
+    private String[] ratings = {"1","2","3","4","5"};
     private ProgressDialog pd;
 
     @Override
@@ -113,28 +113,6 @@ public class CustomerHomePageActivity extends BaseActivity{
 
     }
 
-//    private void populateShopListByRating() {
-//        firebase = new Firebase("https://qremind1.firebaseio.com/shop_test");
-//        firebase.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-//                    Shop shop = new Shop();
-//                    if (ds.child("ratings").getValue().toString().equals(userSelectRatings)) {
-//                        shop.setShop_name(ds.child("shop_name").getValue().toString());
-//                        shop.setEmail(email = ds.child("email").getValue().toString());
-//                        adapter.addShop(shop);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(FirebaseError firebaseError) {
-//            }
-//        });
-//    }
-
     private void populateShopListByCategory() {
         //firebase = new Firebase(Constants.FIREBASE_SHOPS);
         firebase = new Firebase(Constants.FIREBASE_SHOPS);
@@ -144,7 +122,7 @@ public class CustomerHomePageActivity extends BaseActivity{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //clear previous data.
-
+                adapter.clearShops();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Shop shop = new Shop();
                     if (ds.child("category").getValue().toString().equals(userSelectCategory.toLowerCase().replaceAll(" ","_"))) {
@@ -170,7 +148,7 @@ public class CustomerHomePageActivity extends BaseActivity{
 
 
         public ShopListAdapter(){
-            shops.add(new Shop("Shop", "test shop"));
+
         }
 
         @Override

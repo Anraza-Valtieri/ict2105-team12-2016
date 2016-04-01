@@ -1,6 +1,5 @@
 package com.example.chowdi.qremind.views;
 
-import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,10 +27,10 @@ public class CustomerMainNavDrawer extends NavDrawer {
     public CustomerMainNavDrawer(final BaseActivity activity) {
         super(activity);
 
-        addItem(new ActivityDrawerItem(CustomerHomePageActivity.class, "Home", null, R.drawable.ic_action_person, R.id.include_main_nav_drawer_topItems));
-        addItem(new ActivityDrawerItem(CustomerProfilePageActivity.class, "Profile", null, R.drawable.ic_action_group, R.id.include_main_nav_drawer_topItems));
+        addItem(new ActivityDrawerItem(CustomerHomePageActivity.class, "Home", null, R.drawable.ic_home_black_24dp, R.id.include_main_nav_drawer_topItems));
+        addItem(new ActivityDrawerItem(CustomerProfilePageActivity.class, "Profile", null, R.drawable.ic_account_box_black_24dp, R.id.include_main_nav_drawer_topItems));
 
-        addItem(new ActivityDrawerItem(CustomerCurrentServing.class, "MY Queue", null, R.drawable.ic_action_unread, R.id.include_main_nav_drawer_topItems){
+        addItem(new ActivityDrawerItem(CustomerCurrentServing.class, "MY Queue", null, R.drawable.ic_action_group, R.id.include_main_nav_drawer_topItems){
             @Override
             public void onClick(View v) {
                 if(activity.getQremindApplication().getCustomerUser().getCurrent_queue() == null)
