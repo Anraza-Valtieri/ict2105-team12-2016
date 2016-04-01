@@ -1,6 +1,7 @@
 package com.example.chowdi.qremind.views;
 
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
 import com.example.chowdi.qremind.Customer.CustomerProfilePageActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.Firebase;
@@ -55,9 +57,17 @@ public class CustomerMainNavDrawer extends NavDrawer {
     @Override
     public void UpdateNavbarView()
     {
+        Customer customer = activity.getQremindApplication().getCustomerUser();
         if(activity.getQremindApplication().getCustomerUser() != null){
             displayNameText.setText(activity.getQremindApplication().getCustomerUser().getFirstname());
-            avatarImage.setImageBitmap(activity.getQremindApplication().getCustomerUser().getMyImage());
+            if(customer.getMyImage() == null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+                    avatarImage.setImageDrawable(activity.getDrawable(R.drawable.unknown_person));
+                else
+                    avatarImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.unknown_person));
+            }
+            else
+                avatarImage.setImageBitmap(customer.getMyImage());
         }
     }
 }
