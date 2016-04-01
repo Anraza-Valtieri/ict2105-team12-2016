@@ -44,11 +44,9 @@ public class VendorDashBoardActivity extends BaseActivity {
         }
     }
 
-
-
     private void createCards(){
-        Card cardCust,cardServed,cardCurrent,cardExtension;
-        CardHeader cardCustH,cardServedH,cardCurrentH,cardExensionH;
+        Card cardCust,cardServed,cardCurrent,cardNext;
+        CardHeader cardCustH,cardServedH,cardCurrentH,cardNextH;
 
 
         cardCust = new CardTotalPeople(getApplicationContext());
@@ -61,24 +59,19 @@ public class VendorDashBoardActivity extends BaseActivity {
         cardServedH.setTitle("No. of people served");
         cardServed.addCardHeader(cardServedH);
 
-        cardCurrent = new CardCurrentQueue(getApplicationContext());
+        cardNext = new CardNextQueue(getApplicationContext(), application);
+        cardNextH = new CardHeader(getApplicationContext());
+        cardNextH.setTitle("Next Queue No");
+        cardNext.addCardHeader(cardNextH);
+
+        cardCurrent = new CardCurrentQueue(getApplicationContext(), application);
         cardCurrentH = new CardHeader(getApplicationContext());
-        cardCurrentH.setTitle("Current Queue No.");
+        cardCurrentH.setTitle("Current Queue No");
         cardCurrent.addCardHeader(cardCurrentH);
 
-        cardExtension = new CardTimeExtension(getApplicationContext());
-        cardExensionH = new CardHeader(getApplicationContext());
-        cardExensionH.setTitle("Extension Requests");
-        cardExtension.addCardHeader(cardCurrentH);
-
-        dashboardCards.add(cardExtension);
+        dashboardCards.add(cardNext);
         dashboardCards.add(cardCurrent);
         dashboardCards.add(cardCust);
         dashboardCards.add(cardServed);
-
-
     }
-
-
-
 }
