@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <!-- Use same ID to use built-in features -->
     <TextView
         android:id="@+id/card_extension_title"
@@ -19,9 +18,31 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/card_extension_title"
         android:text="Next Customer"
-        android:id="@+id/button2"
+        android:id="@+id/nextCustomerBtn"
         android:layout_centerHorizontal="true"
+        android:visibility="visible"
         />
 
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/card_extension_title"
+        android:gravity="center_horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20sp"
+            android:text="Claim"
+            android:background="@color/card_undobar_material_text_color"
+            android:id="@+id/vendor_curr_queue_claim_Btn"
+            android:visibility="invisible"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:text="Remove"
+            android:background="@color/colorAccent"
+            android:id="@+id/vendor_curr_queue_removeBtn"
+            android:visibility="invisible"/>
+    </LinearLayout>
 </RelativeLayout>
