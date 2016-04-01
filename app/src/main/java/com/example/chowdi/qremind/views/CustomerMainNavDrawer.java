@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind.views;
 
+import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,7 +37,18 @@ public class CustomerMainNavDrawer extends NavDrawer {
                 if(activity.getQremindApplication().getCustomerUser().getCurrent_queue() == null)
                 {
                     Commons.showToastMessage("You are not in any queue", activity);
+                    return;
                 }
+                super.onClick(v);
+
+                //ANIMATIONS
+                activity.fadeOut(new BaseActivity.FadeOutListener() {
+                    @Override
+                    public void onFadeOutEnd() {
+                        activity.startActivity(new Intent(activity, CustomerCurrentServing.class));
+                        activity.finish();
+                    }
+                });
             }
         });
 
