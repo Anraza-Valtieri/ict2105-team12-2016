@@ -78,8 +78,13 @@ public class CardNextQueue extends Card {
                 for(DataSnapshot ds : dataSnapshot.getChildren())
                 {
                     QueueInfo queueInfo = ds.getValue(QueueInfo.class);
-                    if(queueInfo.getCalling() != null) continue;
+                    if(queueInfo.getCalling() != null)
+                    {
+                        mTitle.setText("No Queue");
+                        continue;
+                    }
                     mTitle.setText(queueInfo.getQueue_no()+"");
+                    return;
                 }
             }
 
