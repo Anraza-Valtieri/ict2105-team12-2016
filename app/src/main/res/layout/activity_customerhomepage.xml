@@ -20,52 +20,31 @@
         <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/text_category"
+                android:id="@+id/category_textView"
+                android:layout_alignParentTop="true"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/text_category"
-            android:id="@+id/category_textView"
-            android:layout_alignParentTop="true"/>
+            <Spinner
+                android:layout_width="600dp"
+                android:layout_height="130px"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown"
+                android:id="@+id/spinner_category"
+                android:layout_toRightOf="@id/category_textView"/>
 
-        <Spinner
-            android:layout_width="600dp"
-            android:layout_height="130px"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"
-            android:id="@+id/spinner_category"
-            android:layout_toRightOf="@id/category_textView"/>
-
-
-        <!--
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/text_ratings"
-            android:id="@+id/ratings_textView"
-            android:layout_below="@id/spinner_category"
-          />
-
-        <Spinner
-            android:id="@+id/spinner_ratings"
-            android:layout_width="600dp"
-            android:layout_height="130px"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"
-            android:layout_below="@id/spinner_category"
-            android:layout_toRightOf="@id/ratings_textView"/>
-        -->
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/activity_customerHomePage_recyclerView"
-            android:layout_below="@+id/spinner_category"
-            android:scrollbars="vertical"
-            />
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/activity_customerHomePage_recyclerView"
+                android:layout_below="@+id/spinner_category"
+                android:scrollbars="vertical"
+                />
         </RelativeLayout>
+
     </LinearLayout>
 
     <include layout="@layout/include_main_nav_drawer"/>

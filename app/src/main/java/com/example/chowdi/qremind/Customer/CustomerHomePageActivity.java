@@ -2,10 +2,7 @@ package com.example.chowdi.qremind.Customer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -37,10 +34,8 @@ import java.util.Map;
 public class CustomerHomePageActivity extends BaseActivity{
     //Variable for Firebase
     private Firebase firebase;
-    private SharedPreferences prefs;
 
     // Variable for UI Elements
-    //public static ArrayList categories;
     private Spinner spinnerCategory;
     private String userSelectCategory;
     private RecyclerView rv;
@@ -58,20 +53,22 @@ public class CustomerHomePageActivity extends BaseActivity{
         setNavDrawer(new CustomerMainNavDrawer(this));
         shops = new ArrayList<>();
 
-        // Initialise getSharedPreferences for this app and progress dialog
-        prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
+        // Initialise progress dialog
         pd = new ProgressDialog(this);
 
         // Initialise all UI elements
-        spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
-        rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ShopListAdapter();
-        rv.setAdapter(adapter);
+        initialiseUIElements();
 
+        init();
+    }
 
+    /**
+     * Activity initialisation
+     */
+    private void init()
+    {
         Commons.showProgressDialog(pd, "Shop lists", "Loading shops info");
-                /* Setting the Listener for the category spinner */
+        /* Setting the Listener for the category spinner */
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 userSelectCategory = String.valueOf(parent.getItemAtPosition(pos));
@@ -80,7 +77,6 @@ public class CustomerHomePageActivity extends BaseActivity{
                 adapter.clearShops();
                 populateShopListByCategory();
             }
-
             public void onNothingSelected(AdapterView<?> parent) {
                 //Another Interface callback
             }
@@ -88,9 +84,23 @@ public class CustomerHomePageActivity extends BaseActivity{
 
         //init spinner data
         initializeCategory();
-
     }
-    /* Initializing the */
+
+    /**
+     * Find and assign the correct UI elements to the correct variables from activity_register layout
+     */
+    private void initialiseUIElements()
+    {
+        spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
+        rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ShopListAdapter();
+        rv.setAdapter(adapter);
+    }
+
+    /**
+     * Load and initialise category list
+     */
     private void initializeCategory() {
         firebase = new Firebase(Constants.FIREBASE_CATEGORY);
         firebase.addValueEventListener(new ValueEventListener() {
@@ -114,6 +124,9 @@ public class CustomerHomePageActivity extends BaseActivity{
 
     }
 
+    /**
+     * Populate the shop list by selected category
+     */
     private void populateShopListByCategory() {
         firebase = new Firebase(Constants.FIREBASE_SHOPS);
 
@@ -148,17 +161,11 @@ public class CustomerHomePageActivity extends BaseActivity{
         public ShopListAdapter(){
 
         }
-
         @Override
         public ShopViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            final View view = getLayoutInflater().inflate(R.layout.activity_customer_home_page_rv_list_item, parent, false);//layout inflater from the activity this class is in, the passed layout is given to the viewholder to inflate individual views
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Shop  shop = (Shop) view.getTag();
-                    Toast.makeText(CustomerHomePageActivity.this,"Clicked on "+shop.getShop_name(),Toast.LENGTH_SHORT).show();
-                }
-            });
+            //layout inflater from the activity this class is in, the passed layout is given to the viewholder to inflate individual views
+            final View view = getLayoutInflater().inflate(R.layout.activity_customer_home_page_rv_list_item, parent, false);
+            view.setClickable(false);
             return new ShopViewHolder(view);
         }
 
@@ -211,15 +218,21 @@ public class CustomerHomePageActivity extends BaseActivity{
             shopQueueCount = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_inQueue);
             qButton = (Button)itemView.findViewById(R.id.activity_customerHomePage_list_item_joinQueue);
         }
-
-
     }
 
+    /**
+     * To get queue number for the selected shop
+     * @param shop_key shop key node in Firebase
+     * @param customer_id customer phone no
+     * @param shop_name shop name for display
+     */
     public void getQueue(String shop_key,String customer_id,String shop_name){
         Commons.showProgressDialog(pd, "Please wait", "Getting queue number.");
+        // Set all notification to false first so that later the notification can be sent out when queue is reached
         application.notificationSend = false;
         notificationPoppedOut = false;
 
+        /* Start queueing */
         Firebase vendorRef = new Firebase(Constants.FIREBASE_SHOPS + "/" + shop_key + "/queues");
         Firebase custRef = new Firebase(Constants.FIREBASE_CUSTOMER +"/"+ customer_id +"/current_queue");
         Firebase queueRef = new Firebase(Constants.FIREBASE_QUEUES +"/"+ shop_key).push();
@@ -246,6 +259,7 @@ public class CustomerHomePageActivity extends BaseActivity{
 
         // map for customer current queue
         vendorRef.child(customer_id).setValue(true); // insert into queues
+        /* Finish queueing */
 
         Intent intent = new Intent(CustomerHomePageActivity.this, CustomerCurrentServing.class);
         startActivity(intent);

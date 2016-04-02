@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.chowdi.qremind.Customer.CustomerCurrentServing;
 import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
@@ -46,7 +47,7 @@ public class BaseActivity extends AppCompatActivity {
         {
             fbRefQueueTurn.removeEventListener(queueTurnListener);
         }
-        if(application.getCustomerUser() != null && application.getCustomerUser().getCurrent_queue() != null) {
+        if(application.getCustomerUser() != null && application.getCustomerUser().getCurrent_queue() != null && this.getClass() != CustomerCurrentServing.class) {
             Object[] current_queue = application.getCustomerUser().getCurrent_queue().values().toArray();
             waitForTurn(Commons.keyToNoConverter((String)current_queue[1]) + "");
         }
@@ -123,11 +124,11 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * To set a listener to firebase queues for checking user's turns
-     * Invoke popup notification when user's turn is up
+     * To set a listener to firebase queues for checking user's turns.
+     * Invoke popup notification when user's turn is up.
      * @param queueNo to show the queue in the notification
      */
-    public void waitForTurn(final String queueNo)
+    protected void waitForTurn(final String queueNo)
     {
         if(fbRefQueueTurn != null)
         {
