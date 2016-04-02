@@ -54,6 +54,13 @@
             android:textSize="12sp"
             android:id="@+id/list_item_customer_in_queue_time"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DQ"
+            android:gravity="center"
+            android:id="@+id/vendor_list_remove_customer_in_queue"
+            android:layout_alignParentEnd="true"/>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>
