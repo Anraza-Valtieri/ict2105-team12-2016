@@ -95,7 +95,7 @@
     <string name="text_1_October_1992">01/21/1992</string>
     <string name="text_07_25">07:25</string>
     <string name="text_DQ">DQ</string>
-    <string name="text_cannot_load_data">Oops, couldn't load data</string>
+    <string name="text_cannot_load_data">Oops, could not load data</string>
     <string name="text_retry">Retry</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
