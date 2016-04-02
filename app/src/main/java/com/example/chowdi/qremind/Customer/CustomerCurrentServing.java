@@ -204,10 +204,7 @@ public class CustomerCurrentServing extends BaseActivity {
     protected void onDestroy()
     {
         super.onDestroy();
-        if(runFirst.getStatus() == AsyncTask.Status.RUNNING || runFirst.getStatus() == AsyncTask.Status.PENDING)
-        {
-            runFirst.cancel(true);
-        }
+        if(runFirst.)
         // Remove all listeners to prevent app crash
         if(fbRefWaitingTime != null && waitingTimeListener != null)
             fbRefWaitingTime.removeEventListener(waitingTimeListener);
