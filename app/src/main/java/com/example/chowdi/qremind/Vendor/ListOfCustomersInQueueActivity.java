@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
 
         //initialize queue infos
         vendor = application.getVendorUser();
+
         if(vendor.getShops() != null)
             populateQueueInfoAdapter();
     }
@@ -77,6 +79,8 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     QueueInfo queueInfo = ds.getValue(QueueInfo.class);
+                    queueInfo.setQueue_key(ds.getKey());
+                    Log.d("QUEUE KEY", "onCreate: "+queueInfo.getQueue_key());
                     adapter.addQueueInfo(queueInfo);
                 }
             }
@@ -108,6 +112,15 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
             if(position == -1){//prevent double click
                 return;
             }
+
+            //remove firebase refs
+            Firebase fbref = new Firebase(Constants.FIREBASE_CUSTOMER).child(queueInfo.getCustomer_id()).child("current_queue");
+            fbref.removeValue();
+            fbref = new Firebase(Constants.FIREBASE_SHOPS).child(vendor.getShops().values().toArray()[0].toString()).child("queues").child(queueInfo.getCustomer_id());
+            fbref.removeValue();
+            fbref = new Firebase(Constants.FIREBASE_QUEUES).child(vendor.getShops().values().toArray()[0].toString()).child(queueInfo.getQueue_key());
+            fbref.removeValue();
+            //
             queueInfoArrayList.remove(position);
             notifyItemRemoved(position);
             notifyDataSetChanged();
