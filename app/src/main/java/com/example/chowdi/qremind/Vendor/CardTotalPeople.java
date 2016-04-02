@@ -30,7 +30,7 @@ public class CardTotalPeople extends Card {
     private QremindApplication application;
 
     public CardTotalPeople(Context context, QremindApplication application) {
-        super(context, R.layout.vendor_card_next_queue);
+        super(context, R.layout.vendor_card_total_people_served);
         this.application = application;
     }
 

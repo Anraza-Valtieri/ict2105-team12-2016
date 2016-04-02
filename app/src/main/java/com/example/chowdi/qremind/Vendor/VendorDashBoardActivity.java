@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind.Vendor;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +26,11 @@ import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
 public class VendorDashBoardActivity extends BaseActivity {
     private ArrayList<Card> dashboardCards;
     private AsyncTask runFirst;
+    private ProgressDialog pd;
+
+    public Boolean cardTotalPeopleLoaded;
+    public Boolean cardPeopleServedLoaded;
+    public Boolean cardCurrentQueueLoaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +39,18 @@ public class VendorDashBoardActivity extends BaseActivity {
         setContentView(R.layout.vendor_dashboard_activity);
         setNavDrawer(new VendorMainNavDrawer(this));
 
+        pd = new ProgressDialog(this);
+        cardTotalPeopleLoaded = false;
+        cardPeopleServedLoaded = false;
+        cardCurrentQueueLoaded= false;
+
         runFirst = new AsyncTask<Void, Void, Void>(){
             @Override
             protected void onPreExecute()
             {
                 if(!Commons.isNetworkAvailable(getApplicationContext()))
                 {
-                    ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.layout_no_connection).setVisibility(View.VISIBLE);
                 }
             }
             @Override
@@ -55,7 +66,7 @@ public class VendorDashBoardActivity extends BaseActivity {
             @Override
             protected void onPostExecute(Void result)
             {
-                ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.GONE);
+                findViewById(R.id.layout_no_connection).setVisibility(View.GONE);
                 init();
             }
         }.execute();
@@ -95,8 +106,8 @@ public class VendorDashBoardActivity extends BaseActivity {
      * Create cards to show information on dash board
      */
     private void createCards(){
-        Card cardCust,cardServed,cardCurrent,cardNext;
-        CardHeader cardCustH,cardServedH,cardCurrentH,cardNextH;
+        Card cardCust,cardServed,cardCurrent;
+        CardHeader cardCustH,cardServedH,cardCurrentH;
 
 
         cardCust = new CardTotalPeople(getApplicationContext(), application);
@@ -123,12 +134,6 @@ public class VendorDashBoardActivity extends BaseActivity {
         cardServed.setBackgroundResourceId(R.color.card_base_cardwithlist_divider_color);
         cardServed.setCardElevation(25);
 
-//        cardNext = new CardNextQueue(getApplicationContext(), application);
-//        cardNextH = new CardHeader(getApplicationContext());
-//        cardNextH.setTitle("Next Queue No");
-//        cardNext.addCardHeader(cardNextH);
-//        cardNext.setCardElevation(0);
-
         cardCurrent = new CardCurrentQueue(getApplicationContext(), application);
         cardCurrentH = new CardHeader(getApplicationContext());
         cardCurrentH.setTitle("Queue No");
@@ -137,7 +142,6 @@ public class VendorDashBoardActivity extends BaseActivity {
         cardCurrent.setCardElevation(25);
 
         dashboardCards.add(cardCust);
-//        dashboardCards.add(cardNext);
         dashboardCards.add(cardCurrent);
         dashboardCards.add(cardServed);
     }
