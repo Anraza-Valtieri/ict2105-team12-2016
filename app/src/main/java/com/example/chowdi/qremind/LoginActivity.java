@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
 import com.example.chowdi.qremind.Vendor.VendorDashBoardActivity;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Vendor;
@@ -46,9 +47,6 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        // Initialise Firebase library with android context once before any Firebase reference is created or used
-        Firebase.setAndroidContext(getApplicationContext());
 
         // Initialise all UI elements first and progress dialog
         initialiseUIElements();
@@ -195,11 +193,11 @@ public class LoginActivity extends BaseActivity {
         Commons.showProgressDialog(pd, "Vendor login", "Logging in");
         if(Commons.isNumberString(loginID))
         {
-            phoneLogin(loginID, password, Constants.ROLE_VENDOR);
+            phoneLogin(loginID, password, Constants.ROLE_VENDOR, VendorDashBoardActivity.class);
         }
         else if(Commons.isEmailString(loginID))
         {
-            emailLogin(loginID, password, Constants.ROLE_VENDOR);
+            emailLogin(loginID, password, Constants.ROLE_VENDOR, VendorDashBoardActivity.class);
         }
     }
 
@@ -213,10 +211,10 @@ public class LoginActivity extends BaseActivity {
         Commons.showProgressDialog(pd, "Customer login", "Logging in");
         if(Commons.isNumberString(loginID))
         {
-            phoneLogin(loginID, password, Constants.ROLE_CUSTOMER);
+            phoneLogin(loginID, password, Constants.ROLE_CUSTOMER, CustomerHomePageActivity.class);
         } else if (Commons.isEmailString(loginID))
         {
-            emailLogin(loginID, password, Constants.ROLE_CUSTOMER);
+            emailLogin(loginID, password, Constants.ROLE_CUSTOMER, CustomerHomePageActivity.class);
         }
     }
 
@@ -226,12 +224,16 @@ public class LoginActivity extends BaseActivity {
      * @param password password
      * @param role Constants.ROLE_CUSTOMER or Constant.ROLE_VENDOR only
      */
-    private void phoneLogin(final String loginID, final String password, String role)
+    private void phoneLogin(final String loginID, final String password, final String role, final Class nextActivity)
     {
-        if(role.equals(Constants.ROLE_VENDOR))
+        ;
+
+        if(role.equals(Constants.ROLE_VENDOR)) {
             fbRef = new Firebase(Constants.FIREBASE_VENDOR);
-        else if(role.equals(Constants.ROLE_CUSTOMER))
+        }
+        else if(role.equals(Constants.ROLE_CUSTOMER)) {
             fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
+        }
 
         fbRef.child(loginID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -250,9 +252,9 @@ public class LoginActivity extends BaseActivity {
                                 shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
                             Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
                             getQremindApplication().setVendorUser(vendorUser);
-                            saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR, shopkey);
+                            saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, role, shopkey);
                             Commons.dismissProgressDialog(pd);
-                            nextActivityAfterLogin(VendorDashBoardActivity.class);
+                            nextActivityAfterLogin(nextActivity);
                         }
 
                         @Override
@@ -276,7 +278,7 @@ public class LoginActivity extends BaseActivity {
      * @param password password
      * @param role Constants.ROLE_CUSTOMER or Constant.ROLE_VENDOR only
      */
-    private void emailLogin(final String loginID, final String password, String role)
+    private void emailLogin(final String loginID, final String password, final String role, final Class nextActivity)
     {
         if(role.equals(Constants.ROLE_VENDOR))
             fbRef = new Firebase(Constants.FIREBASE_VENDOR);
@@ -297,9 +299,9 @@ public class LoginActivity extends BaseActivity {
                                     shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
                                 Vendor vendorUser = ds.getValue(Vendor.class);
                                 getQremindApplication().setVendorUser(vendorUser);
-                                saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR, shopkey);
+                                saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), role, shopkey);
                                 Commons.dismissProgressDialog(pd);
-                                nextActivityAfterLogin(VendorDashBoardActivity.class);
+                                nextActivityAfterLogin(nextActivity);
                                 return;
                             }
                         }
