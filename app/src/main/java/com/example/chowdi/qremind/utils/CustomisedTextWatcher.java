@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.nio.charset.Charset;
-
 /**
  * Created by anton on 2/4/2016.
  */

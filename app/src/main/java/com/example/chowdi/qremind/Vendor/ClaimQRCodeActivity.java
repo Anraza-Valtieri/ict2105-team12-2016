@@ -44,6 +44,8 @@ public class ClaimQRCodeActivity extends BaseActivity {
         claimFinished = false;
         claimCancelled = false;
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // Initialise all UI elements first
         initialiseUIElements();
 
@@ -74,7 +76,7 @@ public class ClaimQRCodeActivity extends BaseActivity {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
             }
         });
     }

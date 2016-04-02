@@ -53,6 +53,7 @@ public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView
         // If you would like to resume scanning, call this method below:
         if(!rawResult.getText().contains(Constants.CODE_QR_CLAIM_QUEUE))
         {
+            // Continue scanning if invalid result
             Commons.showToastMessage("Invalid QR Code", this);
             mScannerView.resumeCameraPreview(this);
             return;

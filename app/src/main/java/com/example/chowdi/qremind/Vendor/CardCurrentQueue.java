@@ -35,40 +35,14 @@ public class CardCurrentQueue extends Card{
     protected Button claimBtn;
     protected Button removeBtn;
 
-    private Shop shop;
+    private Shop shopInfo;
     private QueueInfo queueInfo;
     private QremindApplication application;
 
     public CardCurrentQueue(Context context, QremindApplication application) {
-        this(context, R.layout.vendor_current_queue_card_dash_board);
+        super(context, R.layout.vendor_current_queue_card_dash_board);
         this.application = application;
         loadShopInfo();
-    }
-
-    /**
-     *
-     * @param context
-     * @param innerLayout
-     */
-    public CardCurrentQueue(Context context, int innerLayout) {
-        super(context, innerLayout);
-        init();
-    }
-
-    /**
-     * Init
-     */
-    private void init(){
-
-        //No Header
-
-//        //Set a OnClickListener listener
-//        setOnClickListener(new Card.OnCardClickListener() {
-//            @Override
-//            public void onClick(Card card, View view) {
-//                Toast.makeText(getContext(), "Click Listener card=", Toast.LENGTH_LONG).show();
-//            }
-//        });
     }
 
     @Override
@@ -79,7 +53,7 @@ public class CardCurrentQueue extends Card{
         nextCustBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OnClickNextCustomer(v);
+                callNextQueue();
             }
         });
 
@@ -87,33 +61,7 @@ public class CardCurrentQueue extends Card{
         claimBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AsyncTask<String, Void, Void>(){
-                    @Override
-                    protected Void doInBackground(String... params) {
-                        Intent intent = new Intent(getContext(), ClaimQRCodeActivity.class);
-                        intent.putExtra(Constants.EX_MSG_QUEUE_INFO, queueInfo);
-                        intent.putExtra(Constants.EX_MSG_SHOP_INFO, shop);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getContext().startActivity(intent);
-                        SystemClock.sleep(1000);
-                        while (!ClaimQRCodeActivity.claimFinished) ;
-
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Void result) {
-                        if (ClaimQRCodeActivity.claimCancelled)
-                            return;
-                        else
-                        {
-                            mTitle.setText("0");
-                            nextCustBtn.setVisibility(View.VISIBLE);
-                            claimBtn.setVisibility(View.INVISIBLE);
-                            removeBtn.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                }.execute();
+                showQRCode();
             }
         });
 
@@ -121,27 +69,47 @@ public class CardCurrentQueue extends Card{
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Firebase fbref = new Firebase(Constants.FIREBASE_CUSTOMER).child(queueInfo.getCustomer_id()).child("current_queue");
-                fbref.removeValue();
-                fbref = new Firebase(Constants.FIREBASE_SHOPS).child(shop.getShop_key()).child("queues").child(queueInfo.getCustomer_id());
-                fbref.removeValue();
-                fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shop.getShop_key()).child(queueInfo.getQueue_key());
-                fbref.removeValue();
-                nextCustBtn.setVisibility(View.VISIBLE);
-                claimBtn.setVisibility(View.INVISIBLE);
-                removeBtn.setVisibility(View.INVISIBLE);
+                removeCalledQueue();
             }
         });
     }
 
-    public void OnClickNextCustomer(View v){
-        callNextQueue();
+    /**
+     * Start another activity to show QR code for customer to claim queue
+     */
+    private void showQRCode()
+    {
+        new AsyncTask<String, Void, Void>() {
+            @Override
+            protected Void doInBackground(String... params) {
+                Intent intent = new Intent(getContext(), ClaimQRCodeActivity.class);
+                intent.putExtra(Constants.EX_MSG_QUEUE_INFO, queueInfo);
+                intent.putExtra(Constants.EX_MSG_SHOP_INFO, shopInfo);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
+                SystemClock.sleep(1000);
+                while (!ClaimQRCodeActivity.claimFinished) ;
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                if (ClaimQRCodeActivity.claimCancelled)
+                    return;
+                else {
+                    mTitle.setText("0");
+                    nextCustBtn.setVisibility(View.VISIBLE);
+                    claimBtn.setVisibility(View.INVISIBLE);
+                    removeBtn.setVisibility(View.INVISIBLE);
+                }
+            }
+        }.execute();
     }
 
-    protected void finishLoading(){
-
-    }
-
+    /**
+     * Load shop info from firebase and assign it to shopInfo variable
+     */
     private void loadShopInfo()
     {
         final String shopKey = application.getVendorUser().getShops().values().toArray()[0].toString();
@@ -149,8 +117,8 @@ public class CardCurrentQueue extends Card{
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                shop = dataSnapshot.getValue(Shop.class);
-                shop.setShop_key(shopKey);
+                shopInfo = dataSnapshot.getValue(Shop.class);
+                shopInfo.setShop_key(shopKey);
                 getNextQueueInfo();
             }
 
@@ -161,9 +129,12 @@ public class CardCurrentQueue extends Card{
         });
     }
 
+    /**
+     * Call next queue no
+     */
     private void callNextQueue()
     {
-        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shop.getShop_key());
+        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopInfo.getShop_key());
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -174,7 +145,7 @@ public class CardCurrentQueue extends Card{
                         ds = d;
                         break;
                     }
-                    Firebase fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shop.getShop_key()).child(ds.getKey());
+                    Firebase fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopInfo.getShop_key()).child(ds.getKey());
                     fbref.child("calling").setValue(true);
                     getNextQueueInfo();
                 }
@@ -187,9 +158,29 @@ public class CardCurrentQueue extends Card{
         });
     }
 
+    /**
+     * Remove current called queue
+     */
+    private void removeCalledQueue()
+    {
+        Firebase fbref = new Firebase(Constants.FIREBASE_CUSTOMER).child(queueInfo.getCustomer_id()).child("current_queue");
+        fbref.removeValue();
+        fbref = new Firebase(Constants.FIREBASE_SHOPS).child(shopInfo.getShop_key()).child("queues").child(queueInfo.getCustomer_id());
+        fbref.removeValue();
+        fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopInfo.getShop_key()).child(queueInfo.getQueue_key());
+        fbref.removeValue();
+        mTitle.setText("0");
+        nextCustBtn.setVisibility(View.VISIBLE);
+        claimBtn.setVisibility(View.INVISIBLE);
+        removeBtn.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Get next queue info and display on the UI.
+     */
     private void getNextQueueInfo()
     {
-        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES + "/" + shop.getShop_key());
+        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES + "/" + shopInfo.getShop_key());
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

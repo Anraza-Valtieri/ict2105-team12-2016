@@ -32,34 +32,8 @@ public class CardPeopleServed extends Card {
     private QremindApplication application;
 
     public CardPeopleServed(Context context, QremindApplication application) {
-        this(context, R.layout.vendor_card_dash_board);
+        super(context, R.layout.vendor_card_dash_board);
         this.application = application;
-    }
-
-    /**
-     *
-     * @param context
-     * @param innerLayout
-     */
-    public CardPeopleServed(Context context, int innerLayout) {
-        super(context, innerLayout);
-        init();
-    }
-
-    /**
-     * Init
-     */
-    private void init(){
-
-        //No Header
-
-//        //Set a OnClickListener listener
-//        setOnClickListener(new OnCardClickListener() {
-//            @Override
-//            public void onClick(Card card, View view) {
-//                Toast.makeText(getContext(), "Click Listener card=", Toast.LENGTH_LONG).show();
-//            }
-//        });
     }
 
     @Override

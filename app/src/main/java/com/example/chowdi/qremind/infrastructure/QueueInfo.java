@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.Queue;
-
 /**
  * Created by anton on 31/3/2016.
  */

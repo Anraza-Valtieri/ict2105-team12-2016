@@ -64,7 +64,6 @@ public class BusinessProfileActivity extends BaseActivity{
     private File tempOutputFile;
     private Bitmap tempPicture;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,6 +224,9 @@ public class BusinessProfileActivity extends BaseActivity{
         });
     }
 
+    /**
+     * To update shop info
+     */
     private void updateShopInfo()
     {
         String shopnamekey = application.getVendorUser().getShops().values().toArray()[0].toString();

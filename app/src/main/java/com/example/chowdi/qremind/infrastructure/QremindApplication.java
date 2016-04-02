@@ -48,18 +48,6 @@ public class QremindApplication extends Application {
     @Override
     public void onTerminate()
     {
-        if(customerUser != null)
-        {
-            if(customerUser.getCurrent_queue() != null)
-            {
-                SharedPreferences.Editor editor = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE).edit();
-                editor.remove(Constants.SHAREPREF_SHOP_KEY);
-                editor.remove(Constants.SHAREPREF_QUEUE_NO);
-                editor.remove(Constants.SHAREPREF_QUEUE_KEY);
-                editor.remove(Constants.SHAREPREF_SHOP_NAME);
-                editor.commit();
-            }
-        }
         if(accFbRef != null && accListener != null)
         {
             accFbRef.removeEventListener(accListener);
@@ -135,16 +123,6 @@ public class QremindApplication extends Application {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(customerUser != null) {
                     customerUser = dataSnapshot.getValue(Customer.class);
-                    if(customerUser.getCurrent_queue() == null)
-                    {
-                        SharedPreferences prefs = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.remove(Constants.SHAREPREF_QUEUE_KEY);
-                        editor.remove(Constants.SHAREPREF_SHOP_KEY);
-                        editor.remove(Constants.SHAREPREF_SHOP_NAME);
-                        editor.remove(Constants.SHAREPREF_QUEUE_NO);
-                        editor.commit();
-                    }
                 }
                 else
                     vendorUser = dataSnapshot.getValue(Vendor.class);

@@ -42,6 +42,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
 
         adapter = new CustomerListAdapter();
         rv.setAdapter(adapter);
+
         //initialize queue infos
         vendor = application.getVendorUser();
         if(vendor.getShops() != null)
@@ -59,6 +60,9 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * To populate the queue with its information
+     */
     private void populateQueueInfoAdapter() {
         //firebase = new Firebase(Constants.FIREBASE_SHOPS);
         firebase = new Firebase(Constants.FIREBASE_QUEUES);
@@ -80,6 +84,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
             }
         });
     }
+
     //RV adapter private class and view holder
     private class CustomerListAdapter extends RecyclerView.Adapter<CustomerListViewHolder>{
 

@@ -1,7 +1,5 @@
 package com.example.chowdi.qremind.utils;
 
-import java.lang.reflect.Array;
-
 /**
  * Created by L on 3/6/2016.
  */
@@ -27,11 +25,6 @@ public final class Constants {
     public static final String SHAREPREF_PHONE_NO = "PHONE_NO";
     public static final String SHAREPREF_ROLE = "ROLE";
     public static final String SHAREPREF_VENDOR_SHOP_KEY = "SHOP_KEY";
-    public static final String SHAREPREF_QUEUE_KEY = "QUEUE_KEY";
-    public static final String SHAREPREF_QUEUE_NO = "QUEUE_NO";
-    public static final String SHAREPREF_CUSTOMER_ID = "CUSTOMER_ID";
-    public static final String SHAREPREF_SHOP_NAME = "SHOP_NAME";
-    public static final String SHAREPREF_SHOP_KEY = "SHOP_KEY";
 
     // For extra messages
     public static final String EX_MSG_QUEUE_INFO = "QUEUE_INFO";

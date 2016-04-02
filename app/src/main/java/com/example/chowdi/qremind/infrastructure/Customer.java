@@ -1,8 +1,6 @@
 package com.example.chowdi.qremind.infrastructure;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 
 import com.example.chowdi.qremind.utils.Commons;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,7 +15,7 @@ import it.gmariotti.cardslib.library.prototypes.CardWithList;
  * Created by L on 3/5/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Customer implements CardWithList.ListObject{
+public class Customer{
 
     private String email;
     private String firstname;
@@ -97,45 +95,5 @@ public class Customer implements CardWithList.ListObject{
 
     public String getPhoneno() {
         return phoneno;
-    }
-
-    @Override
-    public String getObjectId() {
-        return null;
-    }
-
-    @Override
-    public Card getParentCard() {
-        return null;
-    }
-
-    @Override
-    public void setOnItemClickListener(CardWithList.OnItemClickListener onItemClickListener) {
-
-    }
-
-    @Override
-    public CardWithList.OnItemClickListener getOnItemClickListener() {
-        return null;
-    }
-
-    @Override
-    public boolean isSwipeable() {
-        return false;
-    }
-
-    @Override
-    public void setSwipeable(boolean isSwipeable) {
-
-    }
-
-    @Override
-    public CardWithList.OnItemSwipeListener getOnItemSwipeListener() {
-        return null;
-    }
-
-    @Override
-    public void setOnItemSwipeListener(CardWithList.OnItemSwipeListener onSwipeListener) {
-
     }
 }

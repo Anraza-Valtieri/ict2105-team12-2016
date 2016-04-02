@@ -13,10 +13,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
 import com.example.chowdi.qremind.Vendor.VendorDashBoardActivity;
 import com.example.chowdi.qremind.activities.BaseActivity;
-import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.infrastructure.Vendor;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
@@ -95,6 +93,7 @@ public class LoginActivity extends BaseActivity {
                 vendorLogin(loginID, password);
             }
         });
+
         // add and implement text changed listener to email edit text
         passwordET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -112,6 +111,7 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
+
         // add and implement text changed listener to email edit text
         emailPhoneNoET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -193,85 +193,13 @@ public class LoginActivity extends BaseActivity {
     private void vendorLogin(final String loginID, final String password)
     {
         Commons.showProgressDialog(pd, "Vendor login", "Logging in");
-        fbRef = new Firebase(Constants.FIREBASE_VENDOR);
-        final String email = loginID;
         if(Commons.isNumberString(loginID))
         {
-            fbRef.child(loginID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(final DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.getValue() == null) {
-                        emailPhoneNoET.setError("Phone No does not exists");
-                        Commons.showToastMessage("Phone No does not exists", getApplicationContext());
-                        Commons.dismissProgressDialog(pd);
-                        setEnableAllElements(true);
-                    }
-                    else
-                    {
-                        fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
-                            @Override
-                            public void onAuthenticated(AuthData authData) {
-                                String shopkey = "";
-                                if(dataSnapshot.child("shops").getValue() != null)
-                                    shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
-                                Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
-                                getQremindApplication().setVendorUser(vendorUser);
-                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR, shopkey);
-                                Commons.dismissProgressDialog(pd);
-                                nextActivityAfterLogin(VendorDashBoardActivity.class);
-                            }
-
-                            @Override
-                            public void onAuthenticationError(FirebaseError firebaseError) {
-                                handleFirebaseError(firebaseError);
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    handleFirebaseError(firebaseError);
-                }
-            });
+            phoneLogin(loginID, password, Constants.ROLE_VENDOR);
         }
         else if(Commons.isEmailString(loginID))
         {
-            fbRef.authWithPassword(loginID, password, new Firebase.AuthResultHandler() {
-                @Override
-                public void onAuthenticated(AuthData authData) {
-                    fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot ds : dataSnapshot.getChildren())
-                            {
-                                if(ds.child("email").getValue().toString().equals(loginID))
-                                {
-                                    String shopkey = "";
-                                    if(dataSnapshot.child("shops").getValue() != null)
-                                        shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
-                                    Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
-                                    getQremindApplication().setVendorUser(vendorUser);
-                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR, shopkey);
-                                    Commons.dismissProgressDialog(pd);
-                                    nextActivityAfterLogin(VendorDashBoardActivity.class);
-                                    return;
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-                            handleFirebaseError(firebaseError);
-                        }
-                    });
-                }
-
-                @Override
-                public void onAuthenticationError(FirebaseError firebaseError) {
-                    handleFirebaseError(firebaseError);
-                }
-            });
+            emailLogin(loginID, password, Constants.ROLE_VENDOR);
         }
     }
 
@@ -283,79 +211,112 @@ public class LoginActivity extends BaseActivity {
     private void customerLogin(final String loginID, final String password)
     {
         Commons.showProgressDialog(pd, "Customer login", "Logging in");
-        fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
-        final String email = loginID;
         if(Commons.isNumberString(loginID))
         {
-            fbRef.child(loginID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(final DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.getValue() == null) {
-                        emailPhoneNoET.setError("Phone No does not exists");
-                        Commons.showToastMessage("Phone No does not exists", getApplicationContext());
-                        Commons.dismissProgressDialog(pd);
-                        setEnableAllElements(true);
-                    }
-                    else
-                    {
-                        fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
-                            @Override
-                            public void onAuthenticated(AuthData authData) {
-                                Customer custUser = dataSnapshot.getValue(Customer.class);
-                                getQremindApplication().setCustomerUser(custUser);
-                                saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_CUSTOMER);
-                                Commons.dismissProgressDialog(pd);
-                                nextActivityAfterLogin(CustomerHomePageActivity.class);
-                            }
-
-                            @Override
-                            public void onAuthenticationError(FirebaseError firebaseError) {
-                                handleFirebaseError(firebaseError);
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    handleFirebaseError(firebaseError);
-                }
-            });
+            phoneLogin(loginID, password, Constants.ROLE_CUSTOMER);
         } else if (Commons.isEmailString(loginID))
         {
-            fbRef.authWithPassword(loginID, password, new Firebase.AuthResultHandler() {
-                @Override
-                public void onAuthenticated(AuthData authData) {
-                    fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            emailLogin(loginID, password, Constants.ROLE_CUSTOMER);
+        }
+    }
+
+    /**
+     * Login using phone number
+     * @param loginID phone number
+     * @param password password
+     * @param role Constants.ROLE_CUSTOMER or Constant.ROLE_VENDOR only
+     */
+    private void phoneLogin(final String loginID, final String password, String role)
+    {
+        if(role.equals(Constants.ROLE_VENDOR))
+            fbRef = new Firebase(Constants.FIREBASE_VENDOR);
+        else if(role.equals(Constants.ROLE_CUSTOMER))
+            fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
+
+        fbRef.child(loginID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null) {
+                    emailPhoneNoET.setError("Phone No does not exists");
+                    Commons.showToastMessage("Phone No does not exists", getApplicationContext());
+                    Commons.dismissProgressDialog(pd);
+                    setEnableAllElements(true);
+                } else {
+                    fbRef.authWithPassword(dataSnapshot.child("email").getValue().toString(), password, new Firebase.AuthResultHandler() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot ds : dataSnapshot.getChildren())
-                            {
-                                if(ds.child("email").getValue().toString().equals(loginID))
-                                {
-                                    Customer custUser = dataSnapshot.getValue(Customer.class);
-                                    getQremindApplication().setCustomerUser(custUser);
-                                    saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_CUSTOMER);
-                                    Commons.dismissProgressDialog(pd);
-                                    nextActivityAfterLogin(CustomerHomePageActivity.class);
-                                    return;
-                                }
-                            }
+                        public void onAuthenticated(AuthData authData) {
+                            String shopkey = "";
+                            if (dataSnapshot.child("shops").getValue() != null)
+                                shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
+                            Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
+                            getQremindApplication().setVendorUser(vendorUser);
+                            saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, Constants.ROLE_VENDOR, shopkey);
+                            Commons.dismissProgressDialog(pd);
+                            nextActivityAfterLogin(VendorDashBoardActivity.class);
                         }
 
                         @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                        public void onAuthenticationError(FirebaseError firebaseError) {
                             handleFirebaseError(firebaseError);
                         }
                     });
                 }
+            }
 
-                @Override
-                public void onAuthenticationError(FirebaseError firebaseError) {
-                    handleFirebaseError(firebaseError);
-                }
-            });
-        }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                handleFirebaseError(firebaseError);
+            }
+        });
+    }
+
+    /**
+     * Login using email address
+     * @param loginID email address
+     * @param password password
+     * @param role Constants.ROLE_CUSTOMER or Constant.ROLE_VENDOR only
+     */
+    private void emailLogin(final String loginID, final String password, String role)
+    {
+        if(role.equals(Constants.ROLE_VENDOR))
+            fbRef = new Firebase(Constants.FIREBASE_VENDOR);
+        else if(role.equals(Constants.ROLE_CUSTOMER))
+            fbRef = new Firebase(Constants.FIREBASE_CUSTOMER);
+        fbRef.authWithPassword(loginID, password, new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds : dataSnapshot.getChildren())
+                        {
+                            if(ds.child("email").getValue().toString().equals(loginID))
+                            {
+                                String shopkey = "";
+                                if(dataSnapshot.child("shops").getValue() != null)
+                                    shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
+                                Vendor vendorUser = ds.getValue(Vendor.class);
+                                getQremindApplication().setVendorUser(vendorUser);
+                                saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), Constants.ROLE_VENDOR, shopkey);
+                                Commons.dismissProgressDialog(pd);
+                                nextActivityAfterLogin(VendorDashBoardActivity.class);
+                                return;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                        handleFirebaseError(firebaseError);
+                    }
+                });
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+                handleFirebaseError(firebaseError);
+            }
+        });
     }
 
     /**

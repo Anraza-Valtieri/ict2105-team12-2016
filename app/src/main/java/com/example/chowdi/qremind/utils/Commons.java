@@ -1,10 +1,7 @@
 package com.example.chowdi.qremind.utils;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,20 +9,12 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.chowdi.qremind.Customer.CustomerProfilePageActivity;
 import com.example.chowdi.qremind.Login_RegisterActivity;
-import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -254,10 +243,21 @@ public class Commons {
      */
     public static Bitmap convertBase64ToBitmap(String imageString)
     {
-        byte[] imageAsBytes = Base64.decode(imageString.getBytes(), Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+        try {
+            byte[] imageAsBytes = Base64.decode(imageString.getBytes(), Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
     }
 
+    /**
+     * Convert bitmap image to Base64
+     * @param image any valid Bitmap image
+     * @return Base64 image string
+     */
     public static String convertBitmapToBase64(Bitmap image)
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

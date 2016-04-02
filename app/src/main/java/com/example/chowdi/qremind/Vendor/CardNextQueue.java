@@ -30,34 +30,8 @@ public class CardNextQueue extends Card {
     private QremindApplication application;
 
     public CardNextQueue(Context context, QremindApplication application) {
-        this(context, R.layout.vendor_next_queue_card_dash_board);
+        super(context, R.layout.vendor_next_queue_card_dash_board);
         this.application = application;
-    }
-
-    /**
-     *
-     * @param context
-     * @param innerLayout
-     */
-    public CardNextQueue(Context context, int innerLayout) {
-        super(context, innerLayout);
-        init();
-    }
-
-    /**
-     * Init
-     */
-    private void init(){
-
-        //No Header
-
-//        //Set a OnClickListener listener
-//        setOnClickListener(new Card.OnCardClickListener() {
-//            @Override
-//            public void onClick(Card card, View view) {
-//                Toast.makeText(getContext(), "Click Listener card=", Toast.LENGTH_LONG).show();
-//            }
-//        });
     }
 
     @Override
@@ -92,14 +66,5 @@ public class CardNextQueue extends Card {
                 Commons.handleCommonFirebaseError(firebaseError,getContext());
             }
         });
-
-    }
-
-    public void OnClickNextCustomer(View v){
-
-    }
-
-    protected void finishLoading(){
-
     }
 }
