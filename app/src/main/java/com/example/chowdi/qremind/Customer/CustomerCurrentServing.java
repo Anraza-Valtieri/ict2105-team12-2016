@@ -1,11 +1,13 @@
 package com.example.chowdi.qremind.Customer;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -29,42 +31,31 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
-
 public class CustomerCurrentServing extends BaseActivity {
 
     // Variable for Firebase
     private Firebase fbRefWaitingTime;
-    private ValueEventListener waitingTimeListener = null;
+    private ValueEventListener waitingTimeListener;
+    private Firebase fbRefRemainingQueue;
+    private ValueEventListener remainingQueueListener;
 
     // Variable for all relevant UI elements
-    private TextView vendorName_TV, currentlyServing_TV, myQueueNo_TV, waitingTime_TV;
-    private Button time_ext_req_btn, claim_btn, refresh_btn;
+    private TextView vendorName_TV, remainingQueue_TV, myQueueNo_TV, waitingTime_TV;
+    private Button leave_queue_btn, claim_btn, refresh_btn;
 
 
     // Others variables
-    private SharedPreferences prefs;
     private ProgressDialog pd;
     private Customer user;
     private Shop shop;
     private QueueInfo queueInfo;
     private Boolean shopRetrieved, queueRetrieved;
 
-    // For QR Code camera
-    private ZXingScannerView mScannerView;
-    private View view;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customercurrentlyserving);
         setNavDrawer(new CustomerMainNavDrawer(this));
-
-        // Initialise Firebase library with android context once before any Firebase reference is created or used
-        Firebase.setAndroidContext(getApplicationContext());
-
-        // Initialise getSharedPreferences for this app
-        prefs = getSharedPreferences(Constants.SHARE_PREF_LINK, MODE_PRIVATE);
 
         // Initialise all UI elements first and progress dialog
         initialiseUIElements();
@@ -101,6 +92,7 @@ public class CustomerCurrentServing extends BaseActivity {
             {
                 loadQueueStats();
                 waitForTurn();
+                getRemainingQueue();
                 setEnableAllElements(true);
             }
         }.execute();
@@ -142,14 +134,36 @@ public class CustomerCurrentServing extends BaseActivity {
                 }.execute();
             }
         });
+
+        // set listener to leave queue
+        leave_queue_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CustomerCurrentServing.this);
+                builder.setMessage("Are you sure you want to leave queue?")
+                        .setPositiveButton(R.string.text_leave, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                leaveQueue();
+                            }
+                        })
+                        .setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                builder.show();
+            }
+        });
     }
 
     @Override
     protected void onDestroy()
     {
         super.onDestroy();
-        if(fbRefWaitingTime != null)
+        if(fbRefWaitingTime != null && waitingTimeListener != null)
             fbRefWaitingTime.removeEventListener(waitingTimeListener);
+        if(fbRefRemainingQueue != null)
+            fbRefRemainingQueue.removeEventListener(remainingQueueListener);
     }
 
     /**
@@ -158,10 +172,10 @@ public class CustomerCurrentServing extends BaseActivity {
     private void initialiseUIElements()
     {
         vendorName_TV = (TextView)findViewById(R.id.vendorname_TV);
-        currentlyServing_TV = (TextView)findViewById(R.id.remainingQueue_TV);
+        remainingQueue_TV = (TextView)findViewById(R.id.remainingQueue_TV);
         myQueueNo_TV = (TextView)findViewById(R.id.queue_number_TV);
         waitingTime_TV = (TextView)findViewById(R.id.waiting_time_TV);
-        time_ext_req_btn = (Button) findViewById(R.id.leave_queue_btn);
+        leave_queue_btn = (Button) findViewById(R.id.leave_queue_btn);
         claim_btn = (Button) findViewById(R.id.claim_btn);
         refresh_btn = (Button) findViewById(R.id.refresh_btn);
     }
@@ -173,10 +187,10 @@ public class CustomerCurrentServing extends BaseActivity {
     private void setEnableAllElements(boolean value)
     {
         vendorName_TV.setEnabled(value);
-        currentlyServing_TV.setEnabled(value);
+        remainingQueue_TV.setEnabled(value);
         myQueueNo_TV.setEnabled(value);
         waitingTime_TV.setEnabled(value);
-        time_ext_req_btn.setEnabled(value);
+        leave_queue_btn.setEnabled(value);
         claim_btn.setEnabled(value);
         refresh_btn.setEnabled(value);
     }
@@ -186,7 +200,7 @@ public class CustomerCurrentServing extends BaseActivity {
      */
     private void loadQueueStats(){
         vendorName_TV.setText(shop.getShop_name());
-        myQueueNo_TV.setText(queueInfo.getQueue_no()+"");
+        myQueueNo_TV.setText(queueInfo.getQueue_no() + "");
     }
 
     /**
@@ -206,6 +220,10 @@ public class CustomerCurrentServing extends BaseActivity {
                         inQueuetime = dataSnapshot.child(queueInfo.getQueue_key()).child("in_queue_time").getValue().toString();
                     }catch(Exception ex)
                     {
+                        if (waitingTimeListener != null) {
+                            fbRefWaitingTime.removeEventListener(waitingTimeListener);
+                            waitingTimeListener = null;
+                        }
                         ex.printStackTrace();
                         return;
                     }
@@ -338,8 +356,10 @@ public class CustomerCurrentServing extends BaseActivity {
                     queueInfo.setQueue_key(queuekey);
                     if(queueInfo.getCalling() != null) {
                         Commons.dismissProgressDialog(pd);
-                        if(fbRefWaitingTime!=null)
+                        if(fbRefWaitingTime != null)
                             fbRefWaitingTime.removeEventListener(waitingTimeListener);
+                        if(fbRefRemainingQueue != null)
+                            fbRefRemainingQueue.removeEventListener(remainingQueueListener);
                         waitingTime_TV.setText("Your turn's up!");
 
                         refresh_btn.setVisibility(View.INVISIBLE);
@@ -356,6 +376,8 @@ public class CustomerCurrentServing extends BaseActivity {
                 {
                     if(fbRefWaitingTime!=null)
                         fbRefWaitingTime.removeEventListener(waitingTimeListener);
+                    if(fbRefRemainingQueue != null)
+                        fbRefRemainingQueue.removeEventListener(remainingQueueListener);
                     fbRefQueueTurn.removeEventListener(queueTurnListener);
                     Intent intent = new Intent(CustomerCurrentServing.this, CustomerHomePageActivity.class);
                     startActivity(intent);
@@ -367,6 +389,34 @@ public class CustomerCurrentServing extends BaseActivity {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 handleFirebaseError(firebaseError);
+            }
+        });
+    }
+
+    /**
+     * To get the number of queues before user's queue
+     */
+    private void getRemainingQueue()
+    {
+        fbRefRemainingQueue = new Firebase(Constants.FIREBASE_QUEUES + "/" + shop.getShop_key());
+        remainingQueueListener = fbRefRemainingQueue.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot != null && dataSnapshot.getValue() != null && dataSnapshot.getChildrenCount() > 0)
+                {
+                    int remainingQueues = 0;
+                    for(DataSnapshot ds : dataSnapshot.getChildren())
+                    {
+                        if(ds.getKey() == queueInfo.getQueue_key()) break;
+                        remainingQueues++;
+                    }
+                    remainingQueue_TV.setText(remainingQueues + "");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
             }
         });
     }
@@ -415,12 +465,6 @@ public class CustomerCurrentServing extends BaseActivity {
 
         fbRefQueueTurn.removeEventListener(queueTurnListener);
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(Constants.SHAREPREF_QUEUE_KEY);
-        editor.remove(Constants.SHAREPREF_SHOP_KEY);
-        editor.remove(Constants.SHAREPREF_SHOP_NAME);
-        editor.remove(Constants.SHAREPREF_QUEUE_NO);
-        editor.commit();
         Intent intent = new Intent(this, CustomerHomePageActivity.class);
         startActivity(intent);
         Commons.showToastMessage("Queue claimed successfully", getApplicationContext());
@@ -437,8 +481,7 @@ public class CustomerCurrentServing extends BaseActivity {
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() != null)
-                {
+                if (dataSnapshot.getValue() != null) {
                     shop = dataSnapshot.getValue(Shop.class);
                     shop.setShop_key(shopkey);
                 }
@@ -476,6 +519,27 @@ public class CustomerCurrentServing extends BaseActivity {
                 Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
             }
         });
+    }
+
+    /**
+     * To leave current queue
+     */
+    private void leaveQueue()
+    {
+        if(!Commons.isNetworkAvailable(getApplicationContext()))
+        {
+            Commons.showToastMessage("No internet connection", getApplicationContext());
+            return;
+        }
+
+        Firebase fbref = new Firebase(Constants.FIREBASE_CUSTOMER).child(user.getPhoneno()).child("current_queue");
+        fbref.removeValue();
+
+        fbref = new Firebase(Constants.FIREBASE_SHOPS).child(shop.getShop_key()).child("queues").child(application.getCustomerUser().getPhoneno());
+        fbref.removeValue();
+
+        fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shop.getShop_key()).child(queueInfo.getQueue_key());
+        fbref.removeValue();
     }
 
     /**
