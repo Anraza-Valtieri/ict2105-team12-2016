@@ -247,13 +247,6 @@ public class CustomerHomePageActivity extends BaseActivity{
         // map for customer current queue
         vendorRef.child(customer_id).setValue(true); // insert into queues
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Constants.SHAREPREF_SHOP_NAME, shop_name);
-        editor.putString(Constants.SHAREPREF_SHOP_KEY, shop_key);
-        editor.putString(Constants.SHAREPREF_QUEUE_KEY, queueKey);
-        editor.putString(Constants.SHAREPREF_QUEUE_NO, queueNo + "");
-        editor.commit();
-
         Intent intent = new Intent(CustomerHomePageActivity.this, CustomerCurrentServing.class);
         startActivity(intent);
         Commons.dismissProgressDialog(pd);
