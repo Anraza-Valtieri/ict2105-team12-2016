@@ -11,10 +11,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
+import com.example.chowdi.qremind.utils.CustomisedTextWatcher;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -61,8 +63,7 @@ public class Register_Activity extends BaseActivity{
                 getCurrentFocus().clearFocus(); // Clear all focuses in the view
 
                 // Check network connection
-                if(!Commons.isNetworkAvailable(getApplicationContext()))
-                {
+                if (!Commons.isNetworkAvailable(getApplicationContext())) {
                     Commons.showToastMessage("No internet connection", getApplicationContext());
                     return;
                 }
@@ -71,11 +72,11 @@ public class Register_Activity extends BaseActivity{
                         isEmptyField(phoneNoET) | isEmptyField(pwdET) | isEmptyField(cPwdET);
 
                 // To hide the soft keyboard
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                if(editTextErr) return;
-                if(anyETErrors) return;
+                if (editTextErr) return;
+                if (anyETErrors) return;
 
                 setEnableAllElements(false);
                 registerUser();
@@ -105,6 +106,20 @@ public class Register_Activity extends BaseActivity{
                         anyETErrors = false;
                         cPwdET.setError(null);
                     }
+
+                    if(pwdET.getText().toString().isEmpty())
+                    {
+                        ((TextView)findViewById(R.id.password_textView)).setVisibility(View.INVISIBLE);
+                        pwdET.setHint(R.string.hint_password);
+                    }
+                    else
+                    {
+                        ((TextView)findViewById(R.id.password_textView)).setVisibility(View.VISIBLE);
+                    }
+                }
+                else {
+                    ((TextView)findViewById(R.id.password_textView)).setVisibility(View.VISIBLE);
+                    pwdET.setHint("");
                 }
             }
         });
@@ -126,6 +141,20 @@ public class Register_Activity extends BaseActivity{
                         anyETErrors = false;
                         cPwdET.setError(null);
                     }
+
+                    if(cPwdET.getText().toString().isEmpty())
+                    {
+                        ((TextView)findViewById(R.id.confirmpassword_textView)).setVisibility(View.INVISIBLE);
+                        cPwdET.setHint(R.string.hint_confirmpassword);
+                    }
+                    else
+                    {
+                        ((TextView)findViewById(R.id.confirmpassword_textView)).setVisibility(View.VISIBLE);
+                    }
+                }
+                else {
+                    ((TextView)findViewById(R.id.confirmpassword_textView)).setVisibility(View.VISIBLE);
+                    cPwdET.setHint("");
                 }
             }
         });
@@ -133,28 +162,38 @@ public class Register_Activity extends BaseActivity{
         emailET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus)
-                {
-                    if(isEmptyField(emailET))
-                    {
+                if (!hasFocus) {
+
+                    if (emailET.getText().toString().isEmpty()) {
+                        ((TextView) findViewById(R.id.email_textView)).setVisibility(View.INVISIBLE);
+                        emailET.setHint(R.string.hint_email);
+                    } else {
+                        ((TextView) findViewById(R.id.email_textView)).setVisibility(View.VISIBLE);
+                    }
+
+                    if (isEmptyField(emailET)) {
                         emailET.setError(null);
                         return;
                     }
                     String email = emailET.getText().toString();
-                    if(!email.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"))
-                    {
+                    if (!email.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
                         emailET.setError("Please provide valid email!");
                         anyETErrors = true;
-                    }
-                    else
-                    {
+                    } else {
                         emailET.setError(null);
                         anyETErrors = false;
                     }
+                } else {
+                    ((TextView) findViewById(R.id.email_textView)).setVisibility(View.VISIBLE);
+                    emailET.setHint("");
                 }
             }
         });
+
+        fNameET.addTextChangedListener(new CustomisedTextWatcher(fNameET, (TextView) findViewById(R.id.fname_textView), R.string.hint_fname));
+        lNameET.addTextChangedListener(new CustomisedTextWatcher(lNameET, (TextView) findViewById(R.id.lname_textView), R.string.hint_fname));
+        phoneNoET.addTextChangedListener(new CustomisedTextWatcher(phoneNoET, (TextView) findViewById(R.id.phonenumber_textView), R.string.hint_phone_no));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

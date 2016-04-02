@@ -16,12 +16,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
+import com.example.chowdi.qremind.utils.CustomisedTextWatcher;
 import com.example.chowdi.qremind.views.CustomerMainNavDrawer;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -65,6 +67,12 @@ public class CustomerProfilePageActivity extends BaseActivity{
 
         // Get customer object from application
         customer = application.getCustomerUser();
+
+        // Set CustomisedTextWatcher as TextChangeListener to all EditText
+        fName_ET.addTextChangedListener(new CustomisedTextWatcher(fName_ET, (TextView) findViewById(R.id.custProfile_fName_TV), R.string.hint_fname));
+        lName_ET.addTextChangedListener(new CustomisedTextWatcher(lName_ET, (TextView) findViewById(R.id.custProfile_lName_TV), R.string.hint_lname));
+        email_ET.addTextChangedListener(new CustomisedTextWatcher(email_ET, (TextView) findViewById(R.id.custProfile_email_TV), R.string.hint_email));
+        phoneNo_ET.addTextChangedListener(new CustomisedTextWatcher(phoneNo_ET, (TextView) findViewById(R.id.custProfile_phone_no_TV), R.string.hint_phone_no));
 
         // Check network connection
         if(!Commons.isNetworkAvailable(getApplicationContext()))
