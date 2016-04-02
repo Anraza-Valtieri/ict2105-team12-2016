@@ -27,52 +27,58 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="41dp"
-                android:layout_marginBottom="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:textSize="25sp"
                 android:text="Vendor Name(to be changed)"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-            <TextView
-                android:id="@+id/TV_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_below="@+id/vendorname_TV"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10sp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_remaining_queue"/>
-
-            <TextView
-                android:id="@+id/remainingQueue_TV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/TV_1"
-                android:layout_marginBottom="15sp"
-                android:layout_centerHorizontal="true"
-                android:text="_____"
-                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/TV_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/remainingQueue_TV"
+                android:layout_below="@+id/vendorname_TV"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10sp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_your_queue_no"/>
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:text="@string/text_queue_no"/>
 
             <TextView
                 android:id="@+id/queue_number_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/TV_2"
-                android:layout_marginBottom="15sp"
+                android:layout_marginBottom="20sp"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/black"
+                android:text="_____"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:id="@+id/TV_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/queue_number_TV"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/text_remaining_queue"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:id="@+id/remainingQueue_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/TV_1"
+                android:layout_marginBottom="20sp"
                 android:layout_centerHorizontal="true"
                 android:text="_____"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/TV_3"
@@ -82,18 +88,20 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10sp"
-                android:layout_below="@+id/queue_number_TV"
-                android:text="@string/text_estimated_waiting_time" />
+                android:layout_below="@+id/remainingQueue_TV"
+                android:text="@string/text_estimated_waiting_time"
+                android:textSize="22sp"/>
 
             <TextView
                 android:id="@+id/waiting_time_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/TV_3"
-                android:layout_marginBottom="15sp"
+                android:layout_marginBottom="20sp"
                 android:layout_centerHorizontal="true"
                 android:text="_____"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/refresh_btn"
@@ -101,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/waiting_time_TV"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="23dp"
+                android:layout_marginBottom="30dp"
                 android:text="@string/text_refresh"
                 android:layout_gravity="center_horizontal"
                 android:background="@color/colorAccent" />
@@ -112,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/waiting_time_TV"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="23dp"
+                android:layout_marginBottom="30dp"
                 android:text="@string/text_claim"
                 android:layout_gravity="center_horizontal"
                 android:visibility="invisible"
@@ -132,12 +140,5 @@
 
     <!-- Side navigation drawer UI -->
     <include layout="@layout/include_main_nav_drawer"/>
-   <!--
-    <ListView
-        android:id="@+id/navList"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left|start"
-        android:background="#ffeeeeee"/>-->
 
 </android.support.v4.widget.DrawerLayout>
