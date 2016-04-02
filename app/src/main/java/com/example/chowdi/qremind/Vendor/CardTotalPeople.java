@@ -36,7 +36,7 @@ public class CardTotalPeople extends Card {
 
     @Override
     public void setupInnerViewElements(final ViewGroup parent, View view) {
-        mTitle = (TextView) parent.findViewById(R.id.card_extension_title);
+        mTitle = (TextView) parent.findViewById(R.id.currentQueueNo_TV);
 
         final String shopKey = application.getVendorUser().getShops().values().toArray()[0].toString();
         Firebase fbRef = new Firebase(Constants.FIREBASE_SHOPS).child(shopKey).child("queues");

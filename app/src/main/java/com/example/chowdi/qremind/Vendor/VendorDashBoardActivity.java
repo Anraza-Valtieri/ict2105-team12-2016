@@ -108,35 +108,37 @@ public class VendorDashBoardActivity extends BaseActivity {
             @Override
             public void onClick(Card card, View view) {
                 // Check network connection
-                if(!Commons.isNetworkAvailable(getApplicationContext()))
-                {
+                if (!Commons.isNetworkAvailable(getApplicationContext())) {
                     Commons.showToastMessage("No internet connection", getApplicationContext());
                     return;
                 }
                 startActivity(new Intent(VendorDashBoardActivity.this, ListOfCustomersInQueueActivity.class));
             }
         });
+
         cardServed = new CardPeopleServed(getApplicationContext(), application);
         cardServedH = new CardHeader(getApplicationContext());
         cardServedH.setTitle("No. of people served");
         cardServed.addCardHeader(cardServedH);
-        cardServed.setCardElevation(0);
+        cardServed.setBackgroundResourceId(R.color.card_base_cardwithlist_divider_color);
+        cardServed.setCardElevation(25);
 
-        cardNext = new CardNextQueue(getApplicationContext(), application);
-        cardNextH = new CardHeader(getApplicationContext());
-        cardNextH.setTitle("Next Queue No");
-        cardNext.addCardHeader(cardNextH);
-        cardNext.setCardElevation(0);
+//        cardNext = new CardNextQueue(getApplicationContext(), application);
+//        cardNextH = new CardHeader(getApplicationContext());
+//        cardNextH.setTitle("Next Queue No");
+//        cardNext.addCardHeader(cardNextH);
+//        cardNext.setCardElevation(0);
 
         cardCurrent = new CardCurrentQueue(getApplicationContext(), application);
         cardCurrentH = new CardHeader(getApplicationContext());
-        cardCurrentH.setTitle("Current Queue No");
+        cardCurrentH.setTitle("Queue No");
         cardCurrent.addCardHeader(cardCurrentH);
-        cardCurrent.setCardElevation(0);
+        cardCurrent.setBackgroundResourceId(R.color.card_base_cardwithlist_divider_color);
+        cardCurrent.setCardElevation(25);
 
-        dashboardCards.add(cardNext);
-        dashboardCards.add(cardCurrent);
         dashboardCards.add(cardCust);
+//        dashboardCards.add(cardNext);
+        dashboardCards.add(cardCurrent);
         dashboardCards.add(cardServed);
     }
 

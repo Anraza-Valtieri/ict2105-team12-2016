@@ -30,7 +30,8 @@ public class CardCurrentQueue extends Card{
      * Constructor with a custom inner layout
      * @param context
      */
-    protected TextView mTitle;
+    protected TextView currentQTV;
+    protected TextView nextQTV;
     protected Button nextCustBtn;
     protected Button claimBtn;
     protected Button removeBtn;
@@ -47,7 +48,8 @@ public class CardCurrentQueue extends Card{
 
     @Override
     public void setupInnerViewElements(final ViewGroup parent, View view) {
-        mTitle = (TextView) parent.findViewById(R.id.card_extension_title);
+        currentQTV = (TextView) parent.findViewById(R.id.currentQueueNo_TV);
+        nextQTV = (TextView) parent.findViewById(R.id.nextQueueNo_TV);
 
         nextCustBtn = (Button)parent.findViewById(R.id.nextCustomerBtn);
         nextCustBtn.setOnClickListener(new View.OnClickListener() {
@@ -68,8 +70,7 @@ public class CardCurrentQueue extends Card{
             @Override
             public void onClick(View v) {
                 // Check network connection
-                if(!Commons.isNetworkAvailable(application))
-                {
+                if (!Commons.isNetworkAvailable(application)) {
                     Commons.showToastMessage("No internet connection", application);
                     return;
                 }
@@ -82,14 +83,14 @@ public class CardCurrentQueue extends Card{
             @Override
             public void onClick(View v) {
                 // Check network connection
-                if(!Commons.isNetworkAvailable(application))
-                {
+                if (!Commons.isNetworkAvailable(application)) {
                     Commons.showToastMessage("No internet connection", application);
                     return;
                 }
                 removeCalledQueue();
             }
         });
+        nextQueueListener();
     }
 
     /**
@@ -116,7 +117,7 @@ public class CardCurrentQueue extends Card{
                 if (ClaimQRCodeActivity.claimCancelled)
                     return;
                 else {
-                    mTitle.setText("0");
+                    currentQTV.setText("0000");
                     nextCustBtn.setVisibility(View.VISIBLE);
                     claimBtn.setVisibility(View.INVISIBLE);
                     removeBtn.setVisibility(View.INVISIBLE);
@@ -187,7 +188,7 @@ public class CardCurrentQueue extends Card{
         fbref.removeValue();
         fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopInfo.getShop_key()).child(queueInfo.getQueue_key());
         fbref.removeValue();
-        mTitle.setText("0");
+        currentQTV.setText("0000");
         nextCustBtn.setVisibility(View.VISIBLE);
         claimBtn.setVisibility(View.INVISIBLE);
         removeBtn.setVisibility(View.INVISIBLE);
@@ -202,24 +203,24 @@ public class CardCurrentQueue extends Card{
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() != null) {
+                if (dataSnapshot.getValue() != null) {
                     DataSnapshot ds = null;
-                    for(DataSnapshot d : dataSnapshot.getChildren()) {
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
                         ds = d;
                         break;
                     }
 
                     queueInfo = ds.getValue(QueueInfo.class);
                     queueInfo.setQueue_key(ds.getKey());
-                    if(queueInfo.getCalling() != null) {
-                        mTitle.setText(queueInfo.getQueue_no() + "");
+                    if (queueInfo.getCalling() != null) {
+                        currentQTV.setText(queueInfo.getQueue_no() + "");
                         nextCustBtn.setVisibility(View.INVISIBLE);
                         claimBtn.setVisibility(View.VISIBLE);
                         removeBtn.setVisibility(View.VISIBLE);
                         return;
                     }
                 }
-                mTitle.setText("0");
+                currentQTV.setText("0000");
                 nextCustBtn.setVisibility(View.VISIBLE);
                 claimBtn.setVisibility(View.INVISIBLE);
                 removeBtn.setVisibility(View.INVISIBLE);
@@ -228,6 +229,38 @@ public class CardCurrentQueue extends Card{
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Commons.handleCommonFirebaseError(firebaseError, getContext());
+            }
+        });
+    }
+
+    private void nextQueueListener()
+    {
+        final String shopKey = application.getVendorUser().getShops().values().toArray()[0].toString();
+        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopKey);
+        fbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() == null)
+                {
+                    nextQTV.setText("----");
+                    return;
+                }
+                for(DataSnapshot ds : dataSnapshot.getChildren())
+                {
+                    QueueInfo queueInfo = ds.getValue(QueueInfo.class);
+                    if(queueInfo.getCalling() != null)
+                    {
+                        nextQTV.setText("----");
+                        continue;
+                    }
+                    nextQTV.setText(queueInfo.getQueue_no()+"");
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Commons.handleCommonFirebaseError(firebaseError,getContext());
             }
         });
     }

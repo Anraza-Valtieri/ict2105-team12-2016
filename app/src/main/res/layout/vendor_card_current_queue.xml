@@ -4,21 +4,51 @@
     android:layout_height="wrap_content">
 
     <!-- Use same ID to use built-in features -->
+    <RelativeLayout
+        android:id="@+id/nextQLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        >
+        <TextView
+            android:id="@+id/nextQueueNo_TV"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="25dp"
+            android:text="----"/>
+
+        <TextView
+            android:id="@+id/nextQ_TV"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/nextQueueNo_TV"
+            android:textSize="20dp"
+            android:layout_centerVertical="true"
+            android:text="Next: "/>
+    </RelativeLayout>
+
     <TextView
-        android:id="@+id/card_extension_title"
+        android:id="@+id/currentQueueNo_TV"
         android:layout_marginLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/nextQLayout"
+        android:layout_marginTop="15dp"
         android:textSize="50dp"
+        android:text="0000"
         android:layout_centerHorizontal="true"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/card_extension_title"
+        android:layout_below="@+id/currentQueueNo_TV"
         android:text="Next Customer"
         android:background="@color/colorAccent"
+        android:textColor="@color/white"
         android:id="@+id/nextCustomerBtn"
         android:layout_centerHorizontal="true"
         android:visibility="visible"
@@ -27,7 +57,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/card_extension_title"
+        android:layout_below="@+id/currentQueueNo_TV"
         android:gravity="center_horizontal">
         <Button
             android:layout_width="wrap_content"
@@ -35,6 +65,7 @@
             android:layout_marginRight="20sp"
             android:text="Claim"
             android:background="@color/card_undobar_material_text_color"
+            android:textColor="@color/white"
             android:id="@+id/vendor_curr_queue_claim_Btn"
             android:visibility="invisible"/>
         <Button
@@ -43,6 +74,7 @@
             android:layout_marginLeft="20sp"
             android:text="Remove"
             android:background="@color/colorAccent"
+            android:textColor="@color/white"
             android:id="@+id/vendor_curr_queue_removeBtn"
             android:visibility="invisible"/>
     </LinearLayout>
