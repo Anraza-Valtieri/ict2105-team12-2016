@@ -3,6 +3,7 @@ package com.example.chowdi.qremind;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 
 import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
 import com.example.chowdi.qremind.Vendor.VendorDashBoardActivity;
@@ -21,6 +22,15 @@ public class LogoCoverPageActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        // Check network connection
+        if(!Commons.isNetworkAvailable(getApplicationContext()))
+        {
+            SystemClock.sleep(1500);
+            Commons.showToastMessage("No internet connection", getApplicationContext());
+            nextActivityAfterLogin(Login_RegisterActivity.class);
+            return;
+        }
 
         // Check if there is already an authorisation for firebase which the user application have logged in previously
         Firebase fbRef = new Firebase(Constants.FIREBASE_MAIN);
@@ -44,6 +54,11 @@ public class LogoCoverPageActivity extends BaseActivity{
         }
     }
 
+    /**
+     * Add listener to retrieve account info
+     * @param phoneNo phone number
+     * @param role either Constant.ROLE_VENDOR or Constant.ROLE_CUSTOMER
+     */
     private void retrieveAccountInfo(String phoneNo, final String role)
     {
         Firebase accFbRef;

@@ -16,6 +16,7 @@ import android.widget.EditText;
 import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
 import com.example.chowdi.qremind.Vendor.VendorDashBoardActivity;
 import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.infrastructure.Vendor;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
@@ -226,8 +227,6 @@ public class LoginActivity extends BaseActivity {
      */
     private void phoneLogin(final String loginID, final String password, final String role, final Class nextActivity)
     {
-        ;
-
         if(role.equals(Constants.ROLE_VENDOR)) {
             fbRef = new Firebase(Constants.FIREBASE_VENDOR);
         }
@@ -250,8 +249,15 @@ public class LoginActivity extends BaseActivity {
                             String shopkey = "";
                             if (dataSnapshot.child("shops").getValue() != null)
                                 shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
-                            Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
-                            getQremindApplication().setVendorUser(vendorUser);
+                            if(role.equals(Constants.ROLE_VENDOR)) {
+                                Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
+                                getQremindApplication().setVendorUser(vendorUser);
+                            }
+                            else if(role.equals(Constants.ROLE_CUSTOMER))
+                            {
+                                Customer customerUser = dataSnapshot.getValue(Customer.class);
+                                getQremindApplication().setCustomerUser(customerUser);
+                            }
                             saveAuthenticatedUserInfo(dataSnapshot.child("email").getValue().toString(), loginID, role, shopkey);
                             Commons.dismissProgressDialog(pd);
                             nextActivityAfterLogin(nextActivity);
@@ -297,8 +303,15 @@ public class LoginActivity extends BaseActivity {
                                 String shopkey = "";
                                 if(dataSnapshot.child("shops").getValue() != null)
                                     shopkey = dataSnapshot.child("shops").getChildren().iterator().next().getValue().toString();
-                                Vendor vendorUser = ds.getValue(Vendor.class);
-                                getQremindApplication().setVendorUser(vendorUser);
+                                if(role.equals(Constants.ROLE_VENDOR)) {
+                                    Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
+                                    getQremindApplication().setVendorUser(vendorUser);
+                                }
+                                else if(role.equals(Constants.ROLE_CUSTOMER))
+                                {
+                                    Customer customerUser = dataSnapshot.getValue(Customer.class);
+                                    getQremindApplication().setCustomerUser(customerUser);
+                                }
                                 saveAuthenticatedUserInfo(loginID, ds.child("phoneno").getValue().toString(), role, shopkey);
                                 Commons.dismissProgressDialog(pd);
                                 nextActivityAfterLogin(nextActivity);
