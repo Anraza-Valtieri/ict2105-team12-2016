@@ -24,7 +24,7 @@ public class VendorDashBoardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vendor_dash_board);
+        setContentView(R.layout.vendor_dashboard_activity);
         setNavDrawer(new VendorMainNavDrawer(this));
         //Firebase stuff
         Firebase.setAndroidContext(this);

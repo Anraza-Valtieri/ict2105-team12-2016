@@ -32,7 +32,7 @@ public class CardPeopleServed extends Card {
     private QremindApplication application;
 
     public CardPeopleServed(Context context, QremindApplication application) {
-        this(context, R.layout.card_vendor_dash_board);
+        this(context, R.layout.vendor_card_dash_board);
         this.application = application;
     }
 

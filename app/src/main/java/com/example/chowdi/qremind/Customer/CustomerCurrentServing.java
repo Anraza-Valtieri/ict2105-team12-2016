@@ -52,7 +52,7 @@ public class CustomerCurrentServing extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customercurrentlyserving);
+        setContentView(R.layout.customer_currentlyserving_activity);
         setNavDrawer(new CustomerMainNavDrawer(this));
 
         // Initialise all UI elements first and progress dialog

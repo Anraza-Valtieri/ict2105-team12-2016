@@ -17,8 +17,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.zxing.WriterException;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by anton on 27/3/2016.
  */
@@ -42,7 +40,7 @@ public class ClaimQRCodeActivity extends BaseActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vendor_claim_qr_code);
+        setContentView(R.layout.vendor_claim_qr_code);
         claimFinished = false;
         claimCancelled = false;
 

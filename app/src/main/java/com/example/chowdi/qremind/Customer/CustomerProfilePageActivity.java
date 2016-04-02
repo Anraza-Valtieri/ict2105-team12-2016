@@ -55,7 +55,7 @@ public class CustomerProfilePageActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customerprofilepage);
+        setContentView(R.layout.customer_profilepage_activity);
         setNavDrawer(new CustomerMainNavDrawer(this));
 
         // Initialise all UI elements first and progress dialog

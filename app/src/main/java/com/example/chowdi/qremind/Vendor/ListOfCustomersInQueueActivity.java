@@ -34,7 +34,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        setContentView(R.layout.list_of_customers_in_queue_activity);
+        setContentView(R.layout.vendor_list_of_customers_in_queue_activity);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         rv =(RecyclerView) findViewById(R.id.activity_vendor_customersInQueue_recyclerView);
@@ -107,7 +107,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
         //create view,layout
         @Override
         public CustomerListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            final View view = getLayoutInflater().inflate(R.layout.list_customer_in_queue, parent, false);//layout inflater from the activity this class is in, the passed layout is given to the viewholder to inflate individual views
+            final View view = getLayoutInflater().inflate(R.layout.vendor_list_customer_in_queue, parent, false);//layout inflater from the activity this class is in, the passed layout is given to the viewholder to inflate individual views
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

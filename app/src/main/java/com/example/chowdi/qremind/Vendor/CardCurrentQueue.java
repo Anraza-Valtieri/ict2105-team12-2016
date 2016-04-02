@@ -40,7 +40,7 @@ public class CardCurrentQueue extends Card{
     private QremindApplication application;
 
     public CardCurrentQueue(Context context, QremindApplication application) {
-        this(context, R.layout.current_queue_card_vendor_dash_board);
+        this(context, R.layout.vendor_current_queue_card_dash_board);
         this.application = application;
         loadShopInfo();
     }

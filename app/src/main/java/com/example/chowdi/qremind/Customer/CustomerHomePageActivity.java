@@ -49,7 +49,7 @@ public class CustomerHomePageActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customerhomepage);
+        setContentView(R.layout.customer_homepage_activity);
         setNavDrawer(new CustomerMainNavDrawer(this));
         shops = new ArrayList<>();
 
@@ -164,7 +164,7 @@ public class CustomerHomePageActivity extends BaseActivity{
         @Override
         public ShopViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             //layout inflater from the activity this class is in, the passed layout is given to the viewholder to inflate individual views
-            final View view = getLayoutInflater().inflate(R.layout.activity_customer_home_page_rv_list_item, parent, false);
+            final View view = getLayoutInflater().inflate(R.layout.customer_home_page_rv_list_item, parent, false);
             view.setClickable(false);
             return new ShopViewHolder(view);
         }
