@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
@@ -30,7 +31,9 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
     private Firebase firebase;
     private Vendor vendor;
     private Firebase firebaseQueueRef;
-
+    private ValueEventListener valueEventListener;
+    private ValueEventListener listener;
+    private static final int EMPTY_VIEW = 1;
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
@@ -67,7 +70,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
         //firebase = new Firebase(Constants.FIREBASE_SHOPS);
         firebase = new Firebase(Constants.FIREBASE_QUEUES);
         firebaseQueueRef = firebase.child(vendor.getShops().values().toArray()[0].toString());
-        firebaseQueueRef.addValueEventListener(new ValueEventListener() {
+        listener = firebaseQueueRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //clear previous data.
@@ -107,32 +110,42 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
             }
             queueInfoArrayList.remove(position);
             notifyItemRemoved(position);
-            notifyItemRangeChanged(position, queueInfoArrayList.size());
+            notifyDataSetChanged();
         }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (queueInfoArrayList.isEmpty()) {
+                return EMPTY_VIEW;
+            }else{
+                return 0;
+            }
+        }
+
         //create view,layout
         @Override
         public CustomerListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             final View view = getLayoutInflater().inflate(R.layout.vendor_list_customer_in_queue, parent, false);//layout inflater from the activity this class is in, the passed layout is given to the viewholder to inflate individual views
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    QueueInfo qInfo = (QueueInfo) view.getTag();
-                    removeQueueInfo(qInfo);
-                }
-            });
-
             return new CustomerListViewHolder(view);
+
         }
 
         //populate data
         @Override
         public void onBindViewHolder(CustomerListViewHolder holder, int position) {
-            QueueInfo qInfo = queueInfoArrayList.get(position);
+            final QueueInfo qInfo = queueInfoArrayList.get(position);
             holder.itemView.setTag(qInfo);//tag each view to the DTO
             holder.queueNoTextView.setText(Integer.toString(qInfo.getQueue_no()));
             holder.inQueueDateTextView.setText(qInfo.getIn_queue_date());
             holder.inQueueTimeTextView.setText(qInfo.getIn_queue_time());
 
+            //DQ button
+            holder.dqButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adapter.removeQueueInfo(qInfo);
+                }
+            });
         }
 
         @Override
@@ -145,13 +158,22 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
         public TextView queueNoTextView;
         public TextView inQueueDateTextView;
         public TextView inQueueTimeTextView;
-
+        public Button dqButton;
         public CustomerListViewHolder(View itemView) {
             super(itemView);
             queueNoTextView = (TextView)itemView.findViewById(R.id.list_item_customer_queueNo);
             inQueueDateTextView = (TextView)itemView.findViewById(R.id.list_item_customer_in_queue_date);
             inQueueTimeTextView = (TextView)itemView.findViewById(R.id.list_item_customer_in_queue_time);
 
+            dqButton = (Button)itemView.findViewById(R.id.vendor_list_remove_customer_in_queue);
+
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(firebaseQueueRef != null)
+            firebaseQueueRef.removeEventListener(listener);
     }
 }
