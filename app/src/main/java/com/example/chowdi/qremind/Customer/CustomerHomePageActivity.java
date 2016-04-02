@@ -2,7 +2,9 @@ package com.example.chowdi.qremind.Customer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +48,7 @@ public class CustomerHomePageActivity extends BaseActivity{
     private ShopListAdapter adapter;
     private ArrayList<String> categories = new ArrayList<String>();
     private ProgressDialog pd;
+    private AsyncTask runFirst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,33 @@ public class CustomerHomePageActivity extends BaseActivity{
         // Initialise all UI elements
         initialiseUIElements();
 
-        init();
+        runFirst = new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPreExecute()
+            {
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            protected Void doInBackground(Void... params)
+            {
+                // Check network connection
+                while(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    SystemClock.sleep(1000);
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void result)
+            {
+                ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.GONE);
+                init();
+            }
+        };
+        runFirst.execute();
     }
 
     /**
@@ -71,6 +101,12 @@ public class CustomerHomePageActivity extends BaseActivity{
         /* Setting the Listener for the category spinner */
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
+                
                 userSelectCategory = String.valueOf(parent.getItemAtPosition(pos));
 
                 /* Calls the populateShopListByCategory() function and populates the category spinner with data from Firebase */
@@ -84,6 +120,16 @@ public class CustomerHomePageActivity extends BaseActivity{
 
         //init spinner data
         initializeCategory();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        if(runFirst.getStatus() == AsyncTask.Status.RUNNING || runFirst.getStatus() == AsyncTask.Status.PENDING)
+        {
+            runFirst.cancel(true);
+        }
     }
 
     /**
@@ -185,6 +231,11 @@ public class CustomerHomePageActivity extends BaseActivity{
             holder.qButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(!Commons.isNetworkAvailable(getApplicationContext()))
+                    {
+                        Commons.showToastMessage("No internet connection", getApplicationContext());
+                        return;
+                    }
                     if(application.getCustomerUser().getCurrent_queue() == null){
                         getQueue(shop.getShop_key(),application.getCustomerUser().getPhoneno(),shop.getShop_name());
                     }else{

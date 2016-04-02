@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
@@ -48,6 +49,7 @@ public class CustomerCurrentServing extends BaseActivity {
     private Shop shopInfo;
     private QueueInfo queueInfo;
     private Boolean shopRetrieved, queueRetrieved;
+    private AsyncTask runFirst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,40 @@ public class CustomerCurrentServing extends BaseActivity {
         // Get all customer information from application
         user = application.getCustomerUser();
 
+        runFirst = new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPreExecute()
+            {
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            protected Void doInBackground(Void... params)
+            {
+                // Check network connection
+                while(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    SystemClock.sleep(1000);
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void result)
+            {
+                ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.GONE);
+                init();
+            }
+        };
+        runFirst.execute();
+    }
+
+    /**
+     * Initialise the activity properties
+     */
+    private void init()
+    {
         // Getting shopInfo info and queue info first and assign the result to shopInfo and queueInfo respectively
         // in the doInBackground. After shop and queue info retrieved and loaded successfully, then display all relevant
         // information, get estimated waiting time, and get the number of remaining queue.
@@ -169,6 +205,10 @@ public class CustomerCurrentServing extends BaseActivity {
     protected void onDestroy()
     {
         super.onDestroy();
+        if(runFirst.getStatus() == AsyncTask.Status.RUNNING || runFirst.getStatus() == AsyncTask.Status.PENDING)
+        {
+            runFirst.cancel(true);
+        }
         // Remove all listeners to prevent app crash
         if(fbRefWaitingTime != null && waitingTimeListener != null)
             fbRefWaitingTime.removeEventListener(waitingTimeListener);

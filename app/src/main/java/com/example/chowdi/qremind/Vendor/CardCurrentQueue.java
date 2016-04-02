@@ -40,7 +40,7 @@ public class CardCurrentQueue extends Card{
     private QremindApplication application;
 
     public CardCurrentQueue(Context context, QremindApplication application) {
-        super(context, R.layout.vendor_current_queue_card_dash_board);
+        super(context, R.layout.vendor_card_current_queue);
         this.application = application;
         loadShopInfo();
     }
@@ -53,6 +53,12 @@ public class CardCurrentQueue extends Card{
         nextCustBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check network connection
+                if(!Commons.isNetworkAvailable(application))
+                {
+                    Commons.showToastMessage("No internet connection", application);
+                    return;
+                }
                 callNextQueue();
             }
         });
@@ -61,6 +67,12 @@ public class CardCurrentQueue extends Card{
         claimBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check network connection
+                if(!Commons.isNetworkAvailable(application))
+                {
+                    Commons.showToastMessage("No internet connection", application);
+                    return;
+                }
                 showQRCode();
             }
         });
@@ -69,6 +81,12 @@ public class CardCurrentQueue extends Card{
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check network connection
+                if(!Commons.isNetworkAvailable(application))
+                {
+                    Commons.showToastMessage("No internet connection", application);
+                    return;
+                }
                 removeCalledQueue();
             }
         });

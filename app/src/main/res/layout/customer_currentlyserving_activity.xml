@@ -134,6 +134,9 @@
                 android:layout_below="@+id/claim_btn"
                 android:background="@color/colorAccent"
                 android:text="@string/text_leave_queue"/>
+
+            <include layout="@layout/include_no_connection"/>
+
         </RelativeLayout>
         </LinearLayout>
 

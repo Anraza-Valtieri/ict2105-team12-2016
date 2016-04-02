@@ -29,6 +29,8 @@
                 card:list_card_layout_resourceID="@layout/native_recyclerview_card_layout"
                 android:id="@+id/carddemo_recyclerview"/>
 
+            <include layout="@layout/include_no_connection"/>
+
         </RelativeLayout>
 
     </LinearLayout>
@@ -36,12 +38,4 @@
     <!-- Side navigation drawer UI -->
     <include layout="@layout/include_main_nav_drawer"/>
 
-    <!--
-    <ListView
-        android:id="@+id/navList"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left|start"
-        android:background="#ffeeeeee"/>
-    -->
 </android.support.v4.widget.DrawerLayout>

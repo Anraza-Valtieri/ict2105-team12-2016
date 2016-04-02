@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_no_connection"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#55000000"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:visibility="gone">
+    <ImageView
+        android:id="@+id/noConnectionImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_signal_wifi_off_black_24dp"
+        android:minWidth="50dp"
+        android:minHeight="50dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/noConnectionImg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:textAlignment="center"
+        android:text="No internet\n connection"
+        android:textSize="20dp"
+        android:textColor="@color/white"/>
+</RelativeLayout>

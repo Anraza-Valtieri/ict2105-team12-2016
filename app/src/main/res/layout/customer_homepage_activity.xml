@@ -43,8 +43,10 @@
                 android:layout_below="@+id/spinner_category"
                 android:scrollbars="vertical"
                 />
-        </RelativeLayout>
 
+            <include layout="@layout/include_no_connection"/>
+
+        </RelativeLayout>
     </LinearLayout>
 
     <include layout="@layout/include_main_nav_drawer"/>

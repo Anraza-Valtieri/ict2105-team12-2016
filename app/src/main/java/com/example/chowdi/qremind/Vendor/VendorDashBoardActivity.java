@@ -1,12 +1,17 @@
 package com.example.chowdi.qremind.Vendor;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.widget.RelativeLayout;
 
+import com.example.chowdi.qremind.Login_RegisterActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.views.VendorMainNavDrawer;
 import com.firebase.client.Firebase;
 
@@ -18,7 +23,8 @@ import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerView
 import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
 
 public class VendorDashBoardActivity extends BaseActivity {
-    ArrayList<Card> dashboardCards;
+    private ArrayList<Card> dashboardCards;
+    private AsyncTask runFirst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +32,41 @@ public class VendorDashBoardActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vendor_dashboard_activity);
         setNavDrawer(new VendorMainNavDrawer(this));
-        //Firebase stuff
-        Firebase.setAndroidContext(this);
 
+        runFirst = new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPreExecute()
+            {
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            protected Void doInBackground(Void... params)
+            {
+                // Check network connection
+                while(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    SystemClock.sleep(1000);
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void result)
+            {
+                ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.GONE);
+                init();
+            }
+        };
+        runFirst.execute();
+    }
+
+    /**
+     * initialise this activity operation
+     */
+    private void init()
+    {
         if(application.getVendorUser().getShops() == null)
         {
             startActivity(new Intent(this, BusinessProfileActivity.class));
@@ -54,6 +92,9 @@ public class VendorDashBoardActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Create cards to show information on dash board
+     */
     private void createCards(){
         Card cardCust,cardServed,cardCurrent,cardNext;
         CardHeader cardCustH,cardServedH,cardCurrentH,cardNextH;
@@ -67,6 +108,12 @@ public class VendorDashBoardActivity extends BaseActivity {
         cardCust.setOnClickListener(new Card.OnCardClickListener() {
             @Override
             public void onClick(Card card, View view) {
+                // Check network connection
+                if(!Commons.isNetworkAvailable(getApplicationContext()))
+                {
+                    Commons.showToastMessage("No internet connection", getApplicationContext());
+                    return;
+                }
                 startActivity(new Intent(VendorDashBoardActivity.this, ListOfCustomersInQueueActivity.class));
             }
         });
@@ -92,5 +139,14 @@ public class VendorDashBoardActivity extends BaseActivity {
         dashboardCards.add(cardCurrent);
         dashboardCards.add(cardCust);
         dashboardCards.add(cardServed);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(runFirst.getStatus() == AsyncTask.Status.RUNNING || runFirst.getStatus() == AsyncTask.Status.PENDING)
+        {
+            runFirst.cancel(true);
+        }
     }
 }

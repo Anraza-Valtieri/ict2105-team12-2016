@@ -49,9 +49,6 @@ public class Register_Activity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Initialise Firebase library with android context once before any Firebase reference is created or used
-        Firebase.setAndroidContext(getApplicationContext());
-
         // Initialise all UI elements first and progress dialog
         initialiseUIElements();
         pd = new ProgressDialog(this);
