@@ -34,7 +34,7 @@
                 android:background="@android:drawable/btn_dropdown"
                 android:spinnerMode="dropdown"
                 android:id="@+id/spinner_category"
-                android:layout_toRightOf="@id/category_textView"/>
+                android:layout_toEndOf="@id/category_textView"/>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
