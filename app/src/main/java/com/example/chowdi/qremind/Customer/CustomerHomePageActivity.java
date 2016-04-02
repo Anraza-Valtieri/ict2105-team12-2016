@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -260,13 +261,13 @@ public class CustomerHomePageActivity extends BaseActivity{
         public TextView shopName;
         public TextView shopEmail;
         public TextView shopQueueCount;
-        public Button qButton;
+        public ImageView qButton;
         public ShopViewHolder(View itemView) {
             super(itemView);
             shopName = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_shopName);
             shopEmail = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_shopEmail);
             shopQueueCount = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_inQueue);
-            qButton = (Button)itemView.findViewById(R.id.activity_customerHomePage_list_item_joinQueue);
+            qButton = (ImageView)itemView.findViewById(R.id.activity_customerHomePage_list_item_joinQueue);
         }
     }
 

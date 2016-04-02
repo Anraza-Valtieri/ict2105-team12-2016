@@ -39,11 +39,10 @@
             android:id="@+id/activity_customerHomePage_list_item_inQueue"
             android:text="People in Queue"/>
 
-        <Button
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Q"
-            android:background="@color/colorAccent"
+            android:src="@drawable/queue_button"
             android:id="@+id/activity_customerHomePage_list_item_joinQueue"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
