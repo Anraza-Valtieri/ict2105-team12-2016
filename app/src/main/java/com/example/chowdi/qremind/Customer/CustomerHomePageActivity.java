@@ -88,8 +88,7 @@ public class CustomerHomePageActivity extends BaseActivity{
                 ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.GONE);
                 init();
             }
-        };
-        runFirst.execute();
+        }.execute();
     }
 
     /**
@@ -106,7 +105,7 @@ public class CustomerHomePageActivity extends BaseActivity{
                     Commons.showToastMessage("No internet connection", getApplicationContext());
                     return;
                 }
-                
+
                 userSelectCategory = String.valueOf(parent.getItemAtPosition(pos));
 
                 /* Calls the populateShopListByCategory() function and populates the category spinner with data from Firebase */

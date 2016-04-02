@@ -58,8 +58,7 @@ public class VendorDashBoardActivity extends BaseActivity {
                 ((RelativeLayout)findViewById(R.id.layout_no_connection)).setVisibility(View.GONE);
                 init();
             }
-        };
-        runFirst.execute();
+        }.execute();
     }
 
     /**
