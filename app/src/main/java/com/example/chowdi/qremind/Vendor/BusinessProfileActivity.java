@@ -25,17 +25,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
+import com.example.chowdi.qremind.infrastructure.Vendor;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
+import com.example.chowdi.qremind.utils.CustomisedTextWatcher;
 import com.example.chowdi.qremind.views.VendorMainNavDrawer;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.soundcloud.android.crop.Crop;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,13 +60,12 @@ public class BusinessProfileActivity extends BaseActivity{
     private Spinner category_Spinner;
     private Button createBtn;
     private Button updateBtn;
-    private Button logoutBtn;
     private ImageView profilePic;
 
     // Other variables
-    private SharedPreferences prefs;
     private ArrayAdapter<String> adapter;
     private ProgressDialog pd;
+    private Vendor user;
 
     // Variables for Camera
     private static final int REQUEST_SELECT_IMAGE = 100;
@@ -80,40 +84,14 @@ public class BusinessProfileActivity extends BaseActivity{
 
         // Initialise progress dialog, getSharedPreferences for this app, and firebase
         pd = new ProgressDialog(this);
-        prefs = getSharedPreferences(Constants.SHARE_PREF_LINK,MODE_PRIVATE);
+        user = application.getVendorUser();
         fbRef = new Firebase(Constants.FIREBASE_MAIN);
 
-        // add and implement text changed listener to email edit text
-        email_ET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                email_ET.setError(null);
-            }
-        });
-
-        // add and implement text changed listener to email edit text
-        shopName_ET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                shopName_ET.setError(null);
-            }
-        });
+        // addTextChangeListener to all EditTexts
+        email_ET.addTextChangedListener(new CustomisedTextWatcher(email_ET, (TextView) findViewById(R.id.businessProf_email_TV), R.string.hint_vendor_email));
+        shopName_ET.addTextChangedListener(new CustomisedTextWatcher(shopName_ET, (TextView) findViewById(R.id.businessProf_shopName_TV), -1));
+        location_ET.addTextChangedListener(new CustomisedTextWatcher(location_ET, (TextView) findViewById(R.id.businessProf_location_TV), R.string.hint_vendor_location));
+        telephone_ET.addTextChangedListener(new CustomisedTextWatcher(telephone_ET, (TextView) findViewById(R.id.businessProf_telephone_TV), R.string.hint_vendor_number));
 
         // set click listener to udpate and create button
         createBtn.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +113,7 @@ public class BusinessProfileActivity extends BaseActivity{
                 createShop();
             }
         });
+
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,13 +134,6 @@ public class BusinessProfileActivity extends BaseActivity{
             }
         });
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Commons.logout(fbRef, BusinessProfileActivity.this);
-            }
-        });
-
         // Call changeAvatar() function which will open a small window allowing user to choose
         // which application to use to update his profile picture
         profilePic.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +145,6 @@ public class BusinessProfileActivity extends BaseActivity{
 
         setEnableAllElements(false);
         loadCategoryList();
-        getShopInfo();
     }
 
     /**
@@ -188,7 +159,6 @@ public class BusinessProfileActivity extends BaseActivity{
         category_Spinner = (Spinner) findViewById(R.id.businessProf_category_Spinner);
         createBtn = (Button) findViewById(R.id.businessProf_createbtn);
         updateBtn = (Button) findViewById(R.id.businessProf_updatebtn);
-        logoutBtn = (Button) findViewById(R.id.businessProf_logoutbtn);
         profilePic = (ImageView) findViewById(R.id.businessProf_picture);
         tempOutputFile = new File(getExternalCacheDir(), "temp-image.jpg");
 
@@ -207,7 +177,6 @@ public class BusinessProfileActivity extends BaseActivity{
         category_Spinner.setEnabled(value);
         createBtn.setEnabled(value);
         updateBtn.setEnabled(value);
-        logoutBtn.setEnabled(value);
     }
 
     /**
@@ -338,6 +307,7 @@ public class BusinessProfileActivity extends BaseActivity{
                 category_Spinner.setAdapter(adapter);
                 setEnableAllElements(true);
                 Commons.dismissProgressDialog(pd);
+                getShopInfo();
             }
 
             @Override
@@ -360,7 +330,7 @@ public class BusinessProfileActivity extends BaseActivity{
         }
         Commons.showProgressDialog(pd, "Shop info", "Getting shop info");
         fbRef = new Firebase(Constants.FIREBASE_VENDOR);
-        fbRef.child(prefs.getString(Constants.SHAREPREF_PHONE_NO, "")).child("shops").addListenerForSingleValueEvent(new ValueEventListener() {
+        fbRef.child(user.getPhoneno()).child("shops").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // if no shop is created
@@ -378,8 +348,8 @@ public class BusinessProfileActivity extends BaseActivity{
                     alertDialog.show();
                     createBtn.setVisibility(View.VISIBLE);
                     updateBtn.setVisibility(View.INVISIBLE);
-                    email_ET.setText(prefs.getString(Constants.SHAREPREF_EMAIL, ""));
-                    telephone_ET.setText(prefs.getString(Constants.SHAREPREF_PHONE_NO, ""));
+                    email_ET.setText(user.getEmail());
+                    telephone_ET.setText(user.getPhoneno());
                 } else {
                     createBtn.setVisibility(View.INVISIBLE);
                     updateBtn.setVisibility(View.VISIBLE);

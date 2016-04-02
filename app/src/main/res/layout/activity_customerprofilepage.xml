@@ -148,12 +148,5 @@
 
     <!-- Side navigation drawer UI -->
     <include layout="@layout/include_main_nav_drawer"/>
-    <!--
-    <ListView
-        android:id="@+id/navList"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left|start"
-        android:background="#ffeeeeee"/>
-    -->
+
 </android.support.v4.widget.DrawerLayout>
