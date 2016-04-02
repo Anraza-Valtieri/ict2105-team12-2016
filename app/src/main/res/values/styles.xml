@@ -2,9 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+        <!-- Base primary color for action bar at the top of app -->
         <item name="colorPrimary">@color/colorPrimary</item>
+
+        <!-- Different shade of primary colour for the portion which shows the different icons
+         such as connectivity, time etc...-->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <!-- Colours used for interactions such as buttons -->
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
