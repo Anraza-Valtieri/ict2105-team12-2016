@@ -20,6 +20,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.rockerhieu.rvadapter.states.StatesRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
@@ -32,9 +33,11 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
     private Firebase firebase;
     private Vendor vendor;
     private Firebase firebaseQueueRef;
-    private ValueEventListener valueEventListener;
     private ValueEventListener listener;
-    private static final int EMPTY_VIEW = 1;
+    private View loadingView;
+    private View emptyView;
+    private View errorView;
+    private StatesRecyclerViewAdapter statesRecyclerViewAdapter;
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
@@ -43,15 +46,25 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
 
         rv =(RecyclerView) findViewById(R.id.activity_vendor_customersInQueue_recyclerView);
         rv.setLayoutManager(new LinearLayoutManager(this));//layout to layout the items in RV
-
+        rv.setHasFixedSize(true);
         adapter = new CustomerListAdapter();
-        rv.setAdapter(adapter);
+
+        loadingView = getLayoutInflater().inflate(R.layout.view_loading, rv, false);
+        errorView = getLayoutInflater().inflate(R.layout.view_error, rv, false);
+        emptyView = getLayoutInflater().inflate(R.layout.empty_view, rv, false);
+        statesRecyclerViewAdapter = new StatesRecyclerViewAdapter(adapter, loadingView, emptyView, errorView);
+
+        rv.setAdapter(statesRecyclerViewAdapter);
+
+        //rv.setAdapter(adapter);
 
         //initialize queue infos
         vendor = application.getVendorUser();
 
-        if(vendor.getShops() != null)
+        if(vendor.getShops() != null){
             populateQueueInfoAdapter();
+        }
+
     }
 
     @Override
@@ -83,6 +96,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
                     Log.d("QUEUE KEY", "onCreate: "+queueInfo.getQueue_key());
                     adapter.addQueueInfo(queueInfo);
                 }
+                adapter.isQueueEmpty();
             }
 
             @Override
@@ -106,7 +120,13 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
             notifyItemInserted(queueInfoArrayList.size()-1);//insert at last
 
         }
-
+        public void isQueueEmpty(){
+            if(queueInfoArrayList.isEmpty()){
+                statesRecyclerViewAdapter.setState(StatesRecyclerViewAdapter.STATE_EMPTY);
+            }else{
+                statesRecyclerViewAdapter.setState(StatesRecyclerViewAdapter.STATE_NORMAL);
+            }
+        }
         public void removeQueueInfo(QueueInfo queueInfo){
             int position = queueInfoArrayList.indexOf(queueInfo);
             if(position == -1){//prevent double click
@@ -124,15 +144,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
             queueInfoArrayList.remove(position);
             notifyItemRemoved(position);
             notifyDataSetChanged();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (queueInfoArrayList.isEmpty()) {
-                return EMPTY_VIEW;
-            }else{
-                return 0;
-            }
+            adapter.isQueueEmpty();
         }
 
         //create view,layout
