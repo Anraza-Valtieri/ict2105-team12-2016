@@ -1,5 +1,6 @@
 package com.example.chowdi.qremind.infrastructure;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -89,10 +90,10 @@ public class QremindApplication extends Application {
         }
     }
 
-    public void showNotification() {
+    public void showNotification(Activity context) {
         notificationSend = true;
-        Intent intent = new Intent(getApplicationContext(), CustomerCurrentServing.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(context, CustomerCurrentServing.class);
+        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
         Resources r = getResources();
         Notification notification = new NotificationCompat.Builder(this)
                 .setTicker(r.getString(R.string.notification_title))

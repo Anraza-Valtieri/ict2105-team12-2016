@@ -36,7 +36,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/nextQLayout"
-        android:layout_marginTop="15dp"
         android:textSize="50dp"
         android:text="0000"
         android:layout_centerHorizontal="true"/>

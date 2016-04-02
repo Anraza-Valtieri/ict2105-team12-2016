@@ -143,7 +143,7 @@ public class BaseActivity extends AppCompatActivity {
                         if(!notificationPoppedOut)
                             popUpNotification(queueNo);
                         if(!application.notificationSend)
-                            application.showNotification();
+                            application.showNotification(BaseActivity.this);
                     }
                 }
                 else

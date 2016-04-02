@@ -425,7 +425,7 @@ public class CustomerCurrentServing extends BaseActivity {
                         if(!notificationPoppedOut)
                             popUpNotification(queueInfo.getQueue_no()+"");
                         if(!application.notificationSend)
-                            application.showNotification();
+                            application.showNotification(CustomerCurrentServing.this);
                         return;
                     }
                     getEstimatedWaitingTime();
