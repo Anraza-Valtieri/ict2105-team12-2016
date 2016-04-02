@@ -28,9 +28,9 @@ public class VendorDashBoardActivity extends BaseActivity {
     private AsyncTask runFirst;
     private ProgressDialog pd;
 
-    public Boolean cardTotalPeopleLoaded;
-    public Boolean cardPeopleServedLoaded;
-    public Boolean cardCurrentQueueLoaded;
+    public static Boolean cardTotalPeopleLoaded;
+    public static Boolean cardPeopleServedLoaded;
+    public static Boolean cardCurrentQueueLoaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +77,28 @@ public class VendorDashBoardActivity extends BaseActivity {
      */
     private void init()
     {
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected void onPreExecute()
+            {
+                Commons.showProgressDialog(pd, "Vendor Dashboard", "Loading");
+            }
+            @Override
+            protected Void doInBackground(Void... params)
+            {
+                while(!(cardCurrentQueueLoaded && cardPeopleServedLoaded && cardTotalPeopleLoaded))
+                {
+                    SystemClock.sleep(100);
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void result)
+            {
+                Commons.dismissProgressDialog(pd);
+            }
+        }.execute();
+
         if(application.getVendorUser().getShops() == null)
         {
             startActivity(new Intent(this, BusinessProfileActivity.class));

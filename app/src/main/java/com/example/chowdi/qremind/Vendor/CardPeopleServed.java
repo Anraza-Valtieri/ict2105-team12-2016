@@ -51,6 +51,8 @@ public class CardPeopleServed extends Card {
                     mTitle.setText(dataSnapshot.getChildrenCount()+"");
                 else
                     mTitle.setText("0");
+
+                VendorDashBoardActivity.cardPeopleServedLoaded = true;
             }
 
             @Override

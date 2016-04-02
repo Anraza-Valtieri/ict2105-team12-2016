@@ -243,6 +243,7 @@ public class CardCurrentQueue extends Card{
                 if(dataSnapshot.getValue() == null)
                 {
                     nextQTV.setText("----");
+                    VendorDashBoardActivity.cardCurrentQueueLoaded = true;
                     return;
                 }
                 for(DataSnapshot ds : dataSnapshot.getChildren())
@@ -254,6 +255,7 @@ public class CardCurrentQueue extends Card{
                         continue;
                     }
                     nextQTV.setText(queueInfo.getQueue_no()+"");
+                    VendorDashBoardActivity.cardCurrentQueueLoaded = true;
                     return;
                 }
             }

@@ -44,6 +44,7 @@ public class CardTotalPeople extends Card {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mTitle.setText(dataSnapshot.getChildrenCount()+"");
+                VendorDashBoardActivity.cardTotalPeopleLoaded = true;
             }
 
             @Override
