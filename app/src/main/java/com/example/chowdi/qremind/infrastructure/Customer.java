@@ -59,6 +59,8 @@ public class Customer{
 
     @JsonIgnore
     public Bitmap getMyImage() {
+        if(myImage == null)
+            setMyImage(Commons.convertBase64ToBitmap(image));
         return myImage;
     }
 
@@ -68,8 +70,6 @@ public class Customer{
 
     @JsonIgnore
     public void setMyImage(Bitmap myImage) {
-        if(myImage == null)
-            setMyImage(Commons.convertBase64ToBitmap(image));
         this.myImage = myImage;
     }
 
