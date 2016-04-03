@@ -15,6 +15,7 @@ import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.QueueInfo;
 import com.example.chowdi.qremind.infrastructure.Vendor;
+import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -56,15 +57,12 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
 
         rv.setAdapter(statesRecyclerViewAdapter);
 
-        //rv.setAdapter(adapter);
-
         //initialize queue infos
         vendor = application.getVendorUser();
 
         if(vendor.getShops() != null){
             populateQueueInfoAdapter();
         }
-
     }
 
     @Override
@@ -82,7 +80,6 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
      * To populate the queue with its information
      */
     private void populateQueueInfoAdapter() {
-        //firebase = new Firebase(Constants.FIREBASE_SHOPS);
         firebase = new Firebase(Constants.FIREBASE_QUEUES);
         firebaseQueueRef = firebase.child(vendor.getShops().values().toArray()[0].toString());
         listener = firebaseQueueRef.addValueEventListener(new ValueEventListener() {
@@ -101,7 +98,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Commons.handleCommonFirebaseError(firebaseError, getApplicationContext());
             }
         });
     }

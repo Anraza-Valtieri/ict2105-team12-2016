@@ -258,6 +258,7 @@ public class CardCurrentQueue extends Card{
                     VendorDashBoardActivity.cardCurrentQueueLoaded = true;
                     return;
                 }
+                VendorDashBoardActivity.cardCurrentQueueLoaded = true;
             }
 
             @Override
