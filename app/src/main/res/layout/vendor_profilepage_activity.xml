@@ -41,7 +41,6 @@
                         android:text="@string/text_shop_name"
                         android:textColor="@color/black"
                         android:layout_below="@+id/businessProf_picture"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:visibility="invisible"/>
 
@@ -51,7 +50,6 @@
                         android:hint="@string/hint_vendor_name"
                         android:layout_gravity="center_horizontal"
                         android:layout_below="@+id/businessProf_shopName_TV"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:singleLine="true"/>
 
@@ -62,7 +60,6 @@
                         android:text="@string/text_category"
                         android:textColor="@color/black"
                         android:layout_below="@+id/businessProf_shopName_ET"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"/>
 
                     <Spinner android:id="@+id/businessProf_category_Spinner"
@@ -70,7 +67,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_below="@+id/businessProf_category_TV"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:singleLine="true" />
 
@@ -81,7 +77,6 @@
                         android:text="@string/text_location"
                         android:textColor="@color/black"
                         android:layout_below="@+id/businessProf_category_Spinner"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:visibility="invisible"/>
 
@@ -91,7 +86,6 @@
                         android:hint="@string/hint_vendor_location"
                         android:layout_gravity="center_horizontal"
                         android:layout_below="@+id/businessProf_location_TV"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:singleLine="true" />
 
@@ -102,7 +96,6 @@
                         android:text="@string/text_email"
                         android:textColor="@color/black"
                         android:layout_below="@+id/businessProf_location_ET"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:visibility="invisible"/>
 
@@ -113,7 +106,6 @@
                         android:layout_gravity="center_horizontal"
                         android:inputType="textEmailAddress"
                         android:layout_below="@+id/businessProf_email_TV"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:singleLine="true" />
 
@@ -124,7 +116,6 @@
                         android:text="@string/text_telephone"
                         android:textColor="@color/black"
                         android:layout_below="@+id/businessProf_email_ET"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:visibility="invisible"/>
 
@@ -134,7 +125,6 @@
                         android:hint="@string/hint_vendor_number"
                         android:layout_gravity="center_horizontal"
                         android:layout_below="@+id/businessProf_telephone_TV"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:singleLine="true"
                         android:inputType="phone" />
@@ -144,6 +134,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_update"
                         android:layout_gravity="center_horizontal"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
                         android:background="@color/colorAccent"
                         android:clickable="true"
                         android:layout_marginBottom="10dp"
@@ -158,6 +150,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_create_shop"
                         android:layout_gravity="center_horizontal"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
                         android:background="@color/colorAccent"
                         android:clickable="true"
                         android:layout_marginBottom="10dp"

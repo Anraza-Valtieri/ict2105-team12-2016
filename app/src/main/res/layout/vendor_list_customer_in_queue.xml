@@ -19,14 +19,14 @@
         <TextView
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:text="Queue Number"
+            android:text="@string/text_queue_number"
             android:id="@+id/queue_no_text"
             android:layout_marginEnd="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1234"
+            android:text="@string/text_1234"
             android:layout_centerHorizontal="true"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/list_item_customer_queueNo"
             android:layout_below="@id/list_item_customer_queueNo"
-            android:text="01/21/1992"
+            android:text="@string/text_1_October_1992"
             android:textColor="#444"
             android:textSize="12sp"
             android:id="@+id/list_item_customer_in_queue_date"
@@ -50,14 +50,14 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/list_item_customer_queueNo"
             android:layout_below="@id/list_item_customer_queueNo"
-            android:text="07:25"
+            android:text="@string/text_07_25"
             android:textSize="12sp"
             android:id="@+id/list_item_customer_in_queue_time"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DQ"
+            android:text="@string/text_DQ"
             android:gravity="center"
             android:id="@+id/vendor_list_remove_customer_in_queue"
             android:layout_alignParentEnd="true"/>

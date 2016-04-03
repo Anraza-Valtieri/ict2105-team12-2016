@@ -26,6 +26,7 @@
             android:background="@color/colorAccent"
             android:layout_marginBottom="10dp"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:layout_above="@+id/createacctbtn"
             android:layout_alignParentStart="true"/>
 
@@ -36,6 +37,7 @@
             android:id="@+id/createacctbtn"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="36dp"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:background="@color/colorAccent"
             android:layout_alignParentBottom="true"

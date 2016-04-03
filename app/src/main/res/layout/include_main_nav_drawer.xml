@@ -25,10 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/include_main_nav_drawer_avatar"
-            android:layout_toRightOf="@+id/include_main_nav_drawer_avatar"
             android:layout_alignTop="@+id/include_main_nav_drawer_avatar"
             android:id="@+id/include_main_nav_drawer_displayName"
-            android:text="Zack"
+            android:text="@string/text_zack"
             android:textColor="#8affffff"/>
     </RelativeLayout>
 

@@ -12,32 +12,32 @@
         >
         <TextView
             android:id="@+id/nextQueueNo_TV"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:textSize="25dp"
-            android:text="----"/>
+            android:text="@string/text_4dash"/>
 
         <TextView
             android:id="@+id/nextQ_TV"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/nextQueueNo_TV"
+            android:layout_toStartOf="@+id/nextQueueNo_TV"
             android:textSize="20dp"
             android:layout_centerVertical="true"
-            android:text="Next: "/>
+            android:text="@string/text_Next"/>
     </RelativeLayout>
 
     <TextView
         android:id="@+id/currentQueueNo_TV"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/nextQLayout"
         android:textSize="50dp"
-        android:text="0000"
+        android:text="@string/text_4zeros"
         android:layout_centerHorizontal="true"/>
 
     <Button
@@ -45,9 +45,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/currentQueueNo_TV"
-        android:text="Next Customer"
+        android:text="@string/text_next_customer"
         android:background="@color/colorAccent"
         android:textColor="@color/white"
+        android:textStyle="bold"
         android:id="@+id/nextCustomerBtn"
         android:layout_centerHorizontal="true"
         android:visibility="visible"
@@ -61,19 +62,22 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20sp"
-            android:text="Claim"
+            android:layout_marginEnd="20sp"
+            android:text="@string/text_claim"
             android:background="@color/card_undobar_material_text_color"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:id="@+id/vendor_curr_queue_claim_Btn"
             android:visibility="invisible"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20sp"
-            android:text="Remove"
+            android:layout_marginStart="20sp"
+            android:text="@string/text_remove"
             android:background="@color/colorAccent"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:id="@+id/vendor_curr_queue_removeBtn"
             android:visibility="invisible"/>
     </LinearLayout>
