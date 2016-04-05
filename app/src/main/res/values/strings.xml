@@ -97,6 +97,8 @@
     <string name="text_DQ">DQ</string>
     <string name="text_cannot_load_data">Oops, could not load data</string>
     <string name="text_retry">Retry</string>
+    <string name="text_in_queue">In Queue: </string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="notification_title">QRemind Notification</string>

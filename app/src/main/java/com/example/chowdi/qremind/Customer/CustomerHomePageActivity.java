@@ -2,7 +2,9 @@ package com.example.chowdi.qremind.Customer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.Image;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -182,12 +183,8 @@ public class CustomerHomePageActivity extends BaseActivity{
                 //clear previous data.
                 adapter.clearShops();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Shop shop = new Shop();
                     if (ds.child("category").getValue().toString().equals(userSelectCategory.toLowerCase().replaceAll(" ","_"))) {
-
-                        shop.setShop_name(ds.child("shop_name").getValue().toString());
-                        shop.setEmail(ds.child("email").getValue().toString());
-                        shop.setQueueCount(ds.child("queues").getChildrenCount());
+                        Shop shop = ds.getValue(Shop.class);
                         shop.setShop_key(ds.getKey());
                         adapter.addShop(shop);
                     }
@@ -212,6 +209,7 @@ public class CustomerHomePageActivity extends BaseActivity{
             //layout inflater from the activity this class is in, the passed layout is given to the viewholder to inflate individual views
             final View view = getLayoutInflater().inflate(R.layout.customer_home_page_rv_list_item, parent, false);
             view.setClickable(false);
+
             return new ShopViewHolder(view);
         }
 
@@ -225,8 +223,20 @@ public class CustomerHomePageActivity extends BaseActivity{
             final Shop shop = shops.get(position);
             holder.itemView.setTag(shop);
             holder.shopName.setText(shop.getShop_name());
-            holder.shopEmail.setText(shop.getEmail());
+            holder.shopLocation.setText(shop.getAddress());
+            if(shop.getMyImage() != null) {
+                holder.shopImage.setImageBitmap(shop.getMyImage());
+            }
+            else
+            {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+                    holder.shopImage.setImageDrawable(getDrawable(R.drawable.unknown_building));
+                else
+                    holder.shopImage.setImageDrawable((getResources().getDrawable(R.drawable.unknown_building)));
+            }
+
             holder.shopQueueCount.setText(Long.toString(shop.getQueueCount()));
+
             //button
             holder.qButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -259,15 +269,17 @@ public class CustomerHomePageActivity extends BaseActivity{
 
     private class ShopViewHolder extends RecyclerView.ViewHolder{
         public TextView shopName;
-        public TextView shopEmail;
+        public TextView shopLocation;
         public TextView shopQueueCount;
         public ImageView qButton;
+        public ImageView shopImage;
         public ShopViewHolder(View itemView) {
             super(itemView);
             shopName = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_shopName);
-            shopEmail = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_shopEmail);
+            shopLocation = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_shopLocation);
             shopQueueCount = (TextView)itemView.findViewById(R.id.activity_customerHomePage_list_item_inQueue);
             qButton = (ImageView)itemView.findViewById(R.id.activity_customerHomePage_list_item_joinQueue);
+            shopImage = (ImageView)itemView.findViewById(R.id.activity_customerHomePage_list_item_shopImage);
         }
     }
 

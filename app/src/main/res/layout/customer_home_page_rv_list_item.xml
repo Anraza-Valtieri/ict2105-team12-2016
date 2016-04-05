@@ -17,27 +17,17 @@
         android:layout_height="wrap_content"
         android:padding="4dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/activity_customerHomePage_list_item_shopName"
-            android:text="@string/text_shop_name"
+        <ImageView
+            android:id="@+id/activity_customerHomePage_list_item_shopImage"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/unknown_building"
+            android:maxHeight="75dp"
+            android:maxWidth="75dp"
+            android:minWidth="75dp"
+            android:minHeight="75dp"
+            android:layout_centerVertical="true"
             />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/activity_customerHomePage_list_item_shopEmail"
-            android:layout_below="@+id/activity_customerHomePage_list_item_shopName"
-            android:text="@string/text_shop_email"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_customerHomePage_list_item_shopEmail"
-            android:id="@+id/activity_customerHomePage_list_item_inQueue"
-            android:text="@string/text_people_in_queue"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -45,7 +35,56 @@
             android:src="@drawable/queue_button"
             android:id="@+id/activity_customerHomePage_list_item_joinQueue"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             />
+
+        <RelativeLayout
+            android:id="@+id/activity_customerHomePage_list_item_shopLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:layout_toRightOf="@+id/activity_customerHomePage_list_item_shopImage"
+            android:layout_toLeftOf="@id/activity_customerHomePage_list_item_joinQueue">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_customerHomePage_list_item_shopName"
+                android:text="@string/text_shop_name"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_customerHomePage_list_item_shopLocation"
+                android:layout_below="@+id/activity_customerHomePage_list_item_shopName"
+                android:text="@string/text_location"
+                />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_customerHomePage_list_item_shopLocation">
+                <TextView
+                    android:id="@+id/activity_customerHomePage_list_item_queue_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_in_queue"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/activity_customerHomePage_list_item_queue_tv"
+                    android:id="@+id/activity_customerHomePage_list_item_inQueue"
+                    android:text="0"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

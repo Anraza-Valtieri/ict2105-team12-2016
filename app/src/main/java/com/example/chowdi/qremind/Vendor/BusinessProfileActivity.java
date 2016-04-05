@@ -84,7 +84,7 @@ public class BusinessProfileActivity extends BaseActivity{
         location_ET.addTextChangedListener(new CustomisedTextWatcher(location_ET, (TextView) findViewById(R.id.businessProf_location_TV), R.string.hint_vendor_location));
         telephone_ET.addTextChangedListener(new CustomisedTextWatcher(telephone_ET, (TextView) findViewById(R.id.businessProf_telephone_TV), R.string.hint_vendor_number));
 
-        // set click listener to udpate and create button
+        // set click listener to update and create button
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -264,7 +264,7 @@ public class BusinessProfileActivity extends BaseActivity{
                 navDrawer.UpdateNavbarView();
                 Commons.dismissProgressDialog(pd);
                 getShopInfo();
-                Commons.showToastMessage("Shops info udpated", getApplicationContext());
+                Commons.showToastMessage("Shops info updated", getApplicationContext());
             }
         }.execute(location, category, phoneno, email, vendorkey, shopnamekey);
     }
