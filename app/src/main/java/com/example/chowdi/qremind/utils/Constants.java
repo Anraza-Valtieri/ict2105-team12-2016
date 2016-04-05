@@ -11,13 +11,13 @@ public final class Constants {
     }
 
     // For Firebase
-    public static final String FIREBASE_MAIN = "https://qremind1.firebaseio.com";
-    public static final String FIREBASE_CUSTOMER = "https://qremind1.firebaseio.com/appUserAccount/customer";
-    public static final String FIREBASE_VENDOR = "https://qremind1.firebaseio.com/appUserAccount/vendor";
-    public static final String FIREBASE_CATEGORY = "https://qremind1.firebaseio.com/category";
-    public static final String FIREBASE_SHOPS = "https://qremind1.firebaseio.com/shops";
-    public static final String FIREBASE_QUEUES = "https://qremind1.firebaseio.com/queues";
-    public static final String FIREBASE_SERVED_QUEUES = "https://qremind1.firebaseio.com/served_queues";
+    public static final String FIREBASE_MAIN = "https://qremindapp.firebaseio.com";
+    public static final String FIREBASE_CUSTOMER = "https://qremindapp.firebaseio.com/appUserAccount/customer";
+    public static final String FIREBASE_VENDOR = "https://qremindapp.firebaseio.com/appUserAccount/vendor";
+    public static final String FIREBASE_CATEGORY = "https://qremindapp.firebaseio.com/category";
+    public static final String FIREBASE_SHOPS = "https://qremindapp.firebaseio.com/shops";
+    public static final String FIREBASE_QUEUES = "https://qremindapp.firebaseio.com/queues";
+    public static final String FIREBASE_SERVED_QUEUES = "https://qremindapp.firebaseio.com/served_queues";
 
     // For shared preferences
     public static final String SHARE_PREF_LINK = "QREMIND_SP";
