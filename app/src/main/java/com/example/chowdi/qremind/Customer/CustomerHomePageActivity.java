@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -28,6 +27,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.rockerhieu.rvadapter.states.StatesRecyclerViewAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,10 +43,13 @@ public class CustomerHomePageActivity extends BaseActivity{
     private Spinner spinnerCategory;
     private String userSelectCategory;
     private RecyclerView rv;
-
+    private View loadingView;
+    private View emptyView;
+    private View errorView;
     // Other variables
     private ArrayList<Shop> shops;
     private ShopListAdapter adapter;
+    private StatesRecyclerViewAdapter statesRecyclerViewAdapter;
     private ArrayList<String> categories = new ArrayList<String>();
     private ProgressDialog pd;
     private AsyncTask runFirst;
@@ -56,6 +59,9 @@ public class CustomerHomePageActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_homepage_activity);
         setNavDrawer(new CustomerMainNavDrawer(this));
+        loadingView = getLayoutInflater().inflate(R.layout.view_loading, rv, false);
+        errorView = getLayoutInflater().inflate(R.layout.view_error, rv, false);
+        emptyView = getLayoutInflater().inflate(R.layout.view_empty, rv, false);
         shops = new ArrayList<>();
 
         // Initialise progress dialog
@@ -90,6 +96,18 @@ public class CustomerHomePageActivity extends BaseActivity{
                 init();
             }
         }.execute();
+    }
+    /**
+     * Find and assign the correct UI elements to the correct variables from activity_register layout
+     */
+    private void initialiseUIElements()
+    {
+        spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
+        rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ShopListAdapter();
+        statesRecyclerViewAdapter = new StatesRecyclerViewAdapter(adapter, loadingView, emptyView, errorView);
+        rv.setAdapter(statesRecyclerViewAdapter);
     }
 
     /**
@@ -130,18 +148,6 @@ public class CustomerHomePageActivity extends BaseActivity{
         {
             runFirst.cancel(true);
         }
-    }
-
-    /**
-     * Find and assign the correct UI elements to the correct variables from activity_register layout
-     */
-    private void initialiseUIElements()
-    {
-        spinnerCategory = (Spinner) findViewById(R.id.spinner_category);
-        rv = (RecyclerView)findViewById(R.id.activity_customerHomePage_recyclerView);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ShopListAdapter();
-        rv.setAdapter(adapter);
     }
 
     /**
@@ -193,6 +199,7 @@ public class CustomerHomePageActivity extends BaseActivity{
                     }
                 }
                 Commons.dismissProgressDialog(pd);
+                adapter.isShopsEmpty();
             }
 
             @Override
@@ -248,9 +255,15 @@ public class CustomerHomePageActivity extends BaseActivity{
 
         public void addShop(Shop shop){
             shops.add(shop);
-            notifyItemInserted(shops.size()-1);
+            notifyItemInserted(shops.size() - 1);
         }
-
+        public void isShopsEmpty(){
+            if(shops.isEmpty()){
+                statesRecyclerViewAdapter.setState(StatesRecyclerViewAdapter.STATE_EMPTY);
+            }else{
+                statesRecyclerViewAdapter.setState(StatesRecyclerViewAdapter.STATE_NORMAL);
+            }
+        }
         public void clearShops(){
             shops.clear();
             notifyDataSetChanged();

@@ -52,7 +52,7 @@ public class ListOfCustomersInQueueActivity extends BaseActivity{
 
         loadingView = getLayoutInflater().inflate(R.layout.view_loading, rv, false);
         errorView = getLayoutInflater().inflate(R.layout.view_error, rv, false);
-        emptyView = getLayoutInflater().inflate(R.layout.empty_view, rv, false);
+        emptyView = getLayoutInflater().inflate(R.layout.view_empty, rv, false);
         statesRecyclerViewAdapter = new StatesRecyclerViewAdapter(adapter, loadingView, emptyView, errorView);
 
         rv.setAdapter(statesRecyclerViewAdapter);
