@@ -77,6 +77,13 @@ public class VendorDashBoardActivity extends BaseActivity {
      */
     private void init()
     {
+        if(application.getVendorUser().getShops() == null)
+        {
+            startActivity(new Intent(this, BusinessProfileActivity.class));
+            this.finish();
+            return;
+        }
+
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected void onPreExecute()
@@ -98,13 +105,6 @@ public class VendorDashBoardActivity extends BaseActivity {
                 Commons.dismissProgressDialog(pd);
             }
         }.execute();
-
-        if(application.getVendorUser().getShops() == null)
-        {
-            startActivity(new Intent(this, BusinessProfileActivity.class));
-            this.finish();
-            return;
-        }
 
         //instantiate dashboardCards AL
         dashboardCards = new ArrayList<Card>();

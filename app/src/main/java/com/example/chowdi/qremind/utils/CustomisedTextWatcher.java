@@ -30,6 +30,10 @@ public class CustomisedTextWatcher implements TextWatcher, View.OnFocusChangeLis
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if(!editText.getText().toString().isEmpty())
+        {
+            textView.setVisibility(View.VISIBLE);
+        }
         editText.setError(null);
     }
 
