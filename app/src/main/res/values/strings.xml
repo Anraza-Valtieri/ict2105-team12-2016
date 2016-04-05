@@ -77,7 +77,7 @@
     <string name="text_people_in_queue">People in Queue</string>
     <string name="text_shop_email">Shop Email</string>
     <string name="text_phone_number">Phone Number</string>
-    <string name="text_No_one_is_in_your_queue">No one is in your queue</string>
+    <string name="text_No_one_is_in_your_queue">No data to show!</string>
     <string name="text_zack">Zack</string>
     <string name="text_no_internet_connection">No internet\n connection</string>
     <string name="text_inbox">Inbox</string>
