@@ -212,8 +212,9 @@ public class BusinessProfileActivity extends BaseActivity{
 
                     fbRef = new Firebase(Constants.FIREBASE_SHOPS);
                     fbRef.child(shopkey).setValue(map);
-                    getShopInfo();
                     Commons.showToastMessage("Shops created", getApplicationContext());
+                    startActivity(new Intent(BusinessProfileActivity.this, VendorDashBoardActivity.class));
+                    BusinessProfileActivity.this.finish();
                 }
             }
 

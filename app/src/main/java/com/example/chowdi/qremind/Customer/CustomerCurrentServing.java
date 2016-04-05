@@ -535,6 +535,8 @@ public class CustomerCurrentServing extends BaseActivity {
      */
     private void getShopInfo()
     {
+        while(user.getCurrent_queue() == null);
+
         final String shopkey = user.getCurrent_queue().get("shop").toString();
         Firebase fbRef = new Firebase(Constants.FIREBASE_SHOPS).child(shopkey);
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
