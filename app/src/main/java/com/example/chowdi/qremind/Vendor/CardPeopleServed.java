@@ -28,17 +28,22 @@ public class CardPeopleServed extends Card {
      * @param context
      */
     protected TextView mTitle;
+    protected TextView dateTV;
 
     private QremindApplication application;
 
     public CardPeopleServed(Context context, QremindApplication application) {
-        super(context, R.layout.vendor_card_total_no_queue);
+        super(context, R.layout.vendor_card_total_no_served_queue);
         this.application = application;
     }
 
     @Override
     public void setupInnerViewElements(final ViewGroup parent, View view) {
         mTitle = (TextView) parent.findViewById(R.id.card_main_inner_simple_title);
+        dateTV = (TextView) parent.findViewById(R.id.servedqueue_datetime_TV);
+
+        String today = new SimpleDateFormat("yyyy/M/d").format(new GregorianCalendar().getTime());
+        dateTV.setText(today);
 
         final String shopKey = application.getVendorUser().getShops().values().toArray()[0].toString();
         GregorianCalendar datetime = new GregorianCalendar();

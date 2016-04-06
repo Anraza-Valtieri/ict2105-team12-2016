@@ -6,11 +6,12 @@
 
     <!-- Use same ID to use built-in features -->
     <TextView
-        android:id="@+id/card_main_inner_simple_title"
+        android:id="@+id/currentQueueNo_TV"
         android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="50dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        />
 
 </RelativeLayout>

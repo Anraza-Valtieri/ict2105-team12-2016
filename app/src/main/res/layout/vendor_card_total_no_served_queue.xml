@@ -6,7 +6,15 @@
 
     <!-- Use same ID to use built-in features -->
     <TextView
-        android:id="@+id/currentQueueNo_TV"
+        android:id="@+id/servedqueue_datetime_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="15dp"
+        android:paddingRight="10dp"
+        />
+    <TextView
+        android:id="@+id/card_main_inner_simple_title"
         android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

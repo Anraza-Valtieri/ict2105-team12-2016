@@ -79,8 +79,9 @@ public class VendorDashBoardActivity extends BaseActivity {
     {
         if(application.getVendorUser().getShops() == null)
         {
-            startActivity(new Intent(this, BusinessProfileActivity.class));
-            this.finish();
+            Intent intent = new Intent(this, BusinessProfileActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
             return;
         }
 
