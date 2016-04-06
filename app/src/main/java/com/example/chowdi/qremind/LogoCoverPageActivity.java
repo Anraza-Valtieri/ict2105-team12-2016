@@ -23,6 +23,8 @@ public class LogoCoverPageActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
+        SystemClock.sleep(2000);
+
         // Check network connection
         if(!Commons.isNetworkAvailable(getApplicationContext()))
         {
