@@ -5,7 +5,7 @@
 
     <!-- Setting White Background -->
     <item
-        android:drawable="@color/white"/>
+        android:drawable="@color/colorBackground"/>
 
     <!-- Setting splash screen logo -->
     <item>
