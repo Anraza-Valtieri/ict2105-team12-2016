@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -115,6 +116,8 @@ public class CustomerCurrentServing extends BaseActivity {
 
                 getShopInfo();
                 getQueueInfo();
+
+                SystemClock.sleep(1000);
 
                 // Wait until shop and queue info are successfully retrieved and loaded
                 while(!shopRetrieved || !queueRetrieved)
@@ -263,6 +266,11 @@ public class CustomerCurrentServing extends BaseActivity {
         waitingTimeListener = fbRefWaitingTime.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if(queueInfo == null) return;
+                String queueKey = queueInfo.getQueue_key();
+                queueInfo = dataSnapshot.child(queueInfo.getQueue_key()).getValue(QueueInfo.class);
+                if(queueInfo == null) return;
+                queueInfo.setQueue_key(queueKey);
                 if (dataSnapshot.child(queueInfo.getQueue_key()).child("waiting_time").getValue() == null) {
                     String inQueuetime = "";
 
@@ -313,26 +321,59 @@ public class CustomerCurrentServing extends BaseActivity {
      * @param minutes the minute that the queue number is enqueued
      */
     private void estimateWaitingTime(final int hours, final int minutes) {
-        Firebase fbRef = new Firebase(Constants.FIREBASE_QUEUES).child(shopInfo.getShop_key());
+        Firebase fbRef = new Firebase(Constants.FIREBASE_SERVED_QUEUES).child(shopInfo.getShop_key());
         fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int total = 0;
-                while (total == 0) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (ds.child("calling").getValue() != null)
-                            continue; // if this queue is already being called
-                        int r = new Random().nextInt(13) + 5;
-                        total += (r > 13) ? 13 : r; // for each queue add at least 5 minutes and at most 13 mins
-                        if (ds.getKey().equals(queueInfo.getQueue_key())) {
-                            break;
+
+                final GregorianCalendar datetime = new GregorianCalendar();
+                String today = new SimpleDateFormat("yyyy/M/d").format(datetime.getTime());
+                datetime.add(Calendar.DATE, -1);
+                String yesterdayDate = new SimpleDateFormat("yyyy/M/d").format(datetime.getTime());
+
+                // If this is first time vendor user with no past served queues record, get estimated time randomly
+                if(dataSnapshot.getValue() == null) {
+                    int r = new Random().nextInt(15) + 5;
+                    total += (r > 15) ? 15 : r; // get minutes at least 5 minutes and at most 13 mins
+                }
+                else
+                {
+                    int grandTotalWaitingTime = 0;
+                    int totalServedQueues = 0;
+
+                    // if today is the first day of the shop using this application,
+                    // where there are no past served queue records for yesterday
+                    if(dataSnapshot.child(yesterdayDate).getValue() != null) {
+                        for (DataSnapshot servedQueue : dataSnapshot.child(yesterdayDate).getChildren())
+                        {
+                            try {
+                                // get each served queue totalwaitingtime
+                                grandTotalWaitingTime += Integer.parseInt(servedQueue.child("totalwaitingtime").getValue().toString());
+                                totalServedQueues++;
+                            }catch(Exception ex)
+                            {
+                                ex.printStackTrace();
+                            }
                         }
                     }
+                    for(DataSnapshot servedQueue : dataSnapshot.child(today).getChildren())
+                    {
+                        try {
+                            // get each served queue totalwaitingtime
+                            grandTotalWaitingTime += Integer.parseInt(servedQueue.child("totalwaitingtime").getValue().toString());
+                            totalServedQueues++;
+                        }catch(Exception ex)
+                        {
+                            ex.printStackTrace();
+                        }
+                    }
+                    // get the average waiting time
+                    total = grandTotalWaitingTime/totalServedQueues;
                 }
-                GregorianCalendar time = calcRemainingWaitingTime(total, hours, minutes);
-                dispRemainingTime(time);
-                new Firebase(Constants.FIREBASE_QUEUES).child(shopInfo.getShop_key()).child(queueInfo.getQueue_key()).child("waiting_time").setValue(
-                        (time.get(Calendar.HOUR) * 60) + time.get(Calendar.MINUTE));
+
+                new Firebase(Constants.FIREBASE_QUEUES).child(shopInfo.getShop_key()).child(queueInfo.getQueue_key()).child("waiting_time").
+                        setValue(total);
                 Commons.dismissProgressDialog(pd);
             }
 
@@ -465,6 +506,7 @@ public class CustomerCurrentServing extends BaseActivity {
                     int remainingQueues = 0;
                     for(DataSnapshot ds : dataSnapshot.getChildren())
                     {
+                        if(queueInfo == null) return;
                         if(ds.getKey() == queueInfo.getQueue_key()) break;
                         remainingQueues++;
                     }
@@ -505,12 +547,25 @@ public class CustomerCurrentServing extends BaseActivity {
         newFbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                int totalWaitingTime;
+                int hours = Integer.parseInt(queueInfo.getIn_queue_time().split(":")[0]);
+                int minutes = Integer.parseInt(queueInfo.getIn_queue_time().split(":")[1]);;
                 GregorianCalendar datetime = new GregorianCalendar();
+
+                hours = datetime.get(Calendar.HOUR) - hours;
+                minutes = datetime.get(Calendar.MINUTE) - minutes;
+
+                totalWaitingTime = ((hours >= 0)?(hours*60):0) + minutes;
+
                 String date = new SimpleDateFormat("yyyy/M/d").format(datetime.getTime());
+                String time = new SimpleDateFormat("HH:mm").format(datetime.getTime());
 
                 // Throw the queue to served queue
                 Firebase fbref = new Firebase(Constants.FIREBASE_SERVED_QUEUES).child(shopInfo.getShop_key()).child(date).child(queueInfo.getQueue_key());
                 fbref.setValue(dataSnapshot.getValue());
+                fbref.child("out_queue_time").setValue(time);
+                fbref.child("out_queue_date").setValue(date);
+                fbref.child("totalwaitingtime").setValue(totalWaitingTime);
 
                 fbref = new Firebase(Constants.FIREBASE_QUEUES).child(shopInfo.getShop_key()).child(queueInfo.getQueue_key());
                 fbref.removeValue();
