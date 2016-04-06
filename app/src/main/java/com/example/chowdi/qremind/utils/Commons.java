@@ -115,6 +115,7 @@ public class Commons {
 
     /**
      * To dismiss progress dialog
+     * @param pd progress dialog used in the current activity
      */
     public static void dismissProgressDialog(ProgressDialog pd)
     {
@@ -128,6 +129,8 @@ public class Commons {
 
     /**
      * To logout to main activity (Login_RegisterActivity)
+     * @param fbRef firebase to this application context
+     * @param currActivity the current activity to be closed
      */
     public static void logout(Firebase fbRef, BaseActivity currActivity)
     {
@@ -265,4 +268,5 @@ public class Commons {
         byte[] imageBytes = stream.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
+
 }
