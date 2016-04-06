@@ -2,6 +2,8 @@ package com.example.chowdi.qremind.Vendor;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -99,5 +101,17 @@ public class ClaimQRCodeActivity extends BaseActivity {
         this.finish();
         claimFinished = true;
         claimCancelled = true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return false;
+        }
     }
 }
