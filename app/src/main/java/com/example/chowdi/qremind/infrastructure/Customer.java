@@ -12,7 +12,7 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.prototypes.CardWithList;
 
 /**
- * Created by L on 3/5/2016.
+ * Contributed by Chin Zhi Qiang, Anton Salim on 3/5/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Customer{

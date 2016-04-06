@@ -14,7 +14,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.chowdi.qremind.Login_RegisterActivity;
+import com.example.chowdi.qremind.MainActivity;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -26,7 +26,7 @@ import com.google.zxing.common.BitMatrix;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Created by anton on 9/3/2016.
+ * Contributed by Anton Salim on 9/3/2016.
  */
 public class Commons {
     private static Toast toast = null;
@@ -144,7 +144,7 @@ public class Commons {
         editor.commit();
         currActivity.getQremindApplication().releaseCustomerUser();
         currActivity.getQremindApplication().releaseVendorUser();
-        Intent intent = new Intent(currActivity, Login_RegisterActivity.class);
+        Intent intent = new Intent(currActivity, MainActivity.class);
         currActivity.startActivity(intent);
         currActivity.finish();
     }

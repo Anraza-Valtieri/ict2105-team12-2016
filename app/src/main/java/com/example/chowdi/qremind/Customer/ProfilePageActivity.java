@@ -33,7 +33,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerProfilePageActivity extends BaseActivity{
+/**
+ * Contributed by Anton Salim, Edmund Chow on 31/3/2016.
+ */
+public class ProfilePageActivity extends BaseActivity{
 
     // Firebase variables
     Firebase fbRef;
@@ -112,7 +115,7 @@ public class CustomerProfilePageActivity extends BaseActivity{
                 // If session expired, close current activity and go to login activity
                 if(fbRef.getAuth() == null)
                 {
-                    Commons.logout(fbRef, CustomerProfilePageActivity.this);
+                    Commons.logout(fbRef, ProfilePageActivity.this);
                     Commons.showToastMessage("Your session expired!", getApplicationContext());
                     return;
                 }

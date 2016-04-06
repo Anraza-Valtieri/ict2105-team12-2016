@@ -6,11 +6,10 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.v4.app.NotificationCompat;
 
-import com.example.chowdi.qremind.Customer.CustomerCurrentServing;
+import com.example.chowdi.qremind.Customer.CurrentServingActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
@@ -20,7 +19,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 /**
- * Created by L on 3/26/2016.
+ * Contributed by Chin Zhi Qiang, Anton Salim on 3/26/2016.
  * Used as a singleton point
  * No constructor because may not be initialized yet by then.
  * onCreate would be a better place
@@ -92,7 +91,7 @@ public class QremindApplication extends Application {
 
     public void showNotification(Activity context) {
         notificationSend = true;
-        Intent intent = new Intent(context, CustomerCurrentServing.class);
+        Intent intent = new Intent(context, CurrentServingActivity.class);
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
         Resources r = getResources();
         Notification notification = new NotificationCompat.Builder(this)

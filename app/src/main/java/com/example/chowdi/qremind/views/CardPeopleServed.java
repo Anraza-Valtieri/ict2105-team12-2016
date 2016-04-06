@@ -1,4 +1,4 @@
-package com.example.chowdi.qremind.Vendor;
+package com.example.chowdi.qremind.views;
 
 import android.content.Context;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.Vendor.DashBoardActivity;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
@@ -20,7 +21,7 @@ import java.util.GregorianCalendar;
 import it.gmariotti.cardslib.library.internal.Card;
 
 /**
- * Created by L on 3/13/2016.
+ * Contributed by Chin Zhi Qiang, Anton Salim on 3/14/2016.
  */
 public class CardPeopleServed extends Card {
     /**
@@ -57,7 +58,7 @@ public class CardPeopleServed extends Card {
                 else
                     mTitle.setText("0");
 
-                VendorDashBoardActivity.cardPeopleServedLoaded = true;
+                DashBoardActivity.cardPeopleServedLoaded = true;
             }
 
             @Override

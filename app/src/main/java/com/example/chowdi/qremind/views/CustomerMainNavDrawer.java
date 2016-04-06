@@ -7,9 +7,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.chowdi.qremind.Customer.CustomerCurrentServing;
-import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
-import com.example.chowdi.qremind.Customer.CustomerProfilePageActivity;
+import com.example.chowdi.qremind.Customer.CurrentServingActivity;
+import com.example.chowdi.qremind.Customer.HomePageActivity;
+import com.example.chowdi.qremind.Customer.ProfilePageActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Customer;
@@ -18,7 +18,7 @@ import com.example.chowdi.qremind.utils.Constants;
 import com.firebase.client.Firebase;
 
 /**
- * Created by L on 3/27/2016.
+ * Contributed by Chin Zhi Qiang, Edmund Chow on 3/14/2016.
  */
 public class CustomerMainNavDrawer extends NavDrawer {
 
@@ -28,10 +28,10 @@ public class CustomerMainNavDrawer extends NavDrawer {
     public CustomerMainNavDrawer(final BaseActivity activity) {
         super(activity);
 
-        addItem(new ActivityDrawerItem(CustomerHomePageActivity.class, "Home", null, R.drawable.ic_home_black_24dp, R.id.include_main_nav_drawer_topItems));
-        addItem(new ActivityDrawerItem(CustomerProfilePageActivity.class, "Profile", null, R.drawable.ic_account_box_black_24dp, R.id.include_main_nav_drawer_topItems));
+        addItem(new ActivityDrawerItem(HomePageActivity.class, "Home", null, R.drawable.ic_home_black_24dp, R.id.include_main_nav_drawer_topItems));
+        addItem(new ActivityDrawerItem(ProfilePageActivity.class, "Profile", null, R.drawable.ic_account_box_black_24dp, R.id.include_main_nav_drawer_topItems));
 
-        addItem(new ActivityDrawerItem(CustomerCurrentServing.class, "Queue Status", null, R.drawable.ic_action_group, R.id.include_main_nav_drawer_topItems){
+        addItem(new ActivityDrawerItem(CurrentServingActivity.class, "Queue Status", null, R.drawable.ic_action_group, R.id.include_main_nav_drawer_topItems){
             @Override
             public void onClick(View v) {
                 if(activity.getQremindApplication().getCustomerUser().getCurrent_queue() == null)
@@ -45,7 +45,7 @@ public class CustomerMainNavDrawer extends NavDrawer {
                 activity.fadeOut(new BaseActivity.FadeOutListener() {
                     @Override
                     public void onFadeOutEnd() {
-                        activity.startActivity(new Intent(activity, CustomerCurrentServing.class));
+                        activity.startActivity(new Intent(activity, CurrentServingActivity.class));
                         activity.finish();
                     }
                 });

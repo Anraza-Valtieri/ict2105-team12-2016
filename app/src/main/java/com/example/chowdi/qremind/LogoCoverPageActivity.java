@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 
-import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
-import com.example.chowdi.qremind.Vendor.VendorDashBoardActivity;
+import com.example.chowdi.qremind.Customer.HomePageActivity;
+import com.example.chowdi.qremind.Vendor.DashBoardActivity;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.infrastructure.Vendor;
@@ -17,6 +17,9 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+/**
+ * Contributed by Edmund Chow, Anton Salim on 3/14/2016.
+ */
 public class LogoCoverPageActivity extends BaseActivity{
 
     @Override
@@ -30,7 +33,7 @@ public class LogoCoverPageActivity extends BaseActivity{
         {
             SystemClock.sleep(1500);
             Commons.showToastMessage("No internet connection", getApplicationContext());
-            nextActivityAfterLogin(Login_RegisterActivity.class);
+            nextActivityAfterLogin(MainActivity.class);
             return;
         }
 
@@ -46,13 +49,13 @@ public class LogoCoverPageActivity extends BaseActivity{
             if(phoneNo == null || role == null)
             {
                 fbRef.unauth();
-                nextActivityAfterLogin(Login_RegisterActivity.class);
+                nextActivityAfterLogin(MainActivity.class);
             }
             else
                 retrieveAccountInfo(phoneNo, role);
         }
         else {
-            nextActivityAfterLogin(Login_RegisterActivity.class);
+            nextActivityAfterLogin(MainActivity.class);
         }
     }
 
@@ -75,13 +78,13 @@ public class LogoCoverPageActivity extends BaseActivity{
                 {
                     Customer custUser = dataSnapshot.getValue(Customer.class);
                     getQremindApplication().setCustomerUser(custUser);
-                    nextActivityAfterLogin(CustomerHomePageActivity.class);
+                    nextActivityAfterLogin(HomePageActivity.class);
                 }
                 else if(role.equals(Constants.ROLE_VENDOR))
                 {
                     Vendor vendorUser = dataSnapshot.getValue(Vendor.class);
                     getQremindApplication().setVendorUser(vendorUser);
-                    nextActivityAfterLogin(VendorDashBoardActivity.class);
+                    nextActivityAfterLogin(DashBoardActivity.class);
                 }
             }
 

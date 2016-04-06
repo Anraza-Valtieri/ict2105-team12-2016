@@ -40,7 +40,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BusinessProfileActivity extends BaseActivity{
+/**
+ * Contributed by Anton Salim, Edmund Chow on 31/3/2016.
+ */
+public class ShopProfileActivity extends BaseActivity{
     // Firebase variables
     Firebase fbRef;
 
@@ -213,8 +216,8 @@ public class BusinessProfileActivity extends BaseActivity{
                     fbRef = new Firebase(Constants.FIREBASE_SHOPS);
                     fbRef.child(shopkey).setValue(map);
                     Commons.showToastMessage("Shops created", getApplicationContext());
-                    startActivity(new Intent(BusinessProfileActivity.this, VendorDashBoardActivity.class));
-                    BusinessProfileActivity.this.finish();
+                    startActivity(new Intent(ShopProfileActivity.this, DashBoardActivity.class));
+                    ShopProfileActivity.this.finish();
                 }
             }
 
@@ -294,7 +297,7 @@ public class BusinessProfileActivity extends BaseActivity{
                 }
 
                 // Create an ArrayAdapter using the string array and a default spinner layout
-                adapter = new ArrayAdapter<String>(BusinessProfileActivity.this, android.R.layout.simple_spinner_item,
+                adapter = new ArrayAdapter<String>(ShopProfileActivity.this, android.R.layout.simple_spinner_item,
                         categoryList);
                 // Specify the layout to use when the list of choices appears
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -331,7 +334,7 @@ public class BusinessProfileActivity extends BaseActivity{
                 // if no shop is created
                 if (dataSnapshot.getValue() == null) {
                     Commons.dismissProgressDialog(pd);
-                    final AlertDialog alertDialog = new AlertDialog.Builder(BusinessProfileActivity.this).create();
+                    final AlertDialog alertDialog = new AlertDialog.Builder(ShopProfileActivity.this).create();
                     alertDialog.setTitle("No shop");
                     alertDialog.setMessage("You have not created a shop.");
 

@@ -1,7 +1,7 @@
 package com.example.chowdi.qremind.utils;
 
 /**
- * Created by L on 3/6/2016.
+ * Contributed by Chin Zhi Qiang, Anton Salim, Winnie Lew, Edmund Chow on 3/6/2016.
  */
 public final class Constants {
 

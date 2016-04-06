@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.example.chowdi.qremind.Customer.CustomerCurrentServing;
+import com.example.chowdi.qremind.Customer.CurrentServingActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
 import com.example.chowdi.qremind.infrastructure.QueueInfo;
@@ -22,7 +22,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 /**
- * Created by L on 3/26/2016.
+ * Contributed by Chin Zhi Qiang on 3/26/2016.
  * Base activity class stub for activites
  */
 public class BaseActivity extends AppCompatActivity {
@@ -41,10 +41,18 @@ public class BaseActivity extends AppCompatActivity {
         {
             fbRefQueueTurn.removeEventListener(queueTurnListener);
         }
-        if(application.getCustomerUser() != null && application.getCustomerUser().getCurrent_queue() != null && this.getClass() != CustomerCurrentServing.class) {
+        if(application.getCustomerUser() != null && application.getCustomerUser().getCurrent_queue() != null && this.getClass() != CurrentServingActivity.class) {
             Object[] current_queue = application.getCustomerUser().getCurrent_queue().values().toArray();
             waitForTurn(Commons.keyToNoConverter((String)current_queue[1]) + "");
         }
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        // To cancel and dismiss all current toast
+        Commons.cancelToastMessage();
     }
 
     @Override

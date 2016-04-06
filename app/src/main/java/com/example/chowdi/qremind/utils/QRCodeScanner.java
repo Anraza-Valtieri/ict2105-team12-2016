@@ -8,7 +8,7 @@ import com.google.zxing.Result;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
- * Created by anton on 24/3/2016.
+ * Contributed by Anton Salim on 24/3/2016.
  */
 public class QRCodeScanner extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;

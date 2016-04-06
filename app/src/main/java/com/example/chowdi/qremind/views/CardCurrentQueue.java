@@ -1,4 +1,4 @@
-package com.example.chowdi.qremind.Vendor;
+package com.example.chowdi.qremind.views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.Vendor.ClaimQRCodeActivity;
+import com.example.chowdi.qremind.Vendor.DashBoardActivity;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
 import com.example.chowdi.qremind.infrastructure.QueueInfo;
 import com.example.chowdi.qremind.infrastructure.Shop;
@@ -23,7 +25,7 @@ import com.firebase.client.ValueEventListener;
 import it.gmariotti.cardslib.library.internal.Card;
 
 /**
- * Created by L on 3/14/2016.
+ * Contributed by Chin Zhi Qiang, Anton Salim on 3/14/2016.
  */
 public class CardCurrentQueue extends Card{
     /**
@@ -243,7 +245,7 @@ public class CardCurrentQueue extends Card{
                 if(dataSnapshot.getValue() == null)
                 {
                     nextQTV.setText("----");
-                    VendorDashBoardActivity.cardCurrentQueueLoaded = true;
+                    DashBoardActivity.cardCurrentQueueLoaded = true;
                     return;
                 }
                 for(DataSnapshot ds : dataSnapshot.getChildren())
@@ -255,10 +257,10 @@ public class CardCurrentQueue extends Card{
                         continue;
                     }
                     nextQTV.setText(queueInfo.getQueue_no()+"");
-                    VendorDashBoardActivity.cardCurrentQueueLoaded = true;
+                    DashBoardActivity.cardCurrentQueueLoaded = true;
                     return;
                 }
-                VendorDashBoardActivity.cardCurrentQueueLoaded = true;
+                DashBoardActivity.cardCurrentQueueLoaded = true;
             }
 
             @Override

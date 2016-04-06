@@ -20,7 +20,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.zxing.WriterException;
 
 /**
- * Created by anton on 27/3/2016.
+ * Contributed by Anton Salim on 27/3/2016.
  */
 public class ClaimQRCodeActivity extends BaseActivity {
 

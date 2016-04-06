@@ -25,7 +25,10 @@ import com.firebase.client.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Register_Activity extends BaseActivity{
+/**
+ * Contributed by Winnie Lew on 3/14/2016.
+ */
+public class RegisterActivity extends BaseActivity{
 
     // Variable for Firebase
     private Firebase fbRef;
@@ -300,7 +303,7 @@ public class Register_Activity extends BaseActivity{
 
                             fbRef.child(phoneNoET.getText().toString()).setValue(map);
                             Commons.showToastMessage("Registration Successful", getApplicationContext());
-                            Register_Activity.this.finish();
+                            RegisterActivity.this.finish();
                         }
 
                         @Override
@@ -343,13 +346,5 @@ public class Register_Activity extends BaseActivity{
         }
         setEnableAllElements(true);
         Commons.dismissProgressDialog(pd);
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        // To cancel and dismiss all current toast
-        Commons.cancelToastMessage();
     }
 }

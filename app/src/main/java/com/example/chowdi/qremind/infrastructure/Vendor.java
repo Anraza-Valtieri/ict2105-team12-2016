@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Map;
 
 /**
- * Created by L on 3/5/2016.
+ * Contributed by Chin Zhi Qiang, Anton Salim on 3/5/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Vendor {

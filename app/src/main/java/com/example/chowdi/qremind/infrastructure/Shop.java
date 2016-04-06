@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * Created by L on 3/5/2016.
+ * Contributed by Chin Zhi Qiang on 3/5/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Shop implements Parcelable {

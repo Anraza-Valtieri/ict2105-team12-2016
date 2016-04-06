@@ -1,4 +1,4 @@
-package com.example.chowdi.qremind.Vendor;
+package com.example.chowdi.qremind.views;
 
 import android.content.Context;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.chowdi.qremind.R;
+import com.example.chowdi.qremind.Vendor.DashBoardActivity;
 import com.example.chowdi.qremind.infrastructure.QremindApplication;
 import com.example.chowdi.qremind.utils.Commons;
 import com.example.chowdi.qremind.utils.Constants;
@@ -17,7 +18,7 @@ import com.firebase.client.ValueEventListener;
 import it.gmariotti.cardslib.library.internal.Card;
 
 /**
- * Created by L on 3/13/2016.
+ * Contributed by Chin Zhi Qiang on 3/14/2016.
  */
 public class CardTotalPeople extends Card {
 
@@ -44,7 +45,7 @@ public class CardTotalPeople extends Card {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mTitle.setText(dataSnapshot.getChildrenCount()+"");
-                VendorDashBoardActivity.cardTotalPeopleLoaded = true;
+                DashBoardActivity.cardTotalPeopleLoaded = true;
             }
 
             @Override

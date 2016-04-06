@@ -16,7 +16,7 @@ import com.example.chowdi.qremind.activities.BaseActivity;
 import java.util.ArrayList;
 
 /**
- * Created by L on 3/26/2016.
+ * Contributed by Chin Zhi Qiang, Edmund Chow on 3/14/2016.
  */
 public class NavDrawer  {
 

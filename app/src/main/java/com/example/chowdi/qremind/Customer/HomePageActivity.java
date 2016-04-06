@@ -2,7 +2,6 @@ package com.example.chowdi.qremind.Customer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,7 +36,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomerHomePageActivity extends BaseActivity{
+/**
+ * Contributed by Winnie Lew, Chin Zhi Qiang on 31/3/2016.
+ */
+public class HomePageActivity extends BaseActivity{
     //Variable for Firebase
     private Firebase firebase;
 
@@ -164,7 +166,7 @@ public class CustomerHomePageActivity extends BaseActivity{
                     categories.add(ds.getValue().toString());
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(CustomerHomePageActivity.this, android.R.layout.simple_spinner_item, categories);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(HomePageActivity.this, android.R.layout.simple_spinner_item, categories);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerCategory.setAdapter(adapter);
             }
@@ -257,7 +259,7 @@ public class CustomerHomePageActivity extends BaseActivity{
                     if(application.getCustomerUser().getCurrent_queue() == null){
                         getQueue(shop.getShop_key(),application.getCustomerUser().getPhoneno(),shop.getShop_name());
                     }else{
-                        Toast.makeText(CustomerHomePageActivity.this,"You are already in queue",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomePageActivity.this,"You are already in queue",Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -338,9 +340,9 @@ public class CustomerHomePageActivity extends BaseActivity{
         vendorRef.child(customer_id).setValue(true); // insert into queues
         /* Finish queueing */
 
-        Intent intent = new Intent(CustomerHomePageActivity.this, CustomerCurrentServing.class);
+        Intent intent = new Intent(HomePageActivity.this, CurrentServingActivity.class);
         startActivity(intent);
         Commons.dismissProgressDialog(pd);
-        CustomerHomePageActivity.this.finish();
+        HomePageActivity.this.finish();
     }
 }

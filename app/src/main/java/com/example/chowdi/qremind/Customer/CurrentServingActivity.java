@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +31,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
-public class CustomerCurrentServing extends BaseActivity {
+/**
+ * Contributed by Anton Salim on 31/3/2016.
+ */
+public class CurrentServingActivity extends BaseActivity {
 
     // Variable for Firebase
     private Firebase fbRefWaitingTime;
@@ -154,7 +156,7 @@ public class CustomerCurrentServing extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // Start an activity to open QR code scanner
-                Intent intent = new Intent(CustomerCurrentServing.this, QRCodeScanner.class);
+                Intent intent = new Intent(CurrentServingActivity.this, QRCodeScanner.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
@@ -186,7 +188,7 @@ public class CustomerCurrentServing extends BaseActivity {
         leave_queue_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(CustomerCurrentServing.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(CurrentServingActivity.this);
                 builder.setMessage("Are you sure you want to leave queue?")
                         .setPositiveButton(R.string.text_leave, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -466,7 +468,7 @@ public class CustomerCurrentServing extends BaseActivity {
                         if(!notificationPoppedOut)
                             popUpNotification(queueInfo.getQueue_no()+"");
                         if(!application.notificationSend)
-                            application.showNotification(CustomerCurrentServing.this);
+                            application.showNotification(CurrentServingActivity.this);
                         return;
                     }
                     getEstimatedWaitingTime();
@@ -478,10 +480,10 @@ public class CustomerCurrentServing extends BaseActivity {
                     if(fbRefRemainingQueue != null)
                         fbRefRemainingQueue.removeEventListener(remainingQueueListener);
                     fbRefQueueTurn.removeEventListener(queueTurnListener);
-                    Intent intent = new Intent(CustomerCurrentServing.this, CustomerHomePageActivity.class);
+                    Intent intent = new Intent(CurrentServingActivity.this, HomePageActivity.class);
                     startActivity(intent);
                     Commons.showToastMessage("You have been removed from queue!", getApplicationContext());
-                    CustomerCurrentServing.this.finish();
+                    CurrentServingActivity.this.finish();
                 }
             }
 
@@ -579,7 +581,7 @@ public class CustomerCurrentServing extends BaseActivity {
 
         fbRefQueueTurn.removeEventListener(queueTurnListener);
 
-        Intent intent = new Intent(this, CustomerHomePageActivity.class);
+        Intent intent = new Intent(this, HomePageActivity.class);
         startActivity(intent);
         Commons.showToastMessage("Queue claimed successfully", getApplicationContext());
         this.finish();

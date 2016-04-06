@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * Created by anton on 31/3/2016.
+ * Contributed by Anton Salim on 31/3/2016.
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)

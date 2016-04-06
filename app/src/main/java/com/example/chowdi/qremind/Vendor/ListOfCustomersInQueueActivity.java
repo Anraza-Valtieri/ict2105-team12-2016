@@ -26,7 +26,7 @@ import com.rockerhieu.rvadapter.states.StatesRecyclerViewAdapter;
 import java.util.ArrayList;
 
 /**
- * Created by lotus on 4/1/2016.
+ * Contributed by Chin Zhi Qiang on 4/1/2016.
  */
 public class ListOfCustomersInQueueActivity extends BaseActivity{
     private RecyclerView rv;

@@ -7,14 +7,14 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
-import android.widget.RelativeLayout;
 
-import com.example.chowdi.qremind.Login_RegisterActivity;
 import com.example.chowdi.qremind.R;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.utils.Commons;
+import com.example.chowdi.qremind.views.CardCurrentQueue;
+import com.example.chowdi.qremind.views.CardPeopleServed;
+import com.example.chowdi.qremind.views.CardTotalPeople;
 import com.example.chowdi.qremind.views.VendorMainNavDrawer;
-import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,10 @@ import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerViewAdapter;
 import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
 
-public class VendorDashBoardActivity extends BaseActivity {
+/**
+ * Contributed by Chin Zhi Qiang, Edmund Chow on 31/3/2016.
+ */
+public class DashBoardActivity extends BaseActivity {
     private ArrayList<Card> dashboardCards;
     private AsyncTask runFirst;
     private ProgressDialog pd;
@@ -79,7 +82,7 @@ public class VendorDashBoardActivity extends BaseActivity {
     {
         if(application.getVendorUser().getShops() == null)
         {
-            Intent intent = new Intent(this, BusinessProfileActivity.class);
+            Intent intent = new Intent(this, ShopProfileActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             return;
@@ -146,7 +149,7 @@ public class VendorDashBoardActivity extends BaseActivity {
                     Commons.showToastMessage("No internet connection", getApplicationContext());
                     return;
                 }
-                startActivity(new Intent(VendorDashBoardActivity.this, ListOfCustomersInQueueActivity.class));
+                startActivity(new Intent(DashBoardActivity.this, ListOfCustomersInQueueActivity.class));
             }
         });
 

@@ -13,8 +13,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.chowdi.qremind.Customer.CustomerHomePageActivity;
-import com.example.chowdi.qremind.Vendor.VendorDashBoardActivity;
+import com.example.chowdi.qremind.Customer.HomePageActivity;
+import com.example.chowdi.qremind.Vendor.DashBoardActivity;
 import com.example.chowdi.qremind.activities.BaseActivity;
 import com.example.chowdi.qremind.infrastructure.Customer;
 import com.example.chowdi.qremind.infrastructure.Vendor;
@@ -27,6 +27,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 /**
+ * Contributed by Winnie Lew, Anton Salim on 3/14/2016.
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends BaseActivity {
@@ -194,11 +195,11 @@ public class LoginActivity extends BaseActivity {
         Commons.showProgressDialog(pd, "Vendor login", "Logging in");
         if(Commons.isNumberString(loginID))
         {
-            phoneLogin(loginID, password, Constants.ROLE_VENDOR, VendorDashBoardActivity.class);
+            phoneLogin(loginID, password, Constants.ROLE_VENDOR, DashBoardActivity.class);
         }
         else if(Commons.isEmailString(loginID))
         {
-            emailLogin(loginID, password, Constants.ROLE_VENDOR, VendorDashBoardActivity.class);
+            emailLogin(loginID, password, Constants.ROLE_VENDOR, DashBoardActivity.class);
         }
     }
 
@@ -212,10 +213,10 @@ public class LoginActivity extends BaseActivity {
         Commons.showProgressDialog(pd, "Customer login", "Logging in");
         if(Commons.isNumberString(loginID))
         {
-            phoneLogin(loginID, password, Constants.ROLE_CUSTOMER, CustomerHomePageActivity.class);
+            phoneLogin(loginID, password, Constants.ROLE_CUSTOMER, HomePageActivity.class);
         } else if (Commons.isEmailString(loginID))
         {
-            emailLogin(loginID, password, Constants.ROLE_CUSTOMER, CustomerHomePageActivity.class);
+            emailLogin(loginID, password, Constants.ROLE_CUSTOMER, HomePageActivity.class);
         }
     }
 

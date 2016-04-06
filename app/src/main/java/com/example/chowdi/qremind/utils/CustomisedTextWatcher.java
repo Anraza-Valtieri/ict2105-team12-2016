@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 /**
- * Created by anton on 2/4/2016.
+ * Contributed by Anton Salim on 2/4/2016.
  */
 public class CustomisedTextWatcher implements TextWatcher, View.OnFocusChangeListener {
 
